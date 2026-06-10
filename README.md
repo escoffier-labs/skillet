@@ -16,11 +16,18 @@ Three skills, one report contract ([docs/audit-report-format.md](docs/audit-repo
 | **bug-hunt** | Correctness sweep across five lenses with mandatory adversarial verification. Only bugs that survive a refutation attempt make the report, each with a concrete trigger. |
 | **security-sweep** | Defensive security audit: secrets (tree and history), dependency CVEs, injection surfaces, authn/authz, exposure. Every finding ships with its remediation. |
 
+The trio is read-only by design. **expedite** is the step that closes the loop:
+
+| Skill | What it does |
+|-------|--------------|
+| **expedite** | Takes an audit backlog and drives it to done: highest-leverage finding first, one focused change at a time, each one verified before the next, parking anything destructive or breaking for you to decide. The execution partner to the audit trio. |
+
 ### Daily workflow
 
 | Skill | What it does |
 |-------|--------------|
-| **pressure-test** | Interrogates a plan or design until the important decisions are explicit, one question at a time. Includes sous mode: going AFK? The agent asks its own hard questions, answers them from evidence, and leaves you an auditable Q&A transcript. |
+| **pressure-test** | Drives a plan or design to explicit decisions before anyone builds, one decision at a time, each pinned to its basis. Includes sous mode: going AFK? The agent makes the reversible calls in your place, tags each answer evidence/constraint/judgment, parks anything it can't take back, and leaves you an auditable transcript. |
+| **plate** | The last look before prose goes public: scrubs a blog post, social draft, PR body, or commit message for internal hostnames, private IPs, leaked paths, and AI-authorship disclosures, applies your writing conventions, and previews every change before touching your voice. The per-artifact companion to publish-readiness. |
 | **publish-readiness** | The gate before a repo goes public: working-tree and git-history leak scans, hygiene checks, and the full history-rewrite recipe for when something already leaked. |
 | **release-cut** | Changelog roll-up, semver bump, tag, GitHub release, drafted announcement. Releases on request, never per feature. |
 | **memory-handoff** | Ends a session by writing durable knowledge into a structured handoff a memory owner can review and file. Pairs with brigade, works standalone. |
@@ -58,7 +65,7 @@ Ask naturally ("audit this repo", "is this safe to publish", "cut a release") or
 /pressure-test   (add "answer your own questions, I'm going afk" for sous mode)
 ```
 
-line-check, bug-hunt, and security-sweep are read-only by design. They produce reports and backlogs; applying fixes is a separate step you stay in control of.
+line-check, bug-hunt, and security-sweep are read-only by design. They produce reports and backlogs; **expedite** is the separate, opt-in step that applies the fixes, parking anything destructive or breaking for you to decide.
 
 ## Why these exist
 
