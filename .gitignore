@@ -1,0 +1,8 @@
+# agent session state never ships
+.claude/
+.codex/
+.learnings/
+*.local.*
+node_modules/
+__pycache__/
+.DS_Store
