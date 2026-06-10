@@ -21,7 +21,7 @@ Make a skill when the technique was not obvious the first time, will recur acros
 
 ```markdown
 ---
-name: verb-first-hyphenated-name
+name: verb-first-hyphenated-name   # or the tool's own name when wrapping a named tool
 description: Use when [triggering conditions and symptoms only, third person, under 500 chars]
 ---
 

@@ -40,9 +40,18 @@ Short, specific title
 - files changed: ...
 - commands run: ...
 - error strings: ...
+
+## Recommended memory action
+create-card | update-card | no-card
+
+## Target card
+descriptive-card-name.md
+
+## Suggested card content
+(the exact card to save; MUST start with YAML frontmatter)
 ```
 
-If the destination memory system distinguishes routing targets (memory cards vs operational notes vs rules), add its routing sections; `brigade handoff draft` scaffolds the full format for a configured repo.
+`brigade handoff lint` requires the routing sections: `Recommended memory action` is mandatory, and for `create-card`/`update-card` the suggested card content must begin with YAML frontmatter. For `no-card`, replace the card sections with `## Target document` and `## Suggested document content` instead. When unsure of the destination system's exact expectations, scaffold with `brigade handoff draft` and fill it in.
 
 ## Quality bar
 
