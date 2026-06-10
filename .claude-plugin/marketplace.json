@@ -1,0 +1,19 @@
+{
+  "name": "skillet",
+  "description": "A skillet full of agent skills: repo auditing, bug hunting, security sweeps, publish gates, releases, memory handoffs, and skill extraction",
+  "owner": {
+    "name": "Solomon Neas"
+  },
+  "plugins": [
+    {
+      "name": "skillet",
+      "description": "Production-tested skills for auditing, improving, and shipping repos with AI coding agents: line-check (repo audit + prioritized backlog), bug-hunt, security-sweep, publish-readiness, release-cut, memory-handoff, pressure-test, skillify",
+      "source": "./skillet",
+      "category": "development",
+      "author": {
+        "name": "Solomon Neas"
+      },
+      "homepage": "https://github.com/escoffier-labs/skillet"
+    }
+  ]
+}
