@@ -8,7 +8,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- **mise** - mise en place for building: turns an idea into a design the user approved and a written spec before any code. Reads context, proposes 2-3 approaches with a recommendation, presents a design scaled to its complexity, and hands off to the implementation plan. Composes with pressure-test for hardening the load-bearing decisions instead of duplicating its interrogation. First of the brigade-flavored ports of the superpowers process skills.
+- **mise** - mise en place for building: turns an idea into a design the user approved and a written spec before any code. Reads context, proposes 2-3 approaches with a recommendation, presents a design scaled to its complexity, and hands off to the implementation plan. Composes with pressure-test for hardening the load-bearing decisions instead of duplicating its interrogation. First of skillet's process skills for the daily build loop.
 
 ## [0.1.0] - 2026-06-10
 

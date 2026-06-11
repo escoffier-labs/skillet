@@ -24,14 +24,14 @@ For each finding:
 
 1. **Read the finding, then the actual code at its "Where".** Confirm it still reproduces. Reality drifts from the report, and earlier fixes in this run may have moved or resolved later findings; a finding already fixed gets marked done and skipped, not "fixed" again. If an earlier change relocated the code, update the "Where" before proceeding.
 2. **Make the smallest change that resolves it.** One finding, one focused change. Do not bundle, do not refactor adjacent code the finding did not name, do not gold-plate.
-3. **For a bug or behavior change, write the failing test first.** **REQUIRED SUB-SKILL:** use superpowers:test-driven-development. For a defect whose cause is unclear, **REQUIRED SUB-SKILL:** use superpowers:systematic-debugging before proposing a fix. A bandaid that masks the symptom is not a fix.
-4. **Verify the finding is actually gone.** Re-check the "Where", run the relevant tests, run the command the fix claims to repair. **REQUIRED SUB-SKILL:** use superpowers:verification-before-completion before marking anything done. Evidence, not assertion.
+3. **For a bug or behavior change, write the failing test first.** Watch it fail, then make it pass; the failing test is the proof the change does what the finding claims. For a defect whose cause is unclear, reproduce it and trace it to the root cause before proposing a fix. A bandaid that masks the symptom is not a fix.
+4. **Verify the finding is actually gone.** Re-check the "Where", run the relevant tests, run the command the fix claims to repair, and read the output before marking anything done. Evidence, not assertion.
 5. **Commit per finding** with a message naming the effect, not the plumbing. Keeps the diff reviewable and lets any single fix be reverted alone.
 6. **Mark the finding done in the backlog** with a one-line note (commit SHA or what changed), so the report becomes a live worklist.
 
 If a fix resists you, that the problem will not verify gone after two focused attempts, do not commit a non-fix. Revert the partial change and move the finding to Remaining with what you tried, so the tree stays clean for the next finding.
 
-When done with the runnable items, **REQUIRED SUB-SKILL:** use superpowers:finishing-a-development-branch to land the work.
+When done with the runnable items, land the work: run the full suite one last time, then present the merge-or-PR options to the user and clean up the branch.
 
 ## Stop conditions (surface, do not guess)
 

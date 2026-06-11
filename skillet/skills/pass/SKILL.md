@@ -18,16 +18,16 @@ The sub-skills below are the preferred way to satisfy a check. If a referenced s
 "Non-trivial" here means anything beyond a one-line, obviously-safe change (a dependency bump, a typo, a constant tweak). A small-looking change that touches behavior, like the timeout bump in the example below, is not trivial.
 
 ### 1. It is a real fix, not a bandaid
-The change addresses the root cause, not the symptom. If it is a bugfix, you reproduced the bug, traced it to its source, and the fix targets that source. A change that silences an error, widens a timeout, or catches-and-ignores to make a symptom disappear is not ready. **REQUIRED SUB-SKILL:** for an unclear defect, use superpowers:systematic-debugging before you call it fixed.
+The change addresses the root cause, not the symptom. If it is a bugfix, you reproduced the bug, traced it to its source, and the fix targets that source. A change that silences an error, widens a timeout, or catches-and-ignores to make a symptom disappear is not ready. For an unclear defect, reproduce it and trace it to the root cause before you call it fixed.
 
 ### 2. It is tested and green
-The change ships with a test that fails without it and passes with it; a bugfix ships with a regression test. Run the suite and the linter locally and read the output, do not assume. **REQUIRED SUB-SKILL:** use superpowers:verification-before-completion before claiming anything passes. "CI will tell me" is not a substitute for green-on-your-machine.
+The change ships with a test that fails without it and passes with it; a bugfix ships with a regression test. Run the suite and the linter locally and read the output before claiming anything passes, do not assume. "CI will tell me" is not a substitute for green-on-your-machine.
 
 ### 3. It is one concern
 One PR, one reason to exist. Unrelated cleanups, drive-by reformatting, and "while I was in there" changes belong in their own PRs; bundled, they bury the real change and stall the review. Split them out.
 
 ### 4. The diff is self-reviewed
-Always read your own diff line by line before anyone else does. Remove debug prints, commented-out code, leftover TODOs, and stray files. **REQUIRED SUB-SKILL:** use superpowers:requesting-code-review for a structured self-review.
+Always read your own diff line by line before anyone else does. Remove debug prints, commented-out code, leftover TODOs, and stray files.
 
 Then, only for a non-trivial change or any PR to a repo you do not own, get an independent review pass (a review skill, a bot, or a person) and resolve it before filing, not after. A trivial change skips this second pass.
 
