@@ -26,6 +26,7 @@ The trio is read-only by design. **expedite** is the step that closes the loop:
 
 | Skill | What it does |
 |-------|--------------|
+| **mise** | Mise en place for building: turns an idea into a design the user approved and a written spec, before any code. Reads the context, proposes 2-3 approaches with a recommendation, presents the design scaled to its complexity, and hands off to the implementation plan. Composes with pressure-test for hardening the load-bearing decisions; miseledger keeps the receipts. |
 | **pressure-test** | Drives a plan or design to explicit decisions before anyone builds, one decision at a time, each pinned to its basis. Includes sous mode: going AFK? The agent makes the reversible calls in your place, tags each answer evidence/constraint/judgment, parks anything it can't take back, and leaves you an auditable transcript. |
 | **plate** | The last look before prose goes public: scrubs a blog post, social draft, PR body, or commit message for internal hostnames, private IPs, leaked paths, and AI-authorship disclosures, applies your writing conventions, and previews every change before touching your voice. The per-artifact companion to publish-readiness. |
 | **pass** | The gate before a pull request leaves your hands: real-fix-not-bandaid, tested and green, one concern, self-reviewed diff, clean artifact, and a PR body the author approves before anything is filed. The chef's inspection at the pass. |

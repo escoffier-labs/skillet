@@ -6,6 +6,10 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **mise** - mise en place for building: turns an idea into a design the user approved and a written spec before any code. Reads context, proposes 2-3 approaches with a recommendation, presents a design scaled to its complexity, and hands off to the implementation plan. Composes with pressure-test for hardening the load-bearing decisions instead of duplicating its interrogation. First of the brigade-flavored ports of the superpowers process skills.
+
 ## [0.1.0] - 2026-06-10
 
 First public release: eleven production-tested skills for auditing, improving, and shipping repos with AI coding agents.
