@@ -8,7 +8,8 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- **mise** - mise en place for building: turns an idea into a design the user approved and a written spec before any code. Reads context, proposes 2-3 approaches with a recommendation, presents a design scaled to its complexity, and hands off to the implementation plan. Composes with pressure-test for hardening the load-bearing decisions instead of duplicating its interrogation. First of skillet's process skills for the daily build loop.
+- **mise** - mise en place for building: turns an idea into a design the user approved and a written spec before any code. Reads context, proposes 2-3 approaches with a recommendation, presents a design scaled to its complexity, and hands off to recipe. Composes with pressure-test for hardening the load-bearing decisions instead of duplicating its interrogation. First of skillet's process skills for the daily build loop.
+- **recipe** - turns an approved spec into an implementation plan a zero-context engineer or fresh session can execute alone: reads the code first, maps the file structure, decomposes into bite-size test-first checkbox steps carrying the actual code and exact commands with expected output, pins every decision, and self-reviews for spec coverage and placeholders before handing off to execution. Completes the mise-to-recipe chain.
 
 ## [0.1.0] - 2026-06-10
 

@@ -7,7 +7,7 @@
   "plugins": [
     {
       "name": "skillet",
-      "description": "Production-tested skills for auditing, improving, and shipping repos with AI coding agents: line-check (repo audit + prioritized backlog), bug-hunt, security-sweep, expedite (drive an audit backlog to done), plate (scrub prose before it goes public), pass (PR-filing gate), publish-readiness, release-cut, memory-handoff, pressure-test, skillify",
+      "description": "Production-tested skills for auditing, improving, and shipping repos with AI coding agents: line-check (repo audit + prioritized backlog), bug-hunt, security-sweep, expedite (drive an audit backlog to done), mise (idea to approved design and spec), recipe (spec to executable implementation plan), pressure-test, plate (scrub prose before it goes public), pass (PR-filing gate), publish-readiness, release-cut, memory-handoff, skillify",
       "source": "./skillet",
       "category": "development",
       "author": {

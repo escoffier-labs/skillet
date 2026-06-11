@@ -25,7 +25,7 @@ The split in one line: pressure-test closes the decisions, mise shapes them into
 6. **Write the spec** to `docs/specs/YYYY-MM-DD-<topic>.md` and commit it.
 7. **Self-review the spec** with fresh eyes: placeholders or TBDs, sections that contradict each other, scope that should be decomposed, requirements that read two ways. Fix inline, no second pass needed.
 8. **User reviews the written spec.** Ask them to read it and wait. If they want changes, make them and re-run the self-review.
-9. **Hand off to recipe.** That is the only skill you invoke next - not a frontend skill, not an implementation skill, not the code itself. (Until the `recipe` skill lands, write the implementation plan directly from the spec before any code.)
+9. **Hand off to [recipe](../recipe/SKILL.md).** That is the only skill you invoke next - not a frontend skill, not an implementation skill, not the code itself.
 
 ## Rules
 
