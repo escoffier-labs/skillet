@@ -21,7 +21,7 @@ The sub-skills below are the preferred way to satisfy a check. If a referenced s
 The change addresses the root cause, not the symptom. If it is a bugfix, you reproduced the bug, traced it to its source, and the fix targets that source. A change that silences an error, widens a timeout, or catches-and-ignores to make a symptom disappear is not ready. For an unclear defect, reproduce it and trace it to the root cause before you call it fixed ([refire](../refire/SKILL.md)).
 
 ### 2. It is tested and green
-The change ships with a test that fails without it and passes with it ([taste](../taste/SKILL.md)); a bugfix ships with a regression test. Run the suite and the linter locally and read the output before claiming anything passes, do not assume. "CI will tell me" is not a substitute for green-on-your-machine.
+The change ships with a test that fails without it and passes with it ([taste](../taste/SKILL.md)); a bugfix ships with a regression test. Run the suite and the linter locally and read the output before claiming anything passes ([check](../check/SKILL.md)), do not assume. "CI will tell me" is not a substitute for green-on-your-machine.
 
 ### 3. It is one concern
 One PR, one reason to exist. Unrelated cleanups, drive-by reformatting, and "while I was in there" changes belong in their own PRs; bundled, they bury the real change and stall the review. Split them out.

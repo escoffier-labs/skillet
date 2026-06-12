@@ -34,7 +34,7 @@ Subagents inherit nothing; the prompt is everything they know. Each ticket carri
 
 1. Read every report; confirm each diff stayed inside its scope (`git diff --stat` does not lie; reports sometimes do).
 2. Look for semantic conflicts, not just textual ones: two green stations can still disagree about a data shape. Cross-cutting smells reported by one station get checked against the others' diffs.
-3. Run the full suite and every checker yourself, once, on the integrated result. Per-station green proves each piece; only the integrated run proves the meal. The final verification is yours and is never delegated.
+3. Run the full suite and every checker yourself, once, on the integrated result ([check](../check/SKILL.md): a station's "verified" is a claim, not evidence). Per-station green proves each piece; only the integrated run proves the meal. The final verification is yours and is never delegated.
 4. One station red or blocked? Handle it directly or redispatch with something changed (more context, smaller scope). Do not let one red station hold the integration of the green ones longer than it must.
 
 ## Common mistakes

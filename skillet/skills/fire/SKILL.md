@@ -38,7 +38,7 @@ Execute continuously. No "should I continue?" between tasks and no progress chec
 
 After the last task:
 
-1. Run the full suite one last time and read the output. Failing? Fix before offering anything.
+1. Run the full suite one last time and read the output ([check](../check/SKILL.md)). Failing? Fix before offering anything.
 2. Present exactly these options and wait:
    1. Merge back to the base branch locally (re-verify the suite on the merged result before calling it done)
    2. Push and open a pull request ([pass](../pass/SKILL.md) gates the filing)
