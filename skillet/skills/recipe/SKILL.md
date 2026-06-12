@@ -25,7 +25,7 @@ Assume the implementer is skilled but knows nothing about this codebase or probl
    - Spec coverage: every requirement in the spec points to a task that implements it.
    - Placeholder scan: hunt the patterns under No placeholders below.
    - Consistency: names, signatures, and types used in later tasks match where earlier tasks defined them.
-7. **Save to `docs/plans/YYYY-MM-DD-<topic>.md`, commit, and hand off.** Offer the executor two shapes: a fresh subagent per task with review between tasks (preferred), or inline execution in one session with checkpoints. Either way the plan, not memory of this conversation, is the source of truth.
+7. **Save to `docs/plans/YYYY-MM-DD-<topic>.md`, commit, and hand off to [fire](../fire/SKILL.md).** It executes in two shapes: a fresh subagent per task with review between tasks (preferred), or inline in one session with checkpoints. Either way the plan, not memory of this conversation, is the source of truth.
 
 ## Task format
 
