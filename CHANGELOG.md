@@ -6,6 +6,10 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-06-12
+
+The process-skill release: eight new skills covering the full build loop, from idea to executed plan, with the daily disciplines alongside. The chain is mise -> recipe -> fire, and every new skill was baseline-tested against a fresh agent before it shipped.
+
 ### Added
 
 - **mise** - mise en place for building: turns an idea into a design the user approved and a written spec before any code. Reads context, proposes 2-3 approaches with a recommendation, presents a design scaled to its complexity, and hands off to recipe. Composes with pressure-test for hardening the load-bearing decisions instead of duplicating its interrogation. First of skillet's process skills for the daily build loop.
@@ -16,6 +20,11 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **sendback** - review-feedback reception with technical rigor: every claim verified against the codebase before implementation, a clarity gate that stops guessed interpretations of vague items, a YAGNI gate that greps for callers before adopting speculative API surface, evidence-based pushback, and a ban on performative agreement and gratitude openers.
 - **stations** - the expeditor's fan-out for parallel subagents: triage clusters failures by root cause before any dispatch, shared-cause clusters go to one station, write sets are checked for collisions (serialize or isolate in worktrees), every station gets a complete self-contained ticket with constraints and an output contract, and the integrated full-suite verification stays with the coordinator.
 - **check** - evidence before claims: no "done", "fixed", or "passing" without the proving command run fresh and its output quoted in the same reply. Treats subagent success reports as claims to verify against the diff and a run of your own, treats a failing verification as the finding (manufacturing fixtures to force an exit 0 is fabricating evidence), and ends with a mechanical pre-send checklist (git status reconciled, every file touched during verification disclosed). Verification note: baseline-failed and verified on small models, where coordinators relayed fabricated reports and laundered evidence; capable models passed the baseline unaided. The skill raises the floor; it does not make a small model a safe coordinator.
+
+### Changed
+
+- **expedite**, **pass**, and **mise** state their process discipline inline (test-first, root-cause tracing, verification, plan handoff) instead of referencing external skills, and now cross-link the new in-house skills where one applies.
+- The README's mise entry links miseledger directly, and the marketplace plugin description enumerates the full roster.
 
 ## [0.1.0] - 2026-06-10
 
@@ -37,5 +46,6 @@ First public release: eleven production-tested skills for auditing, improving, a
 - A shared audit report contract (`docs/audit-report-format.md`) so line-check, bug-hunt, and security-sweep findings compose into one leverage-sorted backlog.
 - Claude Code plugin marketplace manifests and a content-guard pre-push hook.
 
-[Unreleased]: https://github.com/escoffier-labs/skillet/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/escoffier-labs/skillet/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/escoffier-labs/skillet/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/escoffier-labs/skillet/releases/tag/v0.1.0
