@@ -6,6 +6,10 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **brigade-handoffs** - sets up and checks Brigade handoff inboxes for repos and agent workspaces, writes linted local drafts, reviews the pending queue, and keeps canonical memory changes review-gated.
+
 ## [0.2.0] - 2026-06-12
 
 The process-skill release: eight new skills covering the full build loop, from idea to executed plan, with the daily disciplines alongside. The chain is mise -> recipe -> fire, and every new skill was baseline-tested against a fresh agent before it shipped.

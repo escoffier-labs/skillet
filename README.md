@@ -42,6 +42,12 @@ The trio is read-only by design. **expedite** is the step that closes the loop:
 | **memory-handoff** | Ends a session by writing durable knowledge into a structured handoff a memory owner can review and file. Pairs with brigade, works standalone. |
 | **skillify** | The meta-skill: turn a script, runbook, or repeated workflow into a new skill, with a fresh-agent test before you call it done. |
 
+### Brigade
+
+| Skill | What it does |
+|-------|--------------|
+| **brigade-handoffs** | Sets up and checks [brigade](https://github.com/escoffier-labs/brigade) handoff inboxes for repos and agent workspaces, writes linted local drafts, reviews the pending queue, and keeps canonical memory changes review-gated. |
+
 ## Install
 
 ### Claude Code (plugin marketplace)
@@ -71,6 +77,7 @@ Ask naturally ("audit this repo", "is this safe to publish", "cut a release") or
 ```
 /line-check
 /security-sweep
+/brigade-handoffs
 /pressure-test   (add "answer your own questions, I'm going afk" for sous mode)
 ```
 
