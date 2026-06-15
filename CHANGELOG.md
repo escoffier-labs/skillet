@@ -9,6 +9,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - **brigade-handoffs** - sets up and checks Brigade handoff inboxes for repos and agent workspaces, writes linted local drafts, reviews the pending queue, and keeps canonical memory changes review-gated.
+- **reduce** - behavior-preserving code simplification for the code you just changed: establishes a behavior lock (find or write characterization tests, baseline-verify green) before touching anything, then boils off the excess one category at a time and re-runs the same verification after each change, on the rule that there is no applied simplification without behavior-preservation evidence. Targets nested control flow, dead code, genuine duplication, and clever-dense code; refuses premature abstraction, DRY past readability, and the removal of load-bearing redundancy (validation, defensive checks, logging, retries, compat shims). Tidies but does not redesign: design-level changes go to a report, never auto-applied. Applies by default for changed code with tests, drops to report mode when behavior cannot be locked, defaults scope to the git diff, commits one category at a time, and hands correctness to bug-hunt, security to security-sweep, and repo-wide quality to line-check.
 
 ## [0.2.0] - 2026-06-12
 
