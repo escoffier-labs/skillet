@@ -6,6 +6,10 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **reel-check** - plate for video: a pre-publication scrub for rendered reels, screen-recordings, and demo MP4s. Scans the composition source (cue captions, title and outro cards, narration scripts, `DESIGN.md`) for the text burned into the frames, then the recording footage itself for incidental leaks that no text scrub can reach (shell-prompt hostnames, browser URL bars, notifications, anything a cursor or zoom cue emphasizes). Scrub the source and re-render (or re-record / crop for footage), then frame-verify the drawn pixels because the MP4 cannot be grepped. Hands off to `plate` for caption and narration prose.
+
 ## [0.4.0] - 2026-06-19
 
 ### Added
