@@ -52,3 +52,4 @@ On Hacker News and Lobsters the top comment is usually someone who has done the 
 - Editorializing the title to bait the click.
 - Treating a clean fact-check as publish clearance and skipping `plate`.
 - Posting the first comment when the post already stands alone.
+- Shipping a markdown render footgun: a bare `~` meaning "approximately" pairs into strikethrough, a stray `*` italicizes mid-word. The scanner flags tildes; always preview the rendered page, not just the source.
