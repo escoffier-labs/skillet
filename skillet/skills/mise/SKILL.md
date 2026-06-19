@@ -1,6 +1,6 @@
 ---
 name: mise
-description: Use before any creative or build work - a new feature, component, behavior change, or "let's build X" - to turn an idea into a design the user approved and a written spec, before a line of code. Mise en place for engineering: everything designed and in its place before you cook. Pairs with pressure-test for hardening decisions and hands off to recipe.
+description: "Use before any creative or build work - a new feature, component, behavior change, or \"let's build X\" - to turn an idea into a design the user approved and a written spec, before a line of code. Mise en place for engineering: everything designed and in its place before you cook. Pairs with pressure-test for hardening decisions and hands off to recipe."
 ---
 
 # mise

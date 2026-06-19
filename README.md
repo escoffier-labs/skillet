@@ -39,6 +39,7 @@ The trio is read-only by design. **expedite** is the step that closes the loop:
 | **stations** | The expeditor's fan-out for parallel agents: cluster failures by root cause before dispatching (a symptom list is not a work breakdown), check write sets for collisions, give each station a complete self-contained ticket, and taste the integrated result yourself. |
 | **pressure-test** | Drives a plan or design to explicit decisions before anyone builds, one decision at a time, each pinned to its basis. Includes sous mode: going AFK? The agent makes the reversible calls in your place, tags each answer evidence/constraint/judgment, parks anything it can't take back, and leaves you an auditable transcript. |
 | **plate** | The last look before prose goes public: scrubs a blog post, social draft, PR body, or commit message for internal hostnames, private IPs, leaked paths, and AI-authorship disclosures, applies your writing conventions, and previews every change before touching your voice. The per-artifact companion to publish-readiness. |
+| **grill** | The hard look at a technical post before it faces a skeptical crowd (Hacker News, Lobsters): kills the effort-proving underdog voice, strips AI-slop and empty hedges, sources or flags every number and third-party claim, checks that a real fact is the right fact for the setup, and runs a comment pre-mortem so the obvious objections are answered before they land. Ships a scanner for the mechanical hits; hands off to plate for the leak scrub. |
 | **pass** | The gate before a pull request leaves your hands: real-fix-not-bandaid, tested and green, one concern, self-reviewed diff, clean artifact, and a PR body the author approves before anything is filed. The chef's inspection at the pass. |
 | **publish-readiness** | The gate before a repo goes public: working-tree and git-history leak scans, hygiene checks, and the full history-rewrite recipe for when something already leaked. |
 | **release-cut** | Changelog roll-up, semver bump, tag, GitHub release, drafted announcement. Releases on request, never per feature. |
@@ -52,6 +53,18 @@ The trio is read-only by design. **expedite** is the step that closes the loop:
 | **brigade-handoffs** | Sets up and checks [brigade](https://github.com/escoffier-labs/brigade) handoff inboxes for repos and agent workspaces, writes linted local drafts, reviews the pending queue, and keeps canonical memory changes review-gated. |
 
 ## Install
+
+### Any `npx skills`-compatible harness
+
+```bash
+npx skills add escoffier-labs/skillet
+```
+
+List the available skills without installing:
+
+```bash
+npx skills add escoffier-labs/skillet --list
+```
 
 ### Claude Code (plugin marketplace)
 

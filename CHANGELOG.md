@@ -6,6 +6,17 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-06-19
+
+### Added
+
+- **grill** - pre-publication hardening for technical posts headed to Hacker News, Lobsters, or similarly skeptical technical audiences. Checks voice, sourcing, right-number relevance, freshness, title framing, and comment pre-mortems, then hands off to `plate` for the required leak scrub. Includes `scripts/grill-scan.sh` for mechanical hits such as AI-slop vocabulary, hedges, em dashes, unsourced authority claims, and unresolved `[CONFIRM]` markers.
+
+### Fixed
+
+- Quoted the `mise` frontmatter description so `npx skills` can parse it. The unquoted colon in the description caused `mise` to be skipped by the CLI's skill discovery.
+- Added the `npx skills add escoffier-labs/skillet` install path to the README for cross-agent skill distribution.
+
 ## [0.3.0] - 2026-06-16
 
 ### Added
@@ -55,6 +66,8 @@ First public release: eleven production-tested skills for auditing, improving, a
 - A shared audit report contract (`docs/audit-report-format.md`) so line-check, bug-hunt, and security-sweep findings compose into one leverage-sorted backlog.
 - Claude Code plugin marketplace manifests and a content-guard pre-push hook.
 
-[Unreleased]: https://github.com/escoffier-labs/skillet/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/escoffier-labs/skillet/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/escoffier-labs/skillet/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/escoffier-labs/skillet/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/escoffier-labs/skillet/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/escoffier-labs/skillet/releases/tag/v0.1.0
