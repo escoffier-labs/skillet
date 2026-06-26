@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Cookbook (longer-form guidance + worked examples)
+    url: https://github.com/escoffier-labs/solos-cookbook
+    about: skillet is the roster of skills. The cookbook is the why and the worked examples. Browse there for usage guidance and patterns rather than filing an issue here.
+  - name: Security report
+    url: https://github.com/escoffier-labs/skillet/blob/main/SECURITY.md
+    about: Do not file security issues publicly. See SECURITY.md for how to report privately.

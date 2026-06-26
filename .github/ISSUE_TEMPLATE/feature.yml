@@ -1,0 +1,40 @@
+name: New skill or enhancement
+description: Propose a new skill, or an improvement to an existing one. For new skills, please open this before sending a PR.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A new skill is the public surface of skillet, and one that overlaps an existing skill (or fights a stated boundary) is painful to remove later. Please describe the workflow first so we can agree on shape before code. See CONTRIBUTING.md.
+  - type: textarea
+    id: workflow
+    attributes:
+      label: The workflow this encodes
+      description: What real procedure should the skill carry, and what friction or repeated mistake does it remove? Concrete is better than abstract.
+      placeholder: |
+        Every time I do X by hand, I forget step Y and burn time. The skill should walk X, enforce Y, and stop on Z.
+    validations:
+      required: true
+  - type: input
+    id: trigger
+    attributes:
+      label: When should it fire (and when should it NOT)
+      description: A first cut at the trigger description. Being specific about the non-triggers keeps it from stepping on other skills.
+      placeholder: Fires when the user asks to do X; not for Y (that is line-check) or Z (that is plate).
+    validations:
+      required: true
+  - type: input
+    id: overlap
+    attributes:
+      label: Existing skills this is near
+      description: Which current skills are adjacent, and how is this different?
+      placeholder: Near `reduce` but for behavior changes, not behavior-preserving cleanup.
+    validations:
+      required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: Open questions, prior art, or a sketch of the procedure.
+    validations:
+      required: false

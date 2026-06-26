@@ -1,0 +1,59 @@
+name: Bug report
+description: A skill misfires, fails to trigger, no longer matches its description, or an install path does not work.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Which skill, what did you ask the agent to do, and what did you expect versus what you got?
+      placeholder: |
+        I asked the agent to "audit this repo" expecting line-check to fire, but it did X instead.
+    validations:
+      required: true
+  - type: input
+    id: skill
+    attributes:
+      label: Skill
+      description: Which skill is affected (or "discovery / install" if a skill failed to load).
+      placeholder: line-check
+    validations:
+      required: true
+  - type: input
+    id: harness
+    attributes:
+      label: Harness
+      description: The agent harness you are running the skill in.
+      placeholder: Claude Code, Codex, OpenCode, etc.
+    validations:
+      required: true
+  - type: input
+    id: install-method
+    attributes:
+      label: Install method
+      placeholder: npx skills add, Claude Code marketplace, raw SKILL.md copy, per-repo
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: skillet version
+      description: The release tag or commit you installed (for example v0.4.0, or a commit sha).
+      placeholder: v0.4.0
+    validations:
+      required: false
+  - type: textarea
+    id: output
+    attributes:
+      label: Relevant output
+      description: Paste the relevant agent output or error. Redact tokens, private hostnames, private repo names, and personal paths.
+      render: shell
+    validations:
+      required: false
+  - type: checkboxes
+    id: scrub
+    attributes:
+      label: Pre-flight
+      options:
+        - label: I have scrubbed any tokens, private hostnames, private repo names, and personal paths from this report.
+          required: true
