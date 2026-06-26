@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/skillet-social-preview.jpg" alt="skillet banner" width="900">
+</p>
+
 <h1 align="center">skillet</h1>
 
 <p align="center">
