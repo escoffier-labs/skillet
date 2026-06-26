@@ -6,8 +6,14 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Documentation
+
+- README upgraded to the escoffier-labs adoption standard: a centered title and one-line value proposition, a badge row (release, skill count, MIT license), a prominent Website link to <https://skillet.escoffierlabs.dev>, a "What it does" section, a "Try it in 60 seconds" quickstart, and explicit "Why not something else?" and "What skillet is not" boundary sections. Existing accurate content (the skill tables, install paths, usage) is preserved.
+- Added maintainer-health files: `SECURITY.md` (private reporting plus the "skills execute through your agent" boundary), `CONTRIBUTING.md` (support scope and contribution path), `CODE_OF_CONDUCT.md`, GitHub issue templates (`bug`, new-skill `feature`, and a `config.yml` routing questions to the cookbook with blank issues disabled), and a pull-request template with a no-PII / content-guard checkbox.
+
 ### Added
 
+- **seo-fleet** - the SEO contract for an Astro site fleet whose page heads keep drifting. Audits each head for title, description, canonical, Open Graph, and structured-data correctness, fixes what is wrong, and brings each site up to one shared fleet standard so pages index the way they should.
 - **using-skillet** - the bootstrap meta-skill. Maps every skillet skill to the job it serves and establishes the rule: invoke the relevant skill before any response, including before clarifying questions. Shipped with a plugin SessionStart hook (`hooks/hooks.json` + a polyglot `run-hook.cmd` wrapper + `session-start`) that injects it at session start so skills auto-trigger, the same mechanism that makes the audit trio and daily workflow fire at the right moments. This makes skillet self-sufficient as the sole skill system, no external bootstrap required.
 - **worktree** - sets up an isolated workspace before risky or parallel work, preferring the harness's native worktree tool and falling back to a git worktree. Detects existing isolation first so it never stacks a worktree on a worktree. Pairs with `stations` and `fire`.
 - **review** - dispatches a fresh reviewer with crafted context (the diff and the requirements, not your session history) for an independent pass. The review step `pass` calls for; hands its findings to `sendback`.

@@ -1,8 +1,51 @@
-# skillet
+<p align="center">
+  <img src="docs/assets/skillet-social-preview.jpg" alt="skillet banner" width="900">
+</p>
 
-A skillet full of agent skills. Production-tested workflows for auditing, improving, and shipping repos with AI coding agents.
+<h1 align="center">skillet</h1>
+
+<p align="center">
+  <strong>A skillet full of agent skills: production-tested workflows that audit, improve, and ship repos with AI coding agents.</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/v/tag/escoffier-labs/skillet?style=for-the-badge&label=release&sort=semver" alt="Latest release">
+  <img src="https://img.shields.io/badge/skills-29-orange?style=for-the-badge" alt="29 skills">
+  <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="MIT license">
+</p>
+
+<p align="center">
+  <a href="https://skillet.escoffierlabs.dev"><strong>Website</strong></a> ·
+  <a href="#install">Install</a> ·
+  <a href="#the-skills">The skills</a> ·
+  <a href="#why-not-something-else">Why not something else?</a>
+</p>
+
+skillet is a roster of agent skills for AI coding agents like Claude Code, Codex, and any `SKILL.md`-compatible harness. It encodes the procedures that audit a repo, hunt bugs, sweep for security issues, plan and execute changes, and gate prose and releases before they go public, each one extracted from a real workflow that broke or burned time the manual way. Unlike a single mega-prompt or a hand-maintained `CLAUDE.md`, every skill is a self-contained file that auto-triggers when the work matches it, composes with the others through a shared report contract, and works the same across every harness instead of locking you into one tool.
 
 Part of the [escoffier-labs](https://github.com/escoffier-labs) kitchen, alongside [brigade](https://github.com/escoffier-labs/brigade) (agent memory and handoffs) and the [solos-cookbook](https://github.com/escoffier-labs/solos-cookbook) (the patterns these skills came from).
+
+## What it does
+
+skillet gives an AI coding agent a roster of 29 production-tested skills for the work that surrounds writing code: repo auditing, bug hunting, security sweeps, build planning, test-first execution, prose and repo leak scrubbing, release cuts, and memory handoffs. Each skill is a plain `SKILL.md` file with a trigger description, so the right one fires when you ask naturally ("audit this repo", "is this safe to publish", "cut a release") instead of you remembering a command. The skills share one audit-report contract, so findings from the read-only auditors compose into a single leverage-sorted backlog that the execution skills then drive to done. Install them into Claude Code, Codex, or any `SKILL.md`-compatible harness, per-machine or per-repo, with no runtime dependency and no service to run.
+
+## Try it in 60 seconds
+
+```bash
+# Any `npx skills`-compatible harness
+npx skills add escoffier-labs/skillet --list   # see every skill without installing
+npx skills add escoffier-labs/skillet          # install the roster
+```
+
+Then ask your agent naturally, or invoke a skill directly:
+
+```
+/line-check        # seven-station repo audit, leverage-sorted backlog
+/security-sweep    # defensive security audit, each finding with its fix
+/publish-readiness # leak scan before a repo goes public
+```
+
+Full install paths (Claude Code marketplace, raw `SKILL.md` copy, per-repo) are under [Install](#install).
 
 ## The skills
 
@@ -43,6 +86,7 @@ The trio is read-only by design. **expedite** is the step that closes the loop:
 | **plate** | The last look before prose goes public: scrubs a blog post, social draft, PR body, or commit message for internal hostnames, private IPs, leaked paths, and AI-authorship disclosures, applies your writing conventions, and previews every change before touching your voice. The per-artifact companion to publish-readiness. |
 | **grill** | The hard look at a technical post before it faces a skeptical crowd (Hacker News, Lobsters): kills the effort-proving underdog voice, strips AI-slop and empty hedges, sources or flags every number and third-party claim, checks that a real fact is the right fact for the setup, and runs a comment pre-mortem so the obvious objections are answered before they land. Ships a scanner for the mechanical hits; hands off to plate for the leak scrub. |
 | **reel-check** | plate for video: the last look before a rendered reel, screen-recording, or demo MP4 goes public. Scans the composition source (cue captions, title and outro cards, narration, DESIGN.md) for the burned-in leaks, then the recording footage itself for incidental ones (shell-prompt hostnames, URL bars, notifications) that no text scrub can catch. Scrub the source, re-render, then frame-verify the drawn pixels. Hands off to plate for caption prose. |
+| **seo-fleet** | The SEO contract for an Astro site fleet whose page heads keep drifting: audits the head for title, description, canonical, Open Graph, and structured-data correctness, fixes what is wrong, and brings each site up to one shared fleet standard so pages index the way they should. |
 | **pass** | The gate before a pull request leaves your hands: real-fix-not-bandaid, tested and green, one concern, self-reviewed diff, clean artifact, and a PR body the author approves before anything is filed. The chef's inspection at the pass. |
 | **publish-readiness** | The gate before a repo goes public: working-tree and git-history leak scans, hygiene checks, and the full history-rewrite recipe for when something already leaked. |
 | **release-cut** | Changelog roll-up, semver bump, tag, GitHub release, drafted announcement. Releases on request, never per feature. |
@@ -103,10 +147,34 @@ Ask naturally ("audit this repo", "is this safe to publish", "cut a release") or
 
 line-check, bug-hunt, and security-sweep are read-only by design. They produce reports and backlogs; **expedite** is the separate, opt-in step that applies the fixes, parking anything destructive or breaking for you to decide.
 
+## Why not something else?
+
+- **A single mega-prompt or one big `CLAUDE.md`** works until it bloats past the context budget and goes stale, and it loads every instruction on every turn whether the work matches or not. skillet is one self-contained file per job that triggers only when the work matches, so the audit procedure does not cost context while you are cutting a release.
+- **Hand-rolling the procedure each session** means the gotcha you learned last month (the repo that published with hostnames in its history, the audit that produced a wall of unprioritized findings) is gone by the next session. Each skill encodes the procedure plus the hard-won gotchas so the floor stays raised.
+- **A tool-locked agent framework** ties the workflow to one harness. skillet skills are plain `SKILL.md` files: they install into Claude Code, Codex, or any `SKILL.md`-compatible harness, per-machine or per-repo, the same way.
+- **Native harness skill libraries** are great, and skillet is not a replacement for the harness. It is the roster of process skills you drop on top, with a shared report contract so the read-only auditors and the execution skills compose instead of each inventing its own format.
+
+## What skillet is not
+
+skillet is not an agent, a runtime, or a service. It does not:
+
+- run anything on its own or install a daemon, scheduler, or background process
+- ship a CLI or a binary; the skills are markdown the harness reads
+- carry a runtime dependency or call out to the network on its own
+- replace your harness, your model, or your editor
+- apply changes from the read-only audit skills (line-check, bug-hunt, security-sweep, special); applying findings is the separate, opt-in **expedite** step
+- cut releases automatically; **release-cut** runs on request, never per feature
+
+The skills carry the procedure and the discipline. You stay in the loop for anything destructive, breaking, or public.
+
 ## Why these exist
 
 Every skill here is extracted from a real workflow that broke or burned time the manual way: repos published with internal hostnames in the history, audits that produced walls of findings nobody prioritized, releases with mismatched versions, sessions whose hard-won knowledge died in the transcript. The skills encode the procedure plus the gotchas.
 
+## Contributing
+
+Bug reports, sharper skill triggers, and new skills are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the support scope and contribution path, [SECURITY.md](SECURITY.md) for reporting a vulnerability, and the [Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## License
 
-MIT
+MIT. See [LICENSE](LICENSE).
