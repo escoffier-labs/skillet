@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# SessionStart hook for the skillet plugin.
+# Injects the using-skillet bootstrap so skills auto-trigger at the right moments.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+using_skillet_content=$(cat "${PLUGIN_ROOT}/skills/using-skillet/SKILL.md" 2>&1 || echo "Error reading using-skillet skill")
+
+# Escape for JSON embedding (single C-level passes, fast).
+escape_for_json() {
+    local s="$1"
+    s="${s//\\/\\\\}"
+    s="${s//\"/\\\"}"
+    s="${s//$'\n'/\\n}"
+    s="${s//$'\r'/\\r}"
+    s="${s//$'\t'/\\t}"
+    printf '%s' "$s"
+}
+
+using_skillet_escaped=$(escape_for_json "$using_skillet_content")
+session_context="<EXTREMELY_IMPORTANT>\nYou have skillet.\n\n**Below is the full content of your 'skillet:using-skillet' skill - your introduction to using skills. For all other skills, use the 'Skill' tool:**\n\n${using_skillet_escaped}\n</EXTREMELY_IMPORTANT>"
+
+# Emit only the field the current platform consumes.
+# Cursor: additional_context. Claude Code: hookSpecificOutput.additionalContext.
+# Copilot CLI / SDK standard: top-level additionalContext.
+# printf (not heredoc) avoids the bash 5.3+ heredoc hang.
+if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+  printf '{\n  "additional_context": "%s"\n}\n' "$session_context" | cat
+elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
+  printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context" | cat
+else
+  printf '{\n  "additionalContext": "%s"\n}\n' "$session_context" | cat
+fi
+
+exit 0

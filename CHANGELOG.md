@@ -8,6 +8,9 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **using-skillet** - the bootstrap meta-skill. Maps every skillet skill to the job it serves and establishes the rule: invoke the relevant skill before any response, including before clarifying questions. Shipped with a plugin SessionStart hook (`hooks/hooks.json` + a polyglot `run-hook.cmd` wrapper + `session-start`) that injects it at session start so skills auto-trigger, the same mechanism that makes the audit trio and daily workflow fire at the right moments. This makes skillet self-sufficient as the sole skill system, no external bootstrap required.
+- **worktree** - sets up an isolated workspace before risky or parallel work, preferring the harness's native worktree tool and falling back to a git worktree. Detects existing isolation first so it never stacks a worktree on a worktree. Pairs with `stations` and `fire`.
+- **review** - dispatches a fresh reviewer with crafted context (the diff and the requirements, not your session history) for an independent pass. The review step `pass` calls for; hands its findings to `sendback`.
 - **reel-check** - plate for video: a pre-publication scrub for rendered reels, screen-recordings, and demo MP4s. Scans the composition source (cue captions, title and outro cards, narration scripts, `DESIGN.md`) for the text burned into the frames, then the recording footage itself for incidental leaks that no text scrub can reach (shell-prompt hostnames, browser URL bars, notifications, anything a cursor or zoom cue emphasizes). Scrub the source and re-render (or re-record / crop for footage), then frame-verify the drawn pixels because the MP4 cannot be grepped. Hands off to `plate` for caption and narration prose.
 
 ## [0.4.0] - 2026-06-19
