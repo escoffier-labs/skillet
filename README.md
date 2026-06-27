@@ -9,16 +9,16 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/v/tag/escoffier-labs/skillet?style=for-the-badge&label=release&sort=semver" alt="Latest release">
-  <img src="https://img.shields.io/badge/skills-29-orange?style=for-the-badge" alt="29 skills">
-  <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="MIT license">
-</p>
-
-<p align="center">
   <a href="https://skillet.escoffierlabs.dev"><strong>Website</strong></a> ·
   <a href="#install">Install</a> ·
   <a href="#the-skills">The skills</a> ·
   <a href="#why-not-something-else">Why not something else?</a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/v/tag/escoffier-labs/skillet?style=for-the-badge&label=release&sort=semver" alt="Latest release">
+  <img src="https://img.shields.io/badge/skills-29-orange?style=for-the-badge" alt="29 skills">
+  <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="MIT license">
 </p>
 
 skillet is a roster of agent skills for AI coding agents like Claude Code, Codex, and any `SKILL.md`-compatible harness. It encodes the procedures that audit a repo, hunt bugs, sweep for security issues, plan and execute changes, and gate prose and releases before they go public, each one extracted from a real workflow that broke or burned time the manual way. Unlike a single mega-prompt or a hand-maintained `CLAUDE.md`, every skill is a self-contained file that auto-triggers when the work matches it, composes with the others through a shared report contract, and works the same across every harness instead of locking you into one tool.
@@ -28,6 +28,40 @@ Part of the [escoffier-labs](https://github.com/escoffier-labs) kitchen, alongsi
 ## What it does
 
 skillet gives an AI coding agent a roster of 29 production-tested skills for the work that surrounds writing code: repo auditing, bug hunting, security sweeps, build planning, test-first execution, prose and repo leak scrubbing, release cuts, and memory handoffs. Each skill is a plain `SKILL.md` file with a trigger description, so the right one fires when you ask naturally ("audit this repo", "is this safe to publish", "cut a release") instead of you remembering a command. The skills share one audit-report contract, so findings from the read-only auditors compose into a single leverage-sorted backlog that the execution skills then drive to done. Install them into Claude Code, Codex, or any `SKILL.md`-compatible harness, per-machine or per-repo, with no runtime dependency and no service to run.
+
+## Install
+
+### Any `npx skills`-compatible harness
+
+```bash
+npx skills add escoffier-labs/skillet
+```
+
+List the available skills without installing:
+
+```bash
+npx skills add escoffier-labs/skillet --list
+```
+
+### Claude Code (plugin marketplace)
+
+```
+/plugin marketplace add escoffier-labs/skillet
+/plugin install skillet@skillet
+```
+
+### Any SKILL.md-compatible harness
+
+The skills are plain `SKILL.md` files. Copy what you want into your harness's skills directory, for example:
+
+```bash
+git clone https://github.com/escoffier-labs/skillet
+cp -r skillet/skillet/skills/line-check <your-skills-dir>/
+```
+
+### Per-repo
+
+Drop individual skills into a repo's `.claude/skills/` to share them with everyone who works on that repo.
 
 ## Try it in 60 seconds
 
@@ -99,40 +133,6 @@ The trio is read-only by design. **expedite** is the step that closes the loop:
 | Skill | What it does |
 |-------|--------------|
 | **brigade-handoffs** | Sets up and checks [brigade](https://github.com/escoffier-labs/brigade) handoff inboxes for repos and agent workspaces, writes linted local drafts, reviews the pending queue, and keeps canonical memory changes review-gated. |
-
-## Install
-
-### Any `npx skills`-compatible harness
-
-```bash
-npx skills add escoffier-labs/skillet
-```
-
-List the available skills without installing:
-
-```bash
-npx skills add escoffier-labs/skillet --list
-```
-
-### Claude Code (plugin marketplace)
-
-```
-/plugin marketplace add escoffier-labs/skillet
-/plugin install skillet@skillet
-```
-
-### Any SKILL.md-compatible harness
-
-The skills are plain `SKILL.md` files. Copy what you want into your harness's skills directory, for example:
-
-```bash
-git clone https://github.com/escoffier-labs/skillet
-cp -r skillet/skillet/skills/line-check <your-skills-dir>/
-```
-
-### Per-repo
-
-Drop individual skills into a repo's `.claude/skills/` to share them with everyone who works on that repo.
 
 ## Usage
 
