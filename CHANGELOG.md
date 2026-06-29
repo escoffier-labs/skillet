@@ -10,6 +10,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - README upgraded to the escoffier-labs adoption standard: a centered title and one-line value proposition, a badge row (release, skill count, MIT license), a prominent Website link to <https://skillet.escoffierlabs.dev>, a "What it does" section, a "Try it in 60 seconds" quickstart, and explicit "Why not something else?" and "What skillet is not" boundary sections. Existing accurate content (the skill tables, install paths, usage) is preserved.
 - Added maintainer-health files: `SECURITY.md` (private reporting plus the "skills execute through your agent" boundary), `CONTRIBUTING.md` (support scope and contribution path), `CODE_OF_CONDUCT.md`, GitHub issue templates (`bug`, new-skill `feature`, and a `config.yml` routing questions to the cookbook with blank issues disabled), and a pull-request template with a no-PII / content-guard checkbox.
+- `using-skillet` bootstrap now points at Brigade's `brigade-work` loop, so in a Brigade-wired repo agents route work through Brigade (verify + outcome capture), not just memory handoffs.
 
 ### Added
 
