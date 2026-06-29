@@ -80,9 +80,10 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 - `reel-check` - scrub leaks burned into a rendered video or demo.
 - `seo-fleet` - audit and fix SEO to the fleet contract.
 
-**Memory:**
+**Memory and work loop:**
 - `memory-handoff` - capture durable knowledge at the end of a session.
 - `brigade-handoffs` - set up, write, lint, and troubleshoot Brigade memory handoffs.
+- `brigade-work` - in a Brigade-wired repo or workspace, route work through Brigade: brief at start, verify via `brigade work verify run`, capture outcomes, handoff at end, so the outcome ledger fills instead of sitting empty.
 
 **Pressure and meta:**
 - `pressure-test` - stress-test an idea, plan, or scope before anyone builds it.
