@@ -16,9 +16,9 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/v/tag/escoffier-labs/skillet?style=for-the-badge&label=release&sort=semver" alt="Latest release">
-  <img src="https://img.shields.io/badge/skills-29-orange?style=for-the-badge" alt="29 skills">
-  <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="MIT license">
+  <img src="https://shieldcn.dev/github/release/escoffier-labs/skillet.svg" alt="Latest release">
+  <img src="https://shieldcn.dev/badge/skills-29-orange.svg" alt="29 skills">
+  <img src="https://shieldcn.dev/badge/license-MIT-green.svg" alt="MIT license">
 </p>
 
 skillet is a roster of agent skills for AI coding agents like Claude Code, Codex, and any `SKILL.md`-compatible harness. It encodes the procedures that audit a repo, hunt bugs, sweep for security issues, plan and execute changes, and gate prose and releases before they go public, each one extracted from a real workflow that broke or burned time the manual way. Unlike a single mega-prompt or a hand-maintained `CLAUDE.md`, every skill is a self-contained file that auto-triggers when the work matches it, composes with the others through a shared report contract, and works the same across every harness instead of locking you into one tool.
