@@ -1,0 +1,8 @@
+{
+  "id": "recipe",
+  "version": "0.1.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh recipe"
+  ],
+  "trust_level": "workspace"
+}

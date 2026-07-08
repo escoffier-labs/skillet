@@ -1,0 +1,8 @@
+{
+  "id": "seo-fleet",
+  "version": "0.1.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh seo-fleet"
+  ],
+  "trust_level": "workspace"
+}

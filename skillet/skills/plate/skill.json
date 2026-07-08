@@ -1,0 +1,8 @@
+{
+  "id": "plate",
+  "version": "0.1.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh plate"
+  ],
+  "trust_level": "workspace"
+}

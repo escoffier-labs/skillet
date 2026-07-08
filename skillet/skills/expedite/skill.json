@@ -1,0 +1,8 @@
+{
+  "id": "expedite",
+  "version": "0.1.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh expedite"
+  ],
+  "trust_level": "workspace"
+}
