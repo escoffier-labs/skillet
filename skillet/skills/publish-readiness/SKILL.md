@@ -18,7 +18,7 @@ Search tracked files for:
 - Internal hostnames, machine names, LAN service URLs, personal email addresses that are not the public git identity
 - Agent session dirs accidentally tracked: `.claude/`, `.codex/`, memory handoffs, transcripts
 
-A policy-driven scanner beats ad hoc grep; [content-guard](https://github.com/solomonneas/content-guard) does this with a pre-push hook. Scan only tracked files (`git ls-files`), not `node_modules/`.
+A policy-driven scanner beats ad hoc grep. Install `brigade-cli` with `pipx install brigade-cli`. The pre-push hook calls `brigade guard git`. Scan only tracked files (`git ls-files`), not `node_modules/`.
 
 ### 2. History scan
 The tree being clean means nothing if a secret was committed and later deleted:

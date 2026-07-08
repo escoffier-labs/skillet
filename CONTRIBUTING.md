@@ -25,7 +25,7 @@ This is a maintained but small project. What you can expect:
 
 ## What does not land
 
-- Personal details, hostnames, IPs, account IDs, or live auth profiles in skill instructions, examples, or tests. The whole point of several of these skills is to keep that stuff out of public repos. The `content-guard` pre-push hook will flag it.
+- Personal details, hostnames, IPs, account IDs, or live auth profiles in skill instructions, examples, or tests. The whole point of several of these skills is to keep that stuff out of public repos. Install `brigade-cli` with `pipx install brigade-cli`. The pre-push hook calls `brigade guard git`.
 - A skill that pushes, publishes, or releases without an explicit operator request, or that applies changes the audit skills are supposed to only report.
 - AI-co-authorship trailers on commits (`Co-Authored-By: <model>`). Conventional commits only.
 

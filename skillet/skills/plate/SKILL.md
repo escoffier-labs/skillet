@@ -37,7 +37,7 @@ The draft is usually pasted text, not a file. Write it to a temp file (or scan i
 grep -nE '(\b10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)|localhost:[0-9]+|/home/[a-z]|/Users/[A-Za-z]|—|Co-Authored-By|Generated with' artifact.md
 ```
 
-The regex only catches the mechanical hits. The two highest-stakes leak types do **not** match it: internal hostnames (you must add the project's and author's machine names, or eyeball section 1) and authorship-disclosure lines (eyeball section 2). An agent that treats the grep as the check will miss both. Read the prose by eye for those. A policy-driven scanner beats ad hoc grep for repeat use; [content-guard](https://github.com/solomonneas/content-guard) enforces a leak policy and can run as a pre-push hook.
+The regex only catches the mechanical hits. The two highest-stakes leak types do **not** match it: internal hostnames (you must add the project's and author's machine names, or eyeball section 1) and authorship-disclosure lines (eyeball section 2). An agent that treats the grep as the check will miss both. Read the prose by eye for those. A policy-driven scanner beats ad hoc grep for repeat use. Install `brigade-cli` with `pipx install brigade-cli`. The pre-push hook calls `brigade guard git`.
 
 ## Preview, then apply
 
