@@ -5,14 +5,19 @@
 <h1 align="center">skillet</h1>
 
 <p align="center">
-  <strong>A skillet full of agent skills: production-tested workflows that audit, improve, and ship repos with AI coding agents.</strong>
+  <img src="docs/assets/marks/skillet-circle.svg" alt="" width="40" height="40">
 </p>
 
 <p align="center">
-  <a href="https://skillet.escoffierlabs.dev"><strong>Website</strong></a> ·
-  <a href="#install">Install</a> ·
-  <a href="#the-skills">The skills</a> ·
-  <a href="#why-not-something-else">Why not something else?</a>
+  <strong>A skillet full of agent skills that actually ship work.</strong>
+</p>
+
+<p align="center">
+  Production-tested SKILL.md workflows for audits, bug hunts, security sweeps, publish gates, releases, and memory handoffs. Auto-trigger across Claude Code, Codex, and compatible harnesses.
+</p>
+
+<p align="center">
+  <a href="https://brigade.tools/skillet">Website</a> &middot; <a href="#install">Install</a> &middot; <a href="#the-skills">The skills</a> &middot; <a href="https://brigade.tools">Brigade hub</a>
 </p>
 
 <p align="center">
@@ -21,47 +26,25 @@
   <img src="https://shieldcn.dev/badge/license-MIT-green.svg" alt="MIT license">
 </p>
 
-skillet is a roster of agent skills for AI coding agents like Claude Code, Codex, and any `SKILL.md`-compatible harness. It encodes the procedures that audit a repo, hunt bugs, sweep for security issues, plan and execute changes, and gate prose and releases before they go public, each one extracted from a real workflow that broke or burned time the manual way. Unlike a single mega-prompt or a hand-maintained `CLAUDE.md`, every skill is a self-contained file that auto-triggers when the work matches it, composes with the others through a shared report contract, and works the same across every harness instead of locking you into one tool.
+## Install
 
-Part of the [escoffier-labs](https://github.com/escoffier-labs) kitchen, alongside [brigade](https://github.com/escoffier-labs/brigade) (agent memory and handoffs) and the [solos-cookbook](https://github.com/escoffier-labs/solos-cookbook) (the patterns these skills came from).
+```bash
+# Claude Code plugin marketplace
+/plugin marketplace add escoffier-labs/skillet
+
+# or via Brigade skills station
+brigade add skills
+```
 
 ## What it does
 
-skillet gives an AI coding agent a roster of 29 production-tested skills for the work that surrounds writing code: repo auditing, bug hunting, security sweeps, build planning, test-first execution, prose and repo leak scrubbing, release cuts, and memory handoffs. Each skill is a plain `SKILL.md` file with a trigger description, so the right one fires when you ask naturally ("audit this repo", "is this safe to publish", "cut a release") instead of you remembering a command. The skills share one audit-report contract, so findings from the read-only auditors compose into a single leverage-sorted backlog that the execution skills then drive to done. Install them into Claude Code, Codex, or any `SKILL.md`-compatible harness, per-machine or per-repo, with no runtime dependency and no service to run.
+| | Job | What you get |
+|---|---|---|
+| **Audit** | See what matters first | line-check, bug-hunt, security-sweep with leverage-sorted backlogs |
+| **Ship** | Gate what goes public | publish-readiness, release-cut, content scrub |
+| **Execute** | Plan and build cleanly | recipe, test-first, reduce, and related skills |
+| **Remember** | File what you learned | memory-handoff compatible with Brigade |
 
-## Install
-
-### Any `npx skills`-compatible harness
-
-```bash
-npx skills add escoffier-labs/skillet
-```
-
-List the available skills without installing:
-
-```bash
-npx skills add escoffier-labs/skillet --list
-```
-
-### Claude Code (plugin marketplace)
-
-```
-/plugin marketplace add escoffier-labs/skillet
-/plugin install skillet@skillet
-```
-
-### Any SKILL.md-compatible harness
-
-The skills are plain `SKILL.md` files. Copy what you want into your harness's skills directory, for example:
-
-```bash
-git clone https://github.com/escoffier-labs/skillet
-cp -r skillet/skillet/skills/line-check <your-skills-dir>/
-```
-
-### Per-repo
-
-Drop individual skills into a repo's `.claude/skills/` to share them with everyone who works on that repo.
 
 ## Try it in 60 seconds
 
