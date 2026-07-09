@@ -83,7 +83,7 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 **Memory and work loop:**
 - `memory-handoff` - capture durable knowledge at the end of a session.
 - `brigade-handoffs` - set up, write, lint, and troubleshoot Brigade memory handoffs.
-- `brigade-work` - in a Brigade-wired repo or workspace, route work through Brigade: brief at start, verify via `brigade work verify run`, capture outcomes, handoff at end, so the outcome ledger fills instead of sitting empty.
+- `brigade-work` - in a Brigade-wired repo or workspace, close the measured loop: brief at start, verify via `brigade work verify run` (or capture from a run receipt), outcome capture, export receipts to MiseLedger when installed, so the next run gets an evidence brief with a measurable `brief_hit_rate` instead of only a handoff.
 
 **Pressure and meta:**
 - `pressure-test` - stress-test an idea, plan, or scope before anyone builds it.

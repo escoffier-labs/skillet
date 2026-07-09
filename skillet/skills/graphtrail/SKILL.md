@@ -13,7 +13,7 @@ GraphTrail keeps a SQLite code graph (symbols, imports, call edges) per repo, sy
 - **"What breaks if I change X?"** -> `impact` with `--depth` for transitive reach. This is the blast-radius question; hop counts tell you how direct the dependency is.
 - **"Where is symbol X?"** -> `search` (qualified-name aware, path-filterable). Faster and more precise than grep for symbol lookup; use grep when you want arbitrary text, comments, or strings.
 - **"What is around this file?"** -> `file_neighbors` (imports in, imports out, co-change candidates) and `context` for an orientation brief before editing unfamiliar code.
-- **"What changed structurally?"** -> `diff` with two DB snapshots (`--before`/`--after`). Reports added/removed/changed symbols (body-hash exact: a body edit with unchanged signature is detected) and call-edge changes, with line-insensitive edge counts alongside raw ones. Brigade attaches these deltas to verify receipts automatically.
+- **"What changed structurally?"** -> `diff` with two DB snapshots (`--before`/`--after`). Reports added/removed/changed symbols (body-hash exact: a body edit with unchanged signature is detected) and call-edge changes, with line-insensitive edge counts alongside raw ones. Brigade attaches these deltas to verify and run receipts automatically, and records `context_eval.brief_hit_rate` when a pre-run code-graph brief is compared to the post-run delta (did the brief name the files that actually changed?).
 - **"Which repos are indexed?"** -> `repos`; per-repo numbers -> `stats`.
 
 ## Freshness
@@ -31,3 +31,14 @@ The graph re-syncs on a 15-minute timer, at session start (hook), and on demand:
 - Call edges include the call line, so raw added/removed edge counts churn on pure line shifts; the diff's line-insensitive counts exist for exactly this. Read both.
 - Dynamic dispatch, reflection, and metaprogrammed calls are not in the graph. An empty `callers` result means no STATIC callers.
 - The graph is derived state, rebuildable by rescan. When in doubt about staleness, `refresh: true` or `graphtrail sync`.
+
+## Brigade loop (when the repo is Brigade-wired)
+
+GraphTrail is half of the measured context loop. After work flows through Brigade:
+
+1. Verify/run receipts carry `code_graph_delta` (fail-open if GraphTrail is missing).
+2. `brigade receipts export miseledger --new-only --import` archives those receipts.
+3. The next `brigade run` can attach a MiseLedger evidence brief; when a code-graph brief was present, `context_eval.brief_hit_rate` measures coverage.
+4. `brigade operator checkup` reports graph ok / ledger ok / last brief hit rate in one glance.
+
+Use `brigade-work` for the full verify → capture → export discipline; this skill is the structural-query half.
