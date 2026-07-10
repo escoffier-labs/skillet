@@ -15,6 +15,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Add an active Brigade skill-roster manifest with the cross-agent install command and a manifest-local lint probe.
 - **seo-fleet** - the SEO contract for an Astro site fleet whose page heads keep drifting. Audits each head for title, description, canonical, Open Graph, and structured-data correctness, fixes what is wrong, and brings each site up to one shared fleet standard so pages index the way they should.
 - **using-skillet** - the bootstrap meta-skill. Maps every skillet skill to the job it serves and establishes the rule: invoke the relevant skill before any response, including before clarifying questions. Shipped with a plugin SessionStart hook (`hooks/hooks.json` + a polyglot `run-hook.cmd` wrapper + `session-start`) that injects it at session start so skills auto-trigger, the same mechanism that makes the audit trio and daily workflow fire at the right moments. This makes skillet self-sufficient as the sole skill system, no external bootstrap required.
 - **worktree** - sets up an isolated workspace before risky or parallel work, preferring the harness's native worktree tool and falling back to a git worktree. Detects existing isolation first so it never stacks a worktree on a worktree. Pairs with `stations` and `fire`.

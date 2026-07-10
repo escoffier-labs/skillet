@@ -36,6 +36,8 @@
 brigade add skills
 ```
 
+The root `station.json` describes Skillet as a commandless skill roster. Brigade verifies the roster with the repository's own `tests/lint-skills.sh` gate instead of looking for a Skillet executable.
+
 ## What it does
 
 | | Job | What you get |

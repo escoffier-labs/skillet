@@ -1,0 +1,24 @@
+{
+  "schema": "brigade.station.v1",
+  "name": "skillet",
+  "station": "skills",
+  "summary": "portable roster of agent workflow skills",
+  "lifecycle": "active",
+  "tools": [
+    {
+      "name": "skillet",
+      "kind": "skill-roster",
+      "summary": "installable roster of SKILL.md workflows",
+      "install": ["npx", "skills", "add", "escoffier-labs/skillet"],
+      "surfaces": [
+        {
+          "kind": "verify-exit",
+          "command": ["bash", "tests/lint-skills.sh"],
+          "timeout_seconds": 60,
+          "probe": ["bash", "tests/lint-skills.sh"],
+          "probe_contains": ["[ok] using-skillet"]
+        }
+      ]
+    }
+  ]
+}

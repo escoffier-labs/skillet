@@ -9,6 +9,41 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SKILLS_DIR="$ROOT/skillet/skills"
 FAIL=0
 
+check_station_manifest() {
+  if ! python3 - "$ROOT/station.json" <<'PY'
+import json, sys
+
+with open(sys.argv[1], encoding="utf-8") as source:
+    manifest = json.load(source)
+
+assert manifest == {
+    "schema": "brigade.station.v1",
+    "name": "skillet",
+    "station": "skills",
+    "summary": "portable roster of agent workflow skills",
+    "lifecycle": "active",
+    "tools": [{
+        "name": "skillet",
+        "kind": "skill-roster",
+        "summary": "installable roster of SKILL.md workflows",
+        "install": ["npx", "skills", "add", "escoffier-labs/skillet"],
+        "surfaces": [{
+            "kind": "verify-exit",
+            "command": ["bash", "tests/lint-skills.sh"],
+            "timeout_seconds": 60,
+            "probe": ["bash", "tests/lint-skills.sh"],
+            "probe_contains": ["[ok] using-skillet"],
+        }],
+    }],
+}
+PY
+  then
+    echo "[fail] station.json: invalid Brigade skill-roster contract"
+    return 1
+  fi
+  echo "[ok] station.json"
+}
+
 check_skill() {
   local dir="$1" id
   id="$(basename "$dir")"
@@ -64,6 +99,7 @@ PY
 if [ "$#" -ge 1 ]; then
   check_skill "$SKILLS_DIR/$1" || FAIL=1
 else
+  check_station_manifest || FAIL=1
   for d in "$SKILLS_DIR"/*/; do
     check_skill "$d" || FAIL=1
   done
