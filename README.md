@@ -84,6 +84,10 @@ The trio is read-only by design. **expedite** is the step that closes the loop:
 
 ### Daily workflow
 
+![skillet daily workflow](docs/assets/daily-workflow.svg)
+
+Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflows/daily-workflow.json) with `plating workflow`.
+
 | Skill | What it does |
 |-------|--------------|
 | **special** | The chef's special: walks the repo for what is possible rather than what is broken, and proposes net-new features grounded in evidence already in the code (unfinished work, asymmetries, adjacent capability, friction, ecosystem fit). Read-only, leverage-sorted, every proposal tied to a signal in the walk-in and cut if it is ungrounded or fights a stated non-goal. The opportunity-finding counterpart to the audit trio; a chosen special feeds mise. |
