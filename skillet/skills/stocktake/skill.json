@@ -1,8 +1,8 @@
 {
-  "id": "seo-fleet",
+  "id": "stocktake",
   "version": "0.1.0",
   "tests": [
-    "bash ../../../tests/lint-skills.sh seo-fleet"
+    "bash ../../../tests/lint-skills.sh stocktake"
   ],
   "trust_level": "workspace"
 }

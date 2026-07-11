@@ -6,12 +6,39 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **graphtrail** - structural code questions over a GraphTrail index: callers, callees, transitive impact, file neighborhoods, context briefs, and before/after graph changes.
+- **garnish** - portable website metadata and indexing checks using policy from the target project. Replaces the fixed Astro fleet contract in `seo-fleet`.
+- **stocktake** - dependency, runtime, package-manager, lockfile, and toolchain inventory and migration workflow.
+- **thermometer** - repeatable performance baselines, profiling, one-hypothesis changes, and like-for-like comparison.
+- GitHub Actions workflow that runs the shipped skill and catalog linter on pushes and pull requests.
+
+### Changed
+
+- The README groups the portable engineering line, publication plating, and optional tool appliances without changing top-level installation paths.
+- Every skill now carries `skill.json` registry metadata and a per-skill changelog.
+- The pre-push hook uses Brigade's embedded content guard.
+- `using-skillet`, `check`, and `graphtrail` document the measured Brigade receipt and evidence loop.
+- The README hero, install path, and job table link the Skillet catalog to the Brigade hub.
+
+### Removed
+
+- **seo-fleet** - replaced by `garnish`. Repositories that need fixed fleet domains, account handles, dimensions, colors, or framework policy should keep those values in a repo-local skill or reference file.
+
+### Fixed
+
+- The advertised skill count now matches the 32 installable directories.
+- `graphtrail`, `garnish`, `stocktake`, and `thermometer` are present in both the public roster and `using-skillet` routing.
+- The linter now fails when a skill directory is missing from the README, routing table, count badge, or CI workflow.
+
+## [0.5.1] - 2026-06-29
+
 ### Documentation
 
-- README upgraded to the escoffier-labs adoption standard: a centered title and one-line value proposition, a badge row (release, skill count, MIT license), a prominent Website link to <https://skillet.escoffierlabs.dev>, a "What it does" section, a "Try it in 60 seconds" quickstart, and explicit "Why not something else?" and "What skillet is not" boundary sections. Existing accurate content (the skill tables, install paths, usage) is preserved.
-- Added maintainer-health files: `SECURITY.md` (private reporting plus the "skills execute through your agent" boundary), `CONTRIBUTING.md` (support scope and contribution path), `CODE_OF_CONDUCT.md`, GitHub issue templates (`bug`, new-skill `feature`, and a `config.yml` routing questions to the cookbook with blank issues disabled), and a pull-request template with a no-PII / content-guard checkbox.
-- `using-skillet` bootstrap now points at Brigade's `brigade-work` loop, so in a Brigade-wired repo agents route work through Brigade (verify + outcome capture), not just memory handoffs.
-- Measured evidence loop in skills: `using-skillet` and `brigade-work` describe verify → capture → MiseLedger export → next-run evidence brief with `brief_hit_rate`; `check` routes proving commands through `brigade work verify run --capture` when Brigade is wired; `graphtrail` documents delta receipts and operator checkup loop health.
+- README upgraded to the escoffier-labs adoption standard: a centered title and one-line value proposition, a badge row (release, skill count, MIT license), a prominent Website link, a "What it does" section, a "Try it in 60 seconds" quickstart, and explicit boundary sections.
+- Added maintainer-health files: `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, GitHub issue templates, and a pull-request template with a content-scrub checkbox.
+- `using-skillet` bootstrap points at Brigade's `brigade-work` loop so Brigade-wired repositories capture verification outcomes instead of only handoffs.
 
 ### Added
 
@@ -81,7 +108,8 @@ First public release: eleven production-tested skills for auditing, improving, a
 - A shared audit report contract (`docs/audit-report-format.md`) so line-check, bug-hunt, and security-sweep findings compose into one leverage-sorted backlog.
 - Claude Code plugin marketplace manifests and a content-guard pre-push hook.
 
-[Unreleased]: https://github.com/escoffier-labs/skillet/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/escoffier-labs/skillet/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/escoffier-labs/skillet/compare/v0.4.0...v0.5.1
 [0.4.0]: https://github.com/escoffier-labs/skillet/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/escoffier-labs/skillet/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/escoffier-labs/skillet/compare/v0.1.0...v0.2.0

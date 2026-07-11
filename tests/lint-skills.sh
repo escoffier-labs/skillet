@@ -61,11 +61,50 @@ PY
   echo "[ok] $id"
 }
 
+check_catalog() {
+  local readme="$ROOT/README.md"
+  local routing="$SKILLS_DIR/using-skillet/SKILL.md"
+  local workflow="$ROOT/.github/workflows/lint-skills.yml"
+  local count badge id
+  count="$(find "$SKILLS_DIR" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
+  badge="$(sed -n 's/.*badge\/skills-\([0-9][0-9]*\)-orange.*/\1/p' "$readme" | head -1)"
+  if [ "$badge" != "$count" ]; then
+    echo "[fail] catalog: README badge says ${badge:-missing}, found $count skills"
+    return 1
+  fi
+  for id in $(find "$SKILLS_DIR" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort); do
+    grep -Fq "| **$id** |" "$readme" || {
+      echo "[fail] catalog: README missing $id"
+      return 1
+    }
+    grep -Fq -- "- \`$id\`" "$routing" || {
+      echo "[fail] catalog: using-skillet missing $id"
+      return 1
+    }
+  done
+  [ ! -d "$SKILLS_DIR/seo-fleet" ] || {
+    echo "[fail] catalog: seo-fleet must be replaced by garnish"
+    return 1
+  }
+  for id in garnish stocktake thermometer; do
+    [ -d "$SKILLS_DIR/$id" ] || {
+      echo "[fail] catalog: required skill $id missing"
+      return 1
+    }
+  done
+  if [ ! -f "$workflow" ] || ! grep -Fq "tests/lint-skills.sh" "$workflow"; then
+    echo "[fail] catalog: CI workflow missing linter invocation"
+    return 1
+  fi
+  echo "[ok] catalog ($count skills)"
+}
+
 if [ "$#" -ge 1 ]; then
   check_skill "$SKILLS_DIR/$1" || FAIL=1
 else
   for d in "$SKILLS_DIR"/*/; do
     check_skill "$d" || FAIL=1
   done
+  check_catalog || FAIL=1
 fi
 exit $FAIL

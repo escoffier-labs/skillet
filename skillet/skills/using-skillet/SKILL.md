@@ -56,6 +56,8 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 **Debug and verify:**
 - `refire` - anything misbehaving: find the root cause before proposing any fix.
 - `check` - before claiming anything works, is fixed, or passes: run it, read the output, then claim with evidence.
+- `stocktake` - audit or change dependencies, runtimes, package managers, lockfiles, and toolchains from the resolved graph.
+- `thermometer` - profile a measured performance problem and compare the same workload before and after one change.
 
 **Review and ship:**
 - `pass` - the pre-PR gate; nothing is filed until it clears.
@@ -78,11 +80,14 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 - `plate` - scrub identity and infra leaks from prose before it goes public.
 - `publish-readiness` - pre-publication leak scan of a repo and its history.
 - `reel-check` - scrub leaks burned into a rendered video or demo.
-- `seo-fleet` - audit and fix SEO to the fleet contract.
+- `garnish` - audit or fix portable website metadata and indexing controls using project-local policy.
+
+**Appliances:**
+- `graphtrail` - answer callers, callees, impact, neighborhood, and structural-diff questions from an indexed code graph.
+- `brigade-handoffs` - set up, write, lint, and troubleshoot Brigade memory handoffs.
 
 **Memory and work loop:**
 - `memory-handoff` - capture durable knowledge at the end of a session.
-- `brigade-handoffs` - set up, write, lint, and troubleshoot Brigade memory handoffs.
 - `brigade-work` - in a Brigade-wired repo or workspace, close the measured loop: brief at start, verify via `brigade work verify run` (or capture from a run receipt), outcome capture, export receipts to MiseLedger when installed, so the next run gets an evidence brief with a measurable `brief_hit_rate` instead of only a handoff.
 
 **Pressure and meta:**

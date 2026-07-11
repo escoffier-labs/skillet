@@ -22,7 +22,7 @@
 
 <p align="center">
   <img src="https://shieldcn.dev/github/release/escoffier-labs/skillet.svg" alt="Latest release">
-  <img src="https://shieldcn.dev/badge/skills-29-orange.svg" alt="29 skills">
+  <img src="https://shieldcn.dev/badge/skills-32-orange.svg" alt="32 skills">
   <img src="https://shieldcn.dev/badge/license-MIT-green.svg" alt="MIT license">
 </p>
 
@@ -41,8 +41,8 @@ brigade add skills
 | | Job | What you get |
 |---|---|---|
 | **Audit** | See what matters first | line-check, bug-hunt, security-sweep with leverage-sorted backlogs |
-| **Ship** | Gate what goes public | publish-readiness, release-cut, content scrub |
-| **Execute** | Plan and build cleanly | recipe, test-first, reduce, and related skills |
+| **Ship** | Gate what goes public | publish-readiness, garnish, release-cut, content scrub |
+| **Execute** | Plan, build, upgrade, and measure | recipe, taste, stocktake, thermometer, reduce |
 | **Remember** | File what you learned | memory-handoff compatible with Brigade |
 
 
@@ -82,7 +82,9 @@ The trio is read-only by design. **expedite** is the step that closes the loop:
 |-------|--------------|
 | **expedite** | Takes an audit backlog and drives it to done: highest-leverage finding first, one focused change at a time, each one verified before the next, parking anything destructive or breaking for you to decide. The execution partner to the audit trio. |
 
-### Daily workflow
+### The line
+
+Portable process skills for planning, building, debugging, reviewing, maintaining, and finishing code changes.
 
 | Skill | What it does |
 |-------|--------------|
@@ -95,26 +97,38 @@ The trio is read-only by design. **expedite** is the step that closes the loop:
 | **demi** | Pre-build simplicity gate: starts with the smallest useful implementation that satisfies the request, fits the repo, and can be verified. Climbs the ladder before custom code (existing behavior, repo primitives, standard library, platform features, installed dependencies, then one local change), cuts speculative scaffolding, names the growth trigger that would justify more, and refuses to treat YAGNI as skimping on validation, security, accessibility, data-loss handling, compatibility shims, or checks. |
 | **reduce** | Behavior-preserving simplification: boils the excess off code you just changed and concentrates the intent without altering what it does. Establishes a behavior lock (tests green before and after) before touching anything, refuses load-bearing redundancy and premature abstraction, applies one category per commit, and hands correctness or design issues to bug-hunt, security-sweep, or line-check. Applies by default, drops to a report when behavior cannot be locked. |
 | **refire** | Root-cause-first debugging: when something misbehaves, find out why the plate came back before cooking it again. Reproduce, check what changed, check the contract, trace to the source, pin the bug with a failing test, then one minimal fix. Three failed fixes means question the architecture. |
+| **stocktake** | Dependency and toolchain maintenance: inventories manifests, lockfiles, runtime pins, CI pins, and the resolved graph before changing one compatibility boundary. Reads maintainer release and migration notes, reviews transitive deltas, and verifies the final resolved versions. |
+| **thermometer** | Measured performance work: pins a workload and metric, collects multiple baseline samples, profiles the bottleneck, changes one hypothesis, and compares the same samples again without trading away correctness. |
 | **review** | The second palate: dispatches a fresh reviewer with crafted context (the diff and the requirements, never your session history) to catch what you have gone nose-blind to. The independent pass that pass calls for; hands its findings to sendback. |
 | **sendback** | Receiving review feedback with rigor instead of reflex: verify each claim against the codebase, YAGNI-gate the "should also support" items, stop on vague items instead of guessing, push back with evidence, and skip the performative "great point!" entirely. |
 | **check** | The expeditor's look at every plate before it leaves: no claim of done, fixed, or passing without fresh verification evidence in the same reply. Subagent success reports are claims to verify, not evidence to relay, and a failing verification is a finding to report, never an invitation to make the command pass. |
 | **stations** | The expeditor's fan-out for parallel agents: cluster failures by root cause before dispatching (a symptom list is not a work breakdown), check write sets for collisions, give each station a complete self-contained ticket, and taste the integrated result yourself. |
 | **pressure-test** | Drives a plan or design to explicit decisions before anyone builds, one decision at a time, each pinned to its basis. Includes sous mode: going AFK? The agent makes the reversible calls in your place, tags each answer evidence/constraint/judgment, parks anything it can't take back, and leaves you an auditable transcript. |
-| **plate** | The last look before prose goes public: scrubs a blog post, social draft, PR body, or commit message for internal hostnames, private IPs, leaked paths, and AI-authorship disclosures, applies your writing conventions, and previews every change before touching your voice. The per-artifact companion to publish-readiness. |
-| **grill** | The hard look at a technical post before it faces a skeptical crowd (Hacker News, Lobsters): kills the effort-proving underdog voice, strips AI-slop and empty hedges, sources or flags every number and third-party claim, checks that a real fact is the right fact for the setup, and runs a comment pre-mortem so the obvious objections are answered before they land. Ships a scanner for the mechanical hits; hands off to plate for the leak scrub. |
-| **reel-check** | plate for video: the last look before a rendered reel, screen-recording, or demo MP4 goes public. Scans the composition source (cue captions, title and outro cards, narration, DESIGN.md) for the burned-in leaks, then the recording footage itself for incidental ones (shell-prompt hostnames, URL bars, notifications) that no text scrub can catch. Scrub the source, re-render, then frame-verify the drawn pixels. Hands off to plate for caption prose. |
-| **seo-fleet** | The SEO contract for an Astro site fleet whose page heads keep drifting: audits the head for title, description, canonical, Open Graph, and structured-data correctness, fixes what is wrong, and brings each site up to one shared fleet standard so pages index the way they should. |
 | **pass** | The gate before a pull request leaves your hands: real-fix-not-bandaid, tested and green, one concern, self-reviewed diff, clean artifact, and a PR body the author approves before anything is filed. The chef's inspection at the pass. |
-| **publish-readiness** | The gate before a repo goes public: working-tree and git-history leak scans, hygiene checks, and the full history-rewrite recipe for when something already leaked. |
 | **release-cut** | Changelog roll-up, semver bump, tag, GitHub release, drafted announcement. Releases on request, never per feature. |
 | **memory-handoff** | Ends a session by writing durable knowledge into a structured handoff a memory owner can review and file. Pairs with brigade, works standalone. |
 | **skillify** | The meta-skill: turn a script, runbook, or repeated workflow into a new skill, with a fresh-agent test before you call it done. |
-| **using-skillet** | The line check before service: the bootstrap that maps every skillet skill to its job and requires invoking the relevant one before any response. Injected at session start (via the plugin's SessionStart hook) so skills auto-trigger the way the audit trio and daily workflow expect. |
+| **using-skillet** | The line check before service: the bootstrap that maps every skillet skill to its job and requires invoking the relevant one before any response. Injected at session start (via the plugin's SessionStart hook) so skills auto-trigger from the catalog routes. |
 
-### Brigade
+### Plating
+
+Publication gates for prose, video, site metadata, and whole repositories.
 
 | Skill | What it does |
 |-------|--------------|
+| **plate** | The last look before prose goes public: scrubs a blog post, social draft, PR body, or commit message for internal hostnames, private IPs, leaked paths, and AI-authorship disclosures, applies writing conventions, and previews every change before editing the author's voice. |
+| **grill** | Hardens a technical post for Hacker News, Lobsters, or another skeptical audience. Checks claims, sources, numbers, title framing, and the objections likely to appear in comments, then hands the draft to plate. |
+| **reel-check** | Checks rendered reels, screen recordings, and demo videos for identity or infrastructure leaks in both source text and sampled frames, then verifies the new render. |
+| **garnish** | Audits or fixes portable website metadata: titles, descriptions, canonical URLs, robots policy, Open Graph, structured data, sitemaps, and rendered output. Project-local policy supplies domains and account values. |
+| **publish-readiness** | The gate before a repository goes public: working-tree and git-history leak scans, hygiene checks, and the history-rewrite recipe for content that already leaked. |
+
+### Appliances
+
+These skills operate optional tools. They remain top-level skill packages, but their procedures only apply when the named tool is installed and configured.
+
+| Skill | What it does |
+|-------|--------------|
+| **graphtrail** | Answers structural code questions from a GraphTrail index: callers, callees, impact, file neighbors, context, and before/after graph changes. Falls back to text or syntax tools when the question is not graph-shaped. |
 | **brigade-handoffs** | Sets up and checks [brigade](https://github.com/escoffier-labs/brigade) handoff inboxes for repos and agent workspaces, writes linted local drafts, reviews the pending queue, and keeps canonical memory changes review-gated. |
 
 ## Usage
