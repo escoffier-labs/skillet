@@ -1,0 +1,86 @@
+{
+  "title": "From repo signal to checked work",
+  "eyebrow": "SKILLET WORKFLOW",
+  "description": "The skills route an idea or finding through design, plan, execution, review, and memory.",
+  "meta": "skills as portable procedure",
+  "columns": [
+    {
+      "title": "READ",
+      "nodes": [
+        {
+          "id": "special",
+          "label": "special",
+          "detail": "new opportunity"
+        },
+        {
+          "id": "audit",
+          "label": "audit trio",
+          "detail": "findings backlog"
+        }
+      ]
+    },
+    {
+      "title": "SHAPE",
+      "nodes": [
+        {
+          "id": "mise",
+          "label": "mise",
+          "detail": "approved design",
+          "kind": "accent"
+        },
+        {
+          "id": "recipe",
+          "label": "recipe",
+          "detail": "implementation plan"
+        }
+      ]
+    },
+    {
+      "title": "BUILD",
+      "nodes": [
+        {
+          "id": "fire",
+          "label": "fire",
+          "detail": "execute the ticket",
+          "kind": "focus",
+          "badge": "gate"
+        },
+        {
+          "id": "check",
+          "label": "check",
+          "detail": "fresh evidence"
+        }
+      ]
+    },
+    {
+      "title": "SHIP",
+      "nodes": [
+        {
+          "id": "pass",
+          "label": "pass",
+          "detail": "public gate"
+        },
+        {
+          "id": "memory",
+          "label": "memory handoff",
+          "detail": "durable learning",
+          "kind": "success"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {"from": "special", "to": "mise"},
+    {"from": "audit", "to": "recipe"},
+    {"from": "mise", "to": "recipe"},
+    {"from": "recipe", "to": "fire"},
+    {"from": "fire", "to": "check"},
+    {"from": "check", "to": "pass"},
+    {"from": "check", "to": "memory"}
+  ],
+  "context": {
+    "title": "OPERATING CONTRACT",
+    "body": "Use the smallest skill that matches the job, then verify before reporting.",
+    "detail": "Read-only skills produce reports; execution skills apply changes only when asked."
+  }
+}
