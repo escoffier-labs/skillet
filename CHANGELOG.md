@@ -6,6 +6,8 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-11
+
 ### Added
 
 - **graphtrail** - structural code questions over a GraphTrail index: callers, callees, transitive impact, file neighborhoods, context briefs, and before/after graph changes.
@@ -108,7 +110,8 @@ First public release: eleven production-tested skills for auditing, improving, a
 - A shared audit report contract (`docs/audit-report-format.md`) so line-check, bug-hunt, and security-sweep findings compose into one leverage-sorted backlog.
 - Claude Code plugin marketplace manifests and a content-guard pre-push hook.
 
-[Unreleased]: https://github.com/escoffier-labs/skillet/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/escoffier-labs/skillet/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/escoffier-labs/skillet/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/escoffier-labs/skillet/compare/v0.4.0...v0.5.1
 [0.4.0]: https://github.com/escoffier-labs/skillet/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/escoffier-labs/skillet/compare/v0.2.0...v0.3.0
