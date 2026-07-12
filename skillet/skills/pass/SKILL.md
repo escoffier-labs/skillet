@@ -1,5 +1,6 @@
 ---
 name: pass
+license: MIT
 description: Use before opening a pull request, before running gh pr create, or before pushing follow-up commits to an existing PR. Also use when the user asks "is this PR ready", "should I file this", or wants a change inspected before it goes out for review.
 ---
 

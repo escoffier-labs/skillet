@@ -1,5 +1,6 @@
 ---
 name: sendback
+license: MIT
 description: Use when code review feedback arrives - from a human reviewer, a bot, or a review agent - before implementing any of it. Especially when the feedback is partly unclear, technically questionable, or comes wrapped in authority ("senior reviewer says").
 ---
 

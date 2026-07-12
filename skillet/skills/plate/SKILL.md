@@ -1,5 +1,6 @@
 ---
 name: plate
+license: MIT
 description: Use before any prose artifact goes public - a blog post, social post, README section, PR or issue body, commit message, release notes - to scrub identity and infrastructure leaks and apply writing conventions. Also use when the user asks to "scrub this", "is this safe to post", or "clean this up before it goes out". For repo and git-history leak scans use publish-readiness instead.
 ---
 

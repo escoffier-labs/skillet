@@ -1,5 +1,6 @@
 ---
 name: review
+license: MIT
 description: Use when you want an independent review pass before merging or between plan tasks - dispatch a fresh reviewer with crafted context (not your session history) to catch what you cannot see in your own work. The second set of eyes that pass asks for and that hands off to sendback. Triggers on "get this reviewed", "request a review", "second opinion", after finishing a feature or task, before merge.
 ---
 
