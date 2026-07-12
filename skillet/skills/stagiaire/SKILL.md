@@ -22,6 +22,7 @@ Run these with the task text substituted. Every one returns the worker's answer 
 | Antigravity (Google login) | `agy --model "<display name>" --add-dir <dir> --dangerously-skip-permissions --print "<task>"` | `agy --model "<display name>" --sandbox --print "<task>"` |
 | Ollama | `ollama run <model> "<task>"` | same (prompt-only, no tools) |
 | opencode (ChatGPT login) | `opencode run -m <provider>/<model> "<task>"` | same, instruct read-only in the prompt |
+| pi (ChatGPT login) | `pi --model openai-codex/<model>:<tier> -p "<task>"` | `pi --tools read,grep,find,ls --model openai-codex/<model> -p "<task>"` |
 
 Model ids: `cursor-agent models`, `agy models`, `grok models`, `opencode models`, `ollama list`. Codex reasoning effort is per-run config: `codex exec -c model_reasoning_effort=<none|low|medium|high|xhigh> -m <model> "<task>"`.
 
@@ -34,6 +35,7 @@ Each of these was found by a dispatch that looked successful and was not. Check 
 - **codex refuses non-git directories.** `Not inside a trusted directory and --skip-git-repo-check was not specified.` Dispatch from inside a git repo.
 - **plain `claude -p` cannot edit files.** Permission prompts have no terminal to land on, so write tasks die quietly. Add `--permission-mode bypassPermissions` only when the task genuinely needs writes, and prefer an isolated working copy when you do.
 - **agy print mode has its own 5-minute clock.** `--print-timeout 12m` for thinking-heavy tasks, or the run dies before the model finishes. Model pins are the full display string, parentheses included: `agy --model "Gemini 3.5 Flash (Low)"`.
+- **pi's system prompt does not name the model, and bad tier suffixes pass through.** Identity self-reports hallucinate (a gpt-5.6-sol run claimed to be GPT-5.2). Verify at the request layer, not by asking. An invalid `:tier` suffix becomes a literal model id the backend rejects, while valid tiers (`off` through `max`) are parsed and applied. pi serves gpt-5.6-luna where opencode cannot.
 - **opencode's v2 beta can edit the wrong project.** Workers non-deterministically apply edits to a previously registered project instead of their own directory (anomalyco/opencode#36498). Stay on v1 stable for dispatch work until that closes. And empty output with exit 0 usually means the model slug is broken upstream, not that the model had nothing to say.
 
 ## Orchestrating instead of dispatching once
