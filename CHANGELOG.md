@@ -8,6 +8,10 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **stagiaire** - one-shot cross-vendor worker dispatch over the user's own CLI logins, with verified headless flags, the per-CLI silent-failure traps, and the write-disabled-chef orchestration pattern. Baseline-tested against live CLIs before it shipped.
+
+### Added
+
 - **latent-premises** - review lens for unguarded assumptions across five categories (input, contract, environment, ordering, cardinality), each finding with a nameable break and one resolution arrow. Taxonomy adapted from alp-river (MIT, Alper Ortac).
 - **retry-safety** - review lens for side-effect re-run safety: idempotent read-modify-write standard, double-apply hazards per surface, and the migration deploy-window lens with expand-migrate-contract. Adapted from alp-river (MIT, Alper Ortac).
 
