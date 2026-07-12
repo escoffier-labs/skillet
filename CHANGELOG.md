@@ -6,6 +6,11 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **latent-premises** - review lens for unguarded assumptions across five categories (input, contract, environment, ordering, cardinality), each finding with a nameable break and one resolution arrow. Taxonomy adapted from alp-river (MIT, Alper Ortac).
+- **retry-safety** - review lens for side-effect re-run safety: idempotent read-modify-write standard, double-apply hazards per surface, and the migration deploy-window lens with expand-migrate-contract. Adapted from alp-river (MIT, Alper Ortac).
+
 ## [0.6.0] - 2026-07-11
 
 ### Added

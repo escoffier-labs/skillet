@@ -69,6 +69,8 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 **Audit and direction:**
 - `line-check` - audit a repo's health, find the highest-value improvements.
 - `bug-hunt` - sweep for correctness defects.
+- `latent-premises` - hunt unguarded assumptions that hold today and break silently later.
+- `retry-safety` - check whether a diff's side effects are safe to run twice.
 - `security-sweep` - find and fix vulnerabilities, leaked secrets, vulnerable deps.
 - `special` - propose what to build next, grounded in the code.
 
