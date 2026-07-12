@@ -52,6 +52,7 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 - `fire` - execute a written plan task by task, verifying and committing each.
 - `stations` - fan out two or more genuinely independent pieces of work to concurrent agents.
 - `worktree` - set up an isolated workspace before risky or parallel work.
+- `stagiaire` - dispatch a one-shot worker on another vendor's CLI (second opinion, cross-model review, cheap bulk model) over the user's own logins.
 
 **Debug and verify:**
 - `refire` - anything misbehaving: find the root cause before proposing any fix.
