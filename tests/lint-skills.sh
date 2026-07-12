@@ -96,6 +96,30 @@ check_catalog() {
     echo "[fail] catalog: CI workflow missing linter invocation"
     return 1
   fi
+  if ! python3 - "$ROOT/station.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+manifest = json.load(open(path))
+assert manifest.get("schema") == "brigade.station.v1"
+assert manifest.get("name") == "skillet"
+assert manifest.get("station") == "skills"
+assert manifest.get("lifecycle") == "active"
+tools = manifest.get("tools")
+assert isinstance(tools, list) and len(tools) == 1
+tool = tools[0]
+assert tool.get("name") == "skillet"
+assert tool.get("kind") == "skill-roster"
+assert tool.get("install") == ["npx", "skills", "add", "escoffier-labs/skillet"]
+surfaces = tool.get("surfaces")
+assert isinstance(surfaces, list) and len(surfaces) == 1
+surface = surfaces[0]
+assert surface.get("kind") == "verify-exit"
+assert surface.get("probe") == ["bash", "tests/lint-skills.sh"]
+PY
+  then
+    echo "[fail] catalog: station.json invalid"
+    return 1
+  fi
   echo "[ok] catalog ($count skills)"
 }
 

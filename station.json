@@ -1,0 +1,23 @@
+{
+  "schema": "brigade.station.v1",
+  "name": "skillet",
+  "station": "skills",
+  "summary": "reviewed portable agent skill roster",
+  "lifecycle": "active",
+  "tools": [
+    {
+      "name": "skillet",
+      "kind": "skill-roster",
+      "summary": "portable skill packages for supported coding harnesses",
+      "install": ["npx", "skills", "add", "escoffier-labs/skillet"],
+      "surfaces": [
+        {
+          "kind": "verify-exit",
+          "probe": ["bash", "tests/lint-skills.sh"],
+          "probe_contains": ["[ok] catalog (36 skills)"],
+          "timeout_seconds": 60
+        }
+      ]
+    }
+  ]
+}
