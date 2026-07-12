@@ -35,10 +35,39 @@ check_skill() {
   if [ "${#fname}" -gt 64 ] || ! printf '%s' "$fname" | grep -Eq '^[a-z0-9]+(-[a-z0-9]+)*$'; then
     echo "[fail] $id: frontmatter name must be a 1-64 character lowercase identifier"; return 1
   fi
-  local description license
-  description="$(printf '%s\n' "$fm" | sed -n 's/^description:[[:space:]]*//p' | head -1)"
+  local license
   license="$(printf '%s\n' "$fm" | sed -n 's/^license:[[:space:]]*//p' | head -1)"
-  if [ -z "$description" ] || [ "${#description}" -gt 1026 ]; then
+  if ! python3 - "$md" <<'PY'
+import json
+import re
+import sys
+
+lines = open(sys.argv[1], encoding="utf-8").read().splitlines()
+try:
+    end = lines.index("---", 1)
+except ValueError:
+    raise SystemExit(1)
+
+raw = ""
+for line in lines[1:end]:
+    if line.startswith("description:"):
+        raw = line.split(":", 1)[1].strip()
+        break
+
+try:
+    if raw.startswith('"'):
+        description = json.loads(raw)
+    elif raw.startswith("'") and raw.endswith("'"):
+        description = raw[1:-1].replace("''", "'")
+    else:
+        description = re.split(r"\s+#", raw, maxsplit=1)[0].rstrip()
+except (ValueError, json.JSONDecodeError):
+    raise SystemExit(1)
+
+if not isinstance(description, str) or not 1 <= len(description) <= 1024:
+    raise SystemExit(1)
+PY
+  then
     echo "[fail] $id: frontmatter description must be 1-1024 characters"; return 1
   fi
   if [ "$license" != "MIT" ]; then
@@ -111,9 +140,9 @@ check_catalog() {
     echo "[fail] catalog: CI workflow missing linter invocation"
     return 1
   fi
-  if ! python3 - "$ROOT/station.json" <<'PY'
+  if ! python3 - "$ROOT/station.json" "$count" <<'PY'
 import json, sys
-path = sys.argv[1]
+path, count = sys.argv[1], int(sys.argv[2])
 manifest = json.load(open(path))
 assert manifest.get("schema") == "brigade.station.v1"
 assert manifest.get("name") == "skillet"
@@ -130,6 +159,7 @@ assert isinstance(surfaces, list) and len(surfaces) == 1
 surface = surfaces[0]
 assert surface.get("kind") == "verify-exit"
 assert surface.get("probe") == ["bash", "tests/lint-skills.sh"]
+assert surface.get("probe_contains") == [f"[ok] catalog ({count} skills)"]
 PY
   then
     echo "[fail] catalog: station.json invalid"
@@ -138,9 +168,41 @@ PY
   echo "[ok] catalog ($count skills)"
 }
 
+check_linter_regressions() {
+  local tmp valid invalid description_1024 description_1025
+  tmp="$(mktemp -d)"
+  valid="$tmp/skillet/skills/valid-length"
+  invalid="$tmp/skillet/skills/invalid-length"
+  mkdir -p "$tmp/tests" "$valid" "$invalid"
+  cp "$0" "$tmp/tests/lint-skills.sh"
+
+  description_1024="$(python3 -c 'print("x" * 1024, end="")')"
+  description_1025="${description_1024}x"
+  printf '%s\n' '---' 'name: valid-length' "description: \"$description_1024\"" 'license: MIT' '---' >"$valid/SKILL.md"
+  printf '%s\n' '---' 'name: invalid-length' "description: $description_1025" 'license: MIT' '---' >"$invalid/SKILL.md"
+  printf '%s\n' '{"id":"valid-length","version":"0.1.0","tests":["true"],"trust_level":"workspace"}' >"$valid/skill.json"
+  printf '%s\n' '{"id":"invalid-length","version":"0.1.0","tests":["true"],"trust_level":"workspace"}' >"$invalid/skill.json"
+  : >"$valid/CHANGELOG.md"
+  : >"$invalid/CHANGELOG.md"
+
+  if ! PATH=/usr/bin:/bin bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1; then
+    echo "[fail] self-test: parsed 1024-character description was rejected"
+    rm -rf "$tmp"
+    return 1
+  fi
+  if PATH=/usr/bin:/bin bash "$tmp/tests/lint-skills.sh" invalid-length >/dev/null 2>&1; then
+    echo "[fail] self-test: parsed 1025-character description was accepted"
+    rm -rf "$tmp"
+    return 1
+  fi
+  rm -rf "$tmp"
+  echo "[ok] linter regression boundaries"
+}
+
 if [ "$#" -ge 1 ]; then
   check_skill "$SKILLS_DIR/$1" || FAIL=1
 else
+  check_linter_regressions || FAIL=1
   for d in "$SKILLS_DIR"/*/; do
     check_skill "$d" || FAIL=1
   done
