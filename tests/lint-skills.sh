@@ -22,7 +22,7 @@ check_skill() {
   fi
   local fm
   fm="$(awk '/^---$/{n++; next} n==1{print}' "$md")"
-  for key in name description; do
+  for key in name description license; do
     if ! printf '%s\n' "$fm" | grep -q "^$key:"; then
       echo "[fail] $id: frontmatter missing '$key:'"; return 1
     fi
@@ -32,11 +32,24 @@ check_skill() {
   if [ "$fname" != "$id" ]; then
     echo "[fail] $id: frontmatter name '$fname' != dir name"; return 1
   fi
+  if [ "${#fname}" -gt 64 ] || ! printf '%s' "$fname" | grep -Eq '^[a-z0-9]+(-[a-z0-9]+)*$'; then
+    echo "[fail] $id: frontmatter name must be a 1-64 character lowercase identifier"; return 1
+  fi
+  local description license
+  description="$(printf '%s\n' "$fm" | sed -n 's/^description:[[:space:]]*//p' | head -1)"
+  license="$(printf '%s\n' "$fm" | sed -n 's/^license:[[:space:]]*//p' | head -1)"
+  if [ -z "$description" ] || [ "${#description}" -gt 1026 ]; then
+    echo "[fail] $id: frontmatter description must be 1-1024 characters"; return 1
+  fi
+  if [ "$license" != "MIT" ]; then
+    echo "[fail] $id: frontmatter license must declare repository license MIT"; return 1
+  fi
   if [ ! -f "$sj" ]; then
     echo "[fail] $id: skill.json missing"; return 1
   fi
   if ! python3 - "$sj" "$dir" "$id" <<'PY'
 import json, os, sys
+import re
 sj, d, sid = sys.argv[1], sys.argv[2], sys.argv[3]
 m = json.load(open(sj))
 assert m.get("id") == sid, f"skill.json id {m.get('id')!r} != {sid!r}"
@@ -47,8 +60,10 @@ else:
     assert os.path.isfile(os.path.join(d, "CHANGELOG.md")), "no CHANGELOG.md in skill dir"
 tests = m.get("tests")
 assert isinstance(tests, list) and tests, "tests list missing or empty"
+version = m.get("version")
+assert isinstance(version, str) and re.fullmatch(r"\d+\.\d+\.\d+", version), "version missing or invalid"
 tl = m.get("trust_level")
-assert tl in (None, "unreviewed", "workspace", "team", "public"), f"bad trust_level {tl!r}"
+assert tl in ("unreviewed", "workspace", "team", "public"), f"trust_level missing or invalid: {tl!r}"
 PY
   then
     echo "[fail] $id: skill.json invalid"; return 1

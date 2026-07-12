@@ -1,5 +1,6 @@
 ---
 name: stocktake
+license: MIT
 description: Use when auditing, updating, or migrating project dependencies, runtimes, package managers, lockfiles, or toolchains. Requires reading authoritative release and migration notes, changing one compatibility boundary at a time, and verifying the resolved dependency graph.
 ---
 

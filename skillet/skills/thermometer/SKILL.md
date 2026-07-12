@@ -1,5 +1,6 @@
 ---
 name: thermometer
+license: MIT
 description: Use when investigating or improving performance, latency, throughput, memory use, CPU use, startup time, or bundle size. Establishes a repeatable baseline and profiles the measured bottleneck before any optimization.
 ---
 

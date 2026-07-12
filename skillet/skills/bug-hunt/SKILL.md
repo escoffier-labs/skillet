@@ -1,5 +1,6 @@
 ---
 name: bug-hunt
+license: MIT
 description: Use when asked to find bugs, hunt for correctness issues, sweep a codebase for defects, or verify a repo behaves as intended. Not for style or architecture review; this is defect-finding only.
 ---
 

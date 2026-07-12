@@ -1,5 +1,6 @@
 ---
 name: demi
+license: MIT
 description: Use before implementing, scaffolding, prototyping, or adding a feature when the work should start with the smallest useful code path, avoid speculative architecture, or prevent overbuilding before reduce would be needed.
 ---
 
