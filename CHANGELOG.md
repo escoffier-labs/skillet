@@ -9,6 +9,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - **stagiaire** - one-shot cross-vendor worker dispatch over the user's own CLI logins, with verified headless flags, the per-CLI silent-failure traps, and the write-disabled-chef orchestration pattern. Baseline-tested against live CLIs before it shipped.
+- **t3-code** - portable T3 Code operations for project state, desktop and headless setup, private Tailscale access, updates, launchers, local icons, and user services. The skill uses generic examples and runtime detection instead of private fleet details.
 
 ### Added
 

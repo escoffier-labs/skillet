@@ -22,7 +22,7 @@
 
 <p align="center">
   <img src="https://shieldcn.dev/github/release/escoffier-labs/skillet.svg" alt="Latest release">
-  <img src="https://shieldcn.dev/badge/skills-35-orange.svg" alt="35 skills">
+  <img src="https://shieldcn.dev/badge/skills-36-orange.svg" alt="36 skills">
   <img src="https://shieldcn.dev/badge/license-MIT-green.svg" alt="MIT license">
 </p>
 
@@ -115,6 +115,7 @@ Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflo
 | **release-cut** | Changelog roll-up, semver bump, tag, GitHub release, drafted announcement. Releases on request, never per feature. |
 | **memory-handoff** | Ends a session by writing durable knowledge into a structured handoff a memory owner can review and file. Pairs with brigade, works standalone. |
 | **skillify** | The meta-skill: turn a script, runbook, or repeated workflow into a new skill, with a fresh-agent test before you call it done. |
+| **t3-code** | Manages T3 Code project state, desktop and headless setup, private Tailscale access, updates, launchers, local icons, and user services without assuming one machine or install source. |
 | **using-skillet** | The line check before service: the bootstrap that maps every skillet skill to its job and requires invoking the relevant one before any response. Injected at session start (via the plugin's SessionStart hook) so skills auto-trigger from the catalog routes. |
 
 ### Plating
