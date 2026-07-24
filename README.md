@@ -115,7 +115,7 @@ Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflo
 | **release-cut** | Changelog roll-up, semver bump, tag, GitHub release, drafted announcement. Releases on request, never per feature. |
 | **memory-handoff** | Ends a session by writing durable knowledge into a structured handoff a memory owner can review and file. Pairs with brigade, works standalone. |
 | **skillify** | The meta-skill: turn a script, runbook, or repeated workflow into a new skill, with a fresh-agent test before you call it done. |
-| **t3-code** | Sets up and troubleshoots T3 Code across multiple machines: project state, saved environments, desktop and headless hosts, direct Tailnet access, Tailscale Serve, local SSH tunnels, updates, launchers, icons, and user services. |
+| **t3-code** | Sets up and troubleshoots T3 Code across Linux and Windows machines: project state, saved environments, headless services, Windows Scheduled Tasks, direct Tailnet access, Tailscale Serve, local SSH tunnels, updates, launchers, and icons. |
 | **using-skillet** | The line check before service: the bootstrap that maps every skillet skill to its job and requires invoking the relevant one before any response. Injected at session start (via the plugin's SessionStart hook) so skills auto-trigger from the catalog routes. |
 
 ### Plating

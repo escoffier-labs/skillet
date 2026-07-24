@@ -124,6 +124,54 @@ PY
     grep -Fq "loginctl enable-linger" "$dir/references/multi-machine.md" || {
       echo "[fail] t3-code: logout persistence action missing"; return 1
     }
+    grep -Fq "references/windows-remote.md" "$md" || {
+      echo "[fail] t3-code: Windows reference is not routed"; return 1
+    }
+    [ -f "$dir/references/windows-remote.md" ] || {
+      echo "[fail] t3-code: Windows reference missing"; return 1
+    }
+    grep -Fq "# Windows Remote Host" "$dir/references/windows-remote.md" || {
+      echo "[fail] t3-code: Windows remote-host workflow missing"; return 1
+    }
+    grep -Fq "New-ScheduledTask" "$dir/references/windows-remote.md" || {
+      echo "[fail] t3-code: Windows Scheduled Task example missing"; return 1
+    }
+    grep -Fq '$env:COMPUTERNAME' "$dir/references/windows-remote.md" || {
+      echo "[fail] t3-code: Windows task principal guidance missing"; return 1
+    }
+    grep -Fq "Get-NetTCPConnection" "$dir/references/windows-remote.md" || {
+      echo "[fail] t3-code: Windows listener verification missing"; return 1
+    }
+    grep -Fq "Do not stop every Node.js process" "$dir/references/windows-remote.md" || {
+      echo "[fail] t3-code: Windows child-process safety guidance missing"; return 1
+    }
+    grep -Fq "AddSeconds(60)" "$dir/references/windows-remote.md" || {
+      echo "[fail] t3-code: Windows Tailscale startup wait missing"; return 1
+    }
+    grep -Fq "Export-ScheduledTask" "$dir/references/windows-remote.md" || {
+      echo "[fail] t3-code: existing Windows task backup missing"; return 1
+    }
+    grep -Fq "curl --connect-timeout" "$dir/references/windows-remote.md" || {
+      echo "[fail] t3-code: controller-side direct TCP probe missing"; return 1
+    }
+    grep -Fq "BatchMode=yes" "$dir/references/windows-remote.md" || {
+      echo "[fail] t3-code: Windows SSH fallback preflight missing"; return 1
+    }
+    if grep -Fq "curl --connect-timeout 5 --verbose" "$dir/references/windows-remote.md"; then
+      echo "[fail] t3-code: Windows probe may print sensitive response content"; return 1
+    fi
+    grep -Fq "ssh-keygen -lf" "$dir/references/windows-remote.md" || {
+      echo "[fail] t3-code: Windows SSH fingerprint verification missing"; return 1
+    }
+    grep -Fq "ssh-keyscan -t ed25519" "$dir/references/windows-remote.md" || {
+      echo "[fail] t3-code: Windows SSH key-type comparison is ambiguous"; return 1
+    }
+    grep -Fq "yyyyMMdd-HHmmss" "$dir/references/windows-remote.md" || {
+      echo "[fail] t3-code: Windows task backup is not timestamped"; return 1
+    }
+    grep -Fq "windows-user@windows-host" "$dir/references/windows-remote.md" || {
+      echo "[fail] t3-code: Windows tunnel target is ambiguous"; return 1
+    }
   fi
   echo "[ok] $id"
 }

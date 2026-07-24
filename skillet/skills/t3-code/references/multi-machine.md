@@ -61,7 +61,9 @@ sudo loginctl enable-linger "$USER"
 loginctl show-user "$USER" -p Linger
 ```
 
-Run the command on each Linux machine whose user services need logout persistence, including the controller when it owns a tunnel service. On Windows, use Task Scheduler with the tested absolute `t3 serve` executable and arguments, start it at logon, configure restart-on-failure behavior, and verify it after a reboot.
+Run the command on each Linux machine whose user services need logout persistence, including the controller when it owns a tunnel service.
+
+For Windows remotes, follow `windows-remote.md`. It covers the PowerShell launcher, current-user Scheduled Task, Tailscale and firewall checks, SSH fallback prerequisites, restart verification, and safe cleanup of an orphaned T3 child process.
 
 ## 4. Choose the transport per host
 
