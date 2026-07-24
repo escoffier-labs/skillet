@@ -172,6 +172,33 @@ PY
     grep -Fq "windows-user@windows-host" "$dir/references/windows-remote.md" || {
       echo "[fail] t3-code: Windows tunnel target is ambiguous"; return 1
     }
+    grep -Fq "https://t3.codes/download" "$dir/references/updates-and-launchers.md" || {
+      echo "[fail] t3-code: official installer page missing"; return 1
+    }
+    grep -Fq "https://github.com/pingdotgg/t3code/releases" "$dir/references/updates-and-launchers.md" || {
+      echo "[fail] t3-code: official release source missing"; return 1
+    }
+    grep -Fq "npx t3@latest" "$dir/references/updates-and-launchers.md" || {
+      echo "[fail] t3-code: stable npm channel missing"; return 1
+    }
+    grep -Fq "npx t3@nightly" "$dir/references/updates-and-launchers.md" || {
+      echo "[fail] t3-code: nightly npm channel missing"; return 1
+    }
+    grep -Fq "npm view t3 dist-tags --json" "$dir/references/updates-and-launchers.md" || {
+      echo "[fail] t3-code: runtime channel discovery missing"; return 1
+    }
+    grep -Fq "select(.prerelease)" "$dir/references/updates-and-launchers.md" || {
+      echo "[fail] t3-code: latest GitHub nightly discovery missing"; return 1
+    }
+    grep -Fq "npx --yes t3@latest serve" "$dir/references/updates-and-launchers.md" || {
+      echo "[fail] t3-code: stable headless command missing"; return 1
+    }
+    grep -Fq "npx --yes t3@nightly serve" "$dir/references/updates-and-launchers.md" || {
+      echo "[fail] t3-code: nightly headless command missing"; return 1
+    }
+    grep -Fq "winget install T3Tools.T3Code" "$dir/references/windows-remote.md" || {
+      echo "[fail] t3-code: official Windows installer command missing"; return 1
+    }
   fi
   echo "[ok] $id"
 }

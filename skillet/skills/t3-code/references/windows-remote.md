@@ -5,13 +5,21 @@ Use this reference to run a persistent T3 backend on Windows and connect it to a
 ## Prerequisites
 
 - Run PowerShell as the Windows user who owns the repositories and T3 state.
-- Install T3 from a trusted source and confirm that it works in that user's shell.
+- Install T3 from the official channels in `updates-and-launchers.md` and confirm that it works in that user's shell.
 - Install and authenticate Tailscale when the selected transport uses the Tailnet.
 - Use a current-user Scheduled Task. Do not put pairing values, Tailscale auth keys, or SSH private keys in the task arguments.
 
 This workflow starts the backend when that user logs on. Running it without an interactive logon requires a separately reviewed service account or credential strategy.
 
 The skill folder documents the complete T3 configuration path, but it does not ship T3, Tailscale, OpenSSH, credentials, or Tailnet policy. Obtain those prerequisites through their trusted upstream and the local operator's access process.
+
+For the stable Windows desktop application, use the official download page at <https://t3.codes/download> or the upstream package command:
+
+```powershell
+winget install T3Tools.T3Code
+```
+
+For a headless server or nightly build, follow the npm and GitHub release-channel instructions in `updates-and-launchers.md`. A Scheduled Task still needs an absolute command path that passes `Get-Command t3`.
 
 ## 1. Inspect the installed commands
 
