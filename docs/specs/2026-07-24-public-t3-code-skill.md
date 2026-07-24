@@ -33,4 +33,3 @@ Remove all private hostnames, organization names, repository names, local wrappe
 - Skillet's catalog, routing skill, marketplace description, count badge, and changelog include `t3-code`.
 - The skill and full catalog pass `tests/lint-skills.sh`.
 - A tracked-tree and history scan finds no private fleet details introduced by this change.
-

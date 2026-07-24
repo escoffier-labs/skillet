@@ -23,19 +23,19 @@
 - [ ] Add the three references named by the entry point.
 - [ ] Add `skill.json` with the structural linter as its test.
 - [ ] Add a `0.1.0` skill changelog.
-- [ ] Run `brigade work verify run --target . --command "./tests/lint-skills.sh t3-code" --capture brigade-work`; expect exit 0 and `[ok] t3-code`.
+- [ ] Run `brigade work verify run --target . --command "./tests/lint-skills.sh t3-code" --capture brigade-work`. Expect exit 0 and `[ok] t3-code`.
 
 ## Task 2: Add catalog discovery
 
-- [ ] Change the README badge count from 36 to 37.
+- [ ] Change the README badge count from 35 to 36.
 - [ ] Add a concise README catalog row.
 - [ ] Route `t3-code` from `using-skillet`.
 - [ ] Add `t3-code` to the marketplace roster and root changelog.
-- [ ] Run `brigade work verify run --target . --command "./tests/lint-skills.sh" --capture brigade-work`; expect exit 0 and `[ok] catalog (37 skills)`.
+- [ ] Run `brigade work verify run --target . --command "./tests/lint-skills.sh" --capture brigade-work`. Expect exit 0 and `[ok] catalog (36 skills)`.
 
 ## Task 3: Gate publication
 
 - [ ] Scan the changed tree and history for secrets, private IPs, private hostnames, absolute home paths, and private repository names.
-- [ ] Run Vale on the public prose after the last edit; errors must be zero.
+- [ ] Run Vale on the public prose after the last edit. Errors must be zero.
 - [ ] Inspect `git diff --check` and the final diff.
 - [ ] Commit with a conventional message, push the feature branch, open a pull request, and merge only after required checks pass.

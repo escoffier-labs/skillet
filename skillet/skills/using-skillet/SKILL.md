@@ -89,6 +89,7 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 **Appliances:**
 - `graphtrail` - answer callers, callees, impact, neighborhood, and structural-diff questions from an indexed code graph.
 - `brigade-handoffs` - set up, write, lint, and troubleshoot Brigade memory handoffs.
+- `t3-code` - configure or troubleshoot T3 Code projects, desktop or headless servers, updates, launchers, icons, and private remote access.
 
 **Memory and work loop:**
 - `memory-handoff` - capture durable knowledge at the end of a session.
