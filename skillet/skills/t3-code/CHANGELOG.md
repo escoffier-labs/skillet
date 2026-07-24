@@ -1,5 +1,10 @@
 # t3-code changelog
 
+## 0.1.3 - 2026-07-24
+
+- Added the official T3 Code website, download page, GitHub repository, releases page, and npm package.
+- Separated stable desktop and CLI installation from the opt-in nightly development channel.
+
 ## 0.1.2 - 2026-07-24
 
 - Added a complete Windows remote-host workflow using PowerShell and a current-user Scheduled Task.

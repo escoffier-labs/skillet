@@ -40,7 +40,7 @@ Nightly flags and storage details can change. Prefer the installed CLI help over
 - Read `references/windows-remote.md` when a remote T3 backend runs on Windows.
 - Read `references/project-state.md` before changing project records or icons.
 - Read `references/remote-tailscale.md` before exposing a headless server.
-- Read `references/updates-and-launchers.md` before changing updates, wrappers, or services.
+- Read `references/updates-and-launchers.md` before installing T3 or changing release channels, updates, wrappers, or services.
 
 ## Prefer supported commands
 

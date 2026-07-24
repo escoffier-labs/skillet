@@ -2,6 +2,85 @@
 
 Use this reference when T3 shows an update banner, a wrapper launches the wrong build, or desktop and headless components drift apart.
 
+## Official sources and release channels
+
+Use these upstream locations:
+
+- Product website: <https://t3.codes>
+- Official desktop download and release landing page: <https://t3.codes/download>
+- Source repository: <https://github.com/pingdotgg/t3code>
+- Latest stable GitHub release: <https://github.com/pingdotgg/t3code/releases/latest>
+- Stable and nightly desktop releases: <https://github.com/pingdotgg/t3code/releases>
+- Published CLI package: <https://www.npmjs.com/package/t3>
+
+The official download page links the current Windows, macOS, and Linux desktop installers. If it sends the user to GitHub Releases, select the newest non-pre-release asset for the operating system and architecture. The GitHub releases page also contains development builds. Nightly release titles begin with `T3 Code Nightly` and are marked `Pre-release`.
+
+Do not hardcode a nightly tag in a reusable launcher or runbook. Inspect the current npm channels at runtime:
+
+```bash
+npm view t3 dist-tags --json
+```
+
+Use the stable CLI without installing it globally:
+
+```bash
+npx t3@latest --version
+npx t3@latest
+```
+
+For an unattended stable headless server, make the server subcommand explicit:
+
+```bash
+npx --yes t3@latest serve --host 127.0.0.1
+```
+
+Replace loopback only after choosing and reviewing the direct Tailnet or Tailscale Serve transport in `remote-tailscale.md`.
+
+Use the current nightly only when the user explicitly chooses the development channel:
+
+```bash
+npx t3@nightly --version
+npx t3@nightly
+```
+
+The development-channel equivalent for a headless server is:
+
+```bash
+npx --yes t3@nightly serve --host 127.0.0.1
+```
+
+Do not put the nightly command into an existing stable service until the user accepts the development-channel risk and a rollback path exists.
+
+With GitHub CLI installed, print the newest GitHub pre-release without relying on a hardcoded nightly tag:
+
+```bash
+gh api repos/pingdotgg/t3code/releases \
+  --jq 'map(select(.prerelease))[0] | {name, tag_name, html_url}'
+```
+
+For a specific client and server version match, use the exact version shown by the client:
+
+```bash
+npx "t3@<client-version>" --version
+```
+
+On the GitHub releases page, verify the release title, tag, pre-release status, operating system, and architecture before downloading an asset. Nightly builds can break compatibility or state. Keep the controller and remote servers on matching versions and retain the previous working artifact when rollback matters.
+
+### Official desktop package commands
+
+The upstream repository documents these package-manager commands:
+
+```powershell
+winget install T3Tools.T3Code
+```
+
+```bash
+brew install --cask t3-code
+yay -S t3code-bin
+```
+
+The website download page remains the source for the Windows installer, macOS disk images, and Linux AppImage when a package manager is not used.
+
 ## Identify the install source
 
 Before updating, record:
@@ -14,7 +93,7 @@ readlink -f "$(command -v t3)"
 
 For the desktop application, inspect the launcher or desktop entry to determine whether it runs an AppImage, package-manager installation, source checkout, or another channel.
 
-Do not run an npm, package-manager, or AppImage update command until the current source is known. Two installations can coexist and make an update appear ineffective.
+Do not run an npm, package-manager, or AppImage update command until the current source and channel are known. Two installations can coexist and make an update appear ineffective.
 
 ## Separate components
 
