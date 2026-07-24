@@ -37,6 +37,7 @@ Nightly flags and storage details can change. Prefer the installed CLI help over
 - Determine how the desktop application was installed: package manager, AppImage, source checkout, or another channel.
 - Determine whether the server runs interactively, through a wrapper, or as a user service.
 - Read `references/multi-machine.md` before setting up one desktop to manage projects on other hosts.
+- Read `references/windows-remote.md` when a remote T3 backend runs on Windows.
 - Read `references/project-state.md` before changing project records or icons.
 - Read `references/remote-tailscale.md` before exposing a headless server.
 - Read `references/updates-and-launchers.md` before changing updates, wrappers, or services.
@@ -75,6 +76,7 @@ Run the checks that match the change:
 - The desktop launcher opens the intended installed version.
 - Every remote environment resolves to the intended host and uses a distinct display name.
 - Each headless service is active and its logs show the expected bind address and base directory.
+- Each Windows Scheduled Task reports the intended principal, launcher, listener, and restart state.
 - The controller can reach each remote environment through its selected Tailnet, Tailscale Serve, or local tunnel URL.
 - Desktop and server components report the expected versions after an update.
 

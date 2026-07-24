@@ -14,6 +14,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - **t3-code** - added the complete controller-to-remote setup loop, saved environment pairing, per-host transport choice, and an SSH local-forward fallback when the T3 Tailnet port is blocked.
+- **t3-code** - added a Windows remote-host workflow with a PowerShell launcher, current-user Scheduled Task, Tailscale and firewall checks, listener verification, and safe child-process cleanup.
 
 ### Added
 

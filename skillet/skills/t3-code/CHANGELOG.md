@@ -1,5 +1,10 @@
 # t3-code changelog
 
+## 0.1.2 - 2026-07-24
+
+- Added a complete Windows remote-host workflow using PowerShell and a current-user Scheduled Task.
+- Added Tailscale installation and listener checks, narrowly scoped firewall guidance, SSH fallback prerequisites, and safe orphaned-process cleanup.
+
 ## 0.1.1 - 2026-07-24
 
 - Added an end-to-end multi-machine setup workflow for one controller and multiple remote T3 hosts.
