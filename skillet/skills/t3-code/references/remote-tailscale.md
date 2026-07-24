@@ -1,6 +1,7 @@
 # T3 Code over Tailscale
 
 Use this reference before configuring a headless T3 Code server for private remote access.
+For a controller with several remote hosts or an SSH tunnel fallback, read `multi-machine.md` first.
 
 ## Preflight
 
@@ -55,7 +56,9 @@ Keep machine-specific values in a local wrapper. Example `~/.local/bin/t3-code-s
 #!/usr/bin/env bash
 set -euo pipefail
 
-exec t3 serve \
+t3_bin="/absolute/path/to/t3"
+
+exec "$t3_bin" serve \
   --no-browser \
   --host "$(tailscale ip -4)" \
   --port "${T3_PORT:-3773}" \

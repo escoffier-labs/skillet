@@ -102,6 +102,29 @@ PY
       echo "[fail] $id: brigade skills lint failed"; return 1
     fi
   fi
+  if [ "$id" = "t3-code" ]; then
+    grep -Fq "references/multi-machine.md" "$md" || {
+      echo "[fail] t3-code: multi-machine reference is not routed"; return 1
+    }
+    [ -f "$dir/references/multi-machine.md" ] || {
+      echo "[fail] t3-code: multi-machine reference missing"; return 1
+    }
+    grep -Fq "Local-only SSH forward" "$dir/references/multi-machine.md" || {
+      echo "[fail] t3-code: SSH tunnel fallback missing"; return 1
+    }
+    grep -Fq "Save and pair each environment" "$dir/references/multi-machine.md" || {
+      echo "[fail] t3-code: saved environment workflow missing"; return 1
+    }
+    grep -Fq "Persist the SSH tunnel" "$dir/references/multi-machine.md" || {
+      echo "[fail] t3-code: persistent SSH tunnel workflow missing"; return 1
+    }
+    grep -Fq "Remote loopback service" "$dir/references/multi-machine.md" || {
+      echo "[fail] t3-code: remote loopback service missing"; return 1
+    }
+    grep -Fq "loginctl enable-linger" "$dir/references/multi-machine.md" || {
+      echo "[fail] t3-code: logout persistence action missing"; return 1
+    }
+  fi
   echo "[ok] $id"
 }
 
