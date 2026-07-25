@@ -224,6 +224,14 @@ check_catalog() {
       return 1
     }
   done
+  grep -F "| **Ship** |" "$readme" | grep -Eq '\bplate\b' || {
+    echo "[fail] catalog: README Ship row missing plate"
+    return 1
+  }
+  grep -F "| **stagiaire** |" "$readme" | grep -Eq '[(,] *pi *[,)]' || {
+    echo "[fail] catalog: README stagiaire row missing pi"
+    return 1
+  }
   [ ! -d "$SKILLS_DIR/seo-fleet" ] || {
     echo "[fail] catalog: seo-fleet must be replaced by garnish"
     return 1
