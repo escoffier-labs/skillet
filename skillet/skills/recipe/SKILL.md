@@ -1,5 +1,6 @@
 ---
 name: recipe
+version: 0.1.0
 license: MIT
 description: Use when an approved spec or design needs to become an implementation plan, after mise and before any code. Also use when the user says "write the plan", "plan this out", or the work will be executed later, by someone else, or in a fresh session.
 ---

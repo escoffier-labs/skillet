@@ -1,5 +1,6 @@
 ---
 name: expedite
+version: 0.1.0
 license: MIT
 description: Use when the user wants to act on an audit, fix the findings in a line-check/bug-hunt/security-sweep report, work a prioritized backlog, or asks to "fix the findings", "work the backlog", "clear the audit", or "do the high-leverage items". The step after the audit trio.
 ---

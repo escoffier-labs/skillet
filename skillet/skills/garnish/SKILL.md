@@ -1,5 +1,6 @@
 ---
 name: garnish
+version: 0.1.0
 license: MIT
 description: Use when auditing or fixing discoverability metadata for a website before publication, including titles, descriptions, canonical URLs, robots policy, Open Graph, structured data, and sitemaps. Not for content strategy or keyword research.
 ---

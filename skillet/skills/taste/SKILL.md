@@ -1,5 +1,6 @@
 ---
 name: taste
+version: 0.1.0
 license: MIT
 description: Use when implementing any feature, bugfix, or behavior change, before writing the implementation code. Especially use under pressure - production is down, "just make it work", "quick fix" - which is when it gets skipped.
 ---

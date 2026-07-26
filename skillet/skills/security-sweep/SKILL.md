@@ -1,5 +1,6 @@
 ---
 name: security-sweep
+version: 0.1.0
 license: MIT
 description: Use when asked to security-audit a repository, find vulnerabilities to fix, check for leaked secrets, review dependencies for known CVEs, or harden a project before exposure. Defensive find-and-fix only.
 ---

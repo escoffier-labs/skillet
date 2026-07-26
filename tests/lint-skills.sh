@@ -35,8 +35,8 @@ check_skill() {
   if [ "$(head -1 "$md")" != "---" ]; then
     echo "[fail] $id: SKILL.md does not start with YAML frontmatter"; return 1
   fi
-  local frontmatter_error
-  if ! frontmatter_error="$(python3 - "$md" "$id" 2>&1 <<'PY'
+  local frontmatter_result frontmatter_version
+  if ! frontmatter_result="$(python3 - "$md" "$id" 2>&1 <<'PY'
 import re
 import sys
 
@@ -281,7 +281,7 @@ while i < len(fm):
 
 if not isinstance(metadata, dict):
     fail("frontmatter must be a YAML mapping")
-for key in ("name", "description", "license"):
+for key in ("name", "description", "license", "version"):
     if key not in metadata:
         fail(f"frontmatter missing {key!r}")
     if not isinstance(metadata[key], str):
@@ -295,17 +295,21 @@ if not 1 <= len(metadata["description"]) <= 1024:
     fail("frontmatter description must be 1-1024 characters")
 if metadata["license"] != "MIT":
     fail("frontmatter license must declare repository license MIT")
+if not re.fullmatch(r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)", metadata["version"]):
+    fail("frontmatter version must use x.y.z semver")
+print(metadata["version"])
 PY
 )"; then
-    echo "[fail] $frontmatter_error"; return 1
+    echo "[fail] $frontmatter_result"; return 1
   fi
+  frontmatter_version="$frontmatter_result"
   if [ ! -f "$sj" ]; then
     echo "[fail] $id: skill.json missing"; return 1
   fi
-  if ! python3 - "$sj" "$dir" "$id" <<'PY'
+  if ! python3 - "$sj" "$dir" "$id" "$frontmatter_version" <<'PY'
 import json, os, sys
 import re
-sj, d, sid = sys.argv[1], sys.argv[2], sys.argv[3]
+sj, d, sid, frontmatter_version = sys.argv[1:]
 m = json.load(open(sj))
 assert m.get("id") == sid, f"skill.json id {m.get('id')!r} != {sid!r}"
 clp = m.get("changelog_path")
@@ -316,7 +320,12 @@ else:
 tests = m.get("tests")
 assert isinstance(tests, list) and tests, "tests list missing or empty"
 version = m.get("version")
-assert isinstance(version, str) and re.fullmatch(r"\d+\.\d+\.\d+", version), "version missing or invalid"
+assert isinstance(version, str) and re.fullmatch(
+    r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)", version
+), "version missing or invalid"
+assert version == frontmatter_version, (
+    f"skill.json version {version!r} != SKILL.md version {frontmatter_version!r}"
+)
 tl = m.get("trust_level")
 assert tl in ("unreviewed", "workspace", "team", "public"), f"trust_level missing or invalid: {tl!r}"
 PY
@@ -324,8 +333,22 @@ PY
     echo "[fail] $id: skill.json invalid"; return 1
   fi
   if command -v brigade >/dev/null 2>&1; then
-    if ! brigade skills lint "$dir" >/dev/null 2>&1; then
-      echo "[fail] $id: brigade skills lint failed"; return 1
+    local brigade_output brigade_tmp
+    if ! brigade_output="$(brigade skills lint "$dir" 2>&1)"; then
+      if ! printf '%s\n' "$brigade_output" |
+        grep -Fxq 'error: unknown frontmatter field: version'; then
+        echo "[fail] $id: brigade skills lint failed"; return 1
+      fi
+      brigade_tmp="$(mktemp -d)"
+      mkdir -p "$brigade_tmp/$id"
+      cp -a "$dir"/. "$brigade_tmp/$id/"
+      sed -i '/^version:/d' "$brigade_tmp/$id/SKILL.md"
+      if ! brigade skills lint "$brigade_tmp/$id" >/dev/null 2>&1; then
+        rm -rf "$brigade_tmp"
+        echo "[fail] $id: brigade skills lint failed after removing unsupported version field"
+        return 1
+      fi
+      rm -rf "$brigade_tmp"
     fi
   fi
   if [ "$id" = "t3-code" ]; then
@@ -691,8 +714,8 @@ check_linter_regressions() {
 
   description_1024="$(python3 -c 'print("x" * 1024, end="")')"
   description_1025="${description_1024}x"
-  printf '%s\n' '---' 'name: valid-length' "description: \"$description_1024\"" 'license: MIT' '---' >"$valid/SKILL.md"
-  printf '%s\n' '---' 'name: invalid-length' "description: $description_1025" 'license: MIT' '---' >"$invalid/SKILL.md"
+  printf '%s\n' '---' 'name: valid-length' 'version: 0.1.0' "description: \"$description_1024\"" 'license: MIT' '---' >"$valid/SKILL.md"
+  printf '%s\n' '---' 'name: invalid-length' 'version: 0.1.0' "description: $description_1025" 'license: MIT' '---' >"$invalid/SKILL.md"
   printf '%s\n' '{"id":"valid-length","version":"0.1.0","tests":["true"],"trust_level":"workspace"}' >"$valid/skill.json"
   printf '%s\n' '{"id":"invalid-length","version":"0.1.0","tests":["true"],"trust_level":"workspace"}' >"$invalid/skill.json"
   : >"$valid/CHANGELOG.md"
@@ -800,6 +823,39 @@ check_linter_regressions() {
   cp -a "$ROOT"/. "$fixture"
   sed -i 's/recipe, taste, stocktake, thermometer, reduce/recipe, taste, stocktake, thermometer, reduce, ghost-workflow-skill/' "$fixture/README.md"
   assert_fixture_rejected "unresolved workflow skill ID" "$fixture"
+
+  fixture="$tmp/version-missing"
+  cp -a "$ROOT"/. "$fixture"
+  sed -i '/^version:/d' "$fixture/skillet/skills/line-check/SKILL.md"
+  assert_fixture_rejected "missing frontmatter version" "$fixture" line-check
+
+  fixture="$tmp/version-invalid"
+  cp -a "$ROOT"/. "$fixture"
+  sed -i '/^name: line-check$/a version: v1.0' "$fixture/skillet/skills/line-check/SKILL.md"
+  assert_fixture_rejected "invalid frontmatter semver" "$fixture" line-check
+
+  fixture="$tmp/version-mismatch"
+  cp -a "$ROOT"/. "$fixture"
+  sed -i 's/^version: 0.1.0$/version: 0.2.0/' "$fixture/skillet/skills/line-check/SKILL.md"
+  assert_fixture_rejected "frontmatter and skill.json version mismatch" "$fixture" line-check
+
+  fixture="$tmp/brigade-unrelated-failure"
+  cp -a "$ROOT"/. "$fixture"
+  mkdir -p "$fixture/bin"
+  printf '%s\n' \
+    '#!/usr/bin/env bash' \
+    'target="${!#}"' \
+    'if grep -q "^version:" "$target/SKILL.md"; then' \
+    '  echo "error: unknown frontmatter field: version"' \
+    'fi' \
+    'echo "fatal: validator crashed"' \
+    'exit 1' >"$fixture/bin/brigade"
+  chmod +x "$fixture/bin/brigade"
+  if LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$fixture/bin:/usr/bin:/bin" \
+    bash "$fixture/tests/lint-skills.sh" line-check >/dev/null 2>&1; then
+    echo "[fail] self-test: unrelated Brigade validator failure was masked"
+    regression_failures=1
+  fi
 
   rm -rf "$tmp"
   if [ "$regression_failures" -ne 0 ]; then

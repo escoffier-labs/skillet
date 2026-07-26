@@ -1,5 +1,6 @@
 ---
 name: grill
+version: 0.1.0
 license: MIT
 description: Use when a technical writeup, blog post, war story, or "Show HN" is about to go to Hacker News, Lobsters, or any skeptical technical audience, or when the user says "grill this", "make it HN-ready", "harden this post", "is this ready to post", "will this survive the comments". Hardens facts, sourcing, voice, and comment-readiness. Not for identity/infra leak scrubbing (use plate) or repo publication (use publish-readiness).
 ---
