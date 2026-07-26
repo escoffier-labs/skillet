@@ -504,14 +504,6 @@ PY
     echo "[fail] catalog: $catalog_error"
     return 1
   fi
-  grep -F "| **Ship** |" "$readme" | grep -Eq '\bplate\b' || {
-    echo "[fail] catalog: README Ship row missing plate"
-    return 1
-  }
-  grep -F "| **stagiaire** |" "$readme" | grep -Eq '[(,] *pi *[,)]' || {
-    echo "[fail] catalog: README stagiaire row missing pi"
-    return 1
-  }
   [ ! -d "$SKILLS_DIR/seo-fleet" ] || {
     echo "[fail] catalog: seo-fleet must be replaced by garnish"
     return 1
@@ -552,6 +544,48 @@ PY
     return 1
   fi
   echo "[ok] catalog ($count skills)"
+}
+
+check_workflow_skill_references() {
+  local workflow_error
+  if ! workflow_error="$(python3 - "$SKILLS_DIR" "$ROOT/README.md" 2>&1 <<'PY'
+import pathlib
+import re
+import sys
+
+skills_dir, readme_path = map(pathlib.Path, sys.argv[1:])
+local_ids = {path.name for path in skills_dir.iterdir() if path.is_dir()}
+workflow_rows = {"Audit", "Ship", "Execute", "Remember"}
+seen_rows = set()
+
+for line in readme_path.read_text(encoding="utf-8").splitlines():
+    columns = [column.strip() for column in line.strip().strip("|").split("|")]
+    if len(columns) != 3:
+        continue
+    row_name = columns[0].strip("* ")
+    if row_name not in workflow_rows:
+        continue
+    seen_rows.add(row_name)
+    for entry in columns[2].split(","):
+        match = re.match(r"\s*([a-z0-9]+(?:-[a-z0-9]+)*)\b", entry)
+        if not match:
+            print(f"{row_name}: cannot parse workflow skill from {entry!r}")
+            raise SystemExit(1)
+        skill_id = match.group(1)
+        if skill_id not in local_ids:
+            print(f"{row_name}: workflow skill {skill_id!r} does not resolve to skillet/skills")
+            raise SystemExit(1)
+
+missing_rows = workflow_rows - seen_rows
+if missing_rows:
+    print(f"workflow rows missing: {', '.join(sorted(missing_rows))}")
+    raise SystemExit(1)
+PY
+)"; then
+    echo "[fail] workflow: $workflow_error"
+    return 1
+  fi
+  echo "[ok] workflow skill references"
 }
 
 check_skill_boundaries() {
@@ -762,6 +796,11 @@ check_linter_regressions() {
   sed -i 's/brigade work verify run --target \. --command "<proving command>" --capture <skill-or-card-id>/brigade work verify run --target . --command "<proving command>"/' "$fixture/skillet/skills/check/SKILL.md"
   assert_fixture_rejected "Brigade verify command without atomic capture" "$fixture"
 
+  fixture="$tmp/workflow-phantom"
+  cp -a "$ROOT"/. "$fixture"
+  sed -i 's/recipe, taste, stocktake, thermometer, reduce/recipe, taste, stocktake, thermometer, reduce, ghost-workflow-skill/' "$fixture/README.md"
+  assert_fixture_rejected "unresolved workflow skill ID" "$fixture"
+
   rm -rf "$tmp"
   if [ "$regression_failures" -ne 0 ]; then
     return 1
@@ -779,6 +818,7 @@ else
     check_skill "$d" || FAIL=1
   done
   check_catalog || FAIL=1
+  check_workflow_skill_references || FAIL=1
   check_skill_boundaries || FAIL=1
   check_brigade_verify_commands || FAIL=1
 fi
