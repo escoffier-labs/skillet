@@ -1,7 +1,8 @@
 ---
 name: latent-premises
+version: 0.1.0
 license: MIT
-description: Use when reviewing a diff or module for hidden assumptions - things the code takes for granted that nothing guarantees - or when asked "what could break this later", "what does this assume", or to harden code that works today. Complements bug-hunt: bug-hunt finds defects with triggers today; this finds the ones waiting for tomorrow.
+description: "Use when reviewing a diff or module for hidden assumptions - things the code takes for granted that nothing guarantees - or when asked \"what could break this later\", \"what does this assume\", or to harden code that works today. Complements bug-hunt: bug-hunt finds defects with triggers today; this finds the ones waiting for tomorrow."
 ---
 
 # latent-premises

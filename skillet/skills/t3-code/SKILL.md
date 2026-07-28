@@ -1,5 +1,6 @@
 ---
 name: t3-code
+version: 0.1.3
 license: MIT
 description: Use when configuring or troubleshooting T3 Code projects, multi-machine environments, desktop or headless servers, project names or icons, updates, launchers, or private remote access. Trigger on stale project entries, wrong workspace identity, missing favicons, update banners, saved backend setup, server reachability, Tailscale exposure, SSH tunnel fallback, or T3 service setup.
 ---

@@ -1,5 +1,6 @@
 ---
 name: publish-readiness
+version: 0.1.0
 license: MIT
 description: Use before making a private repository public, before the first push of a new public repo, or when the user asks "is this safe to publish", "check for leaks", or wants a pre-publication scan. Also use after discovering identifying content already leaked into a public repo's history.
 ---

@@ -1,5 +1,6 @@
 ---
 name: check
+version: 0.1.0
 license: MIT
 description: Use when about to claim anything works, is fixed, is complete, or passes - before committing, replying to the user, or moving to the next task. Also use when relaying a subagent's or tool's success report, and especially at the end of a long session when the pull to say "done" is strongest.
 ---

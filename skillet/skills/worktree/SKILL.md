@@ -1,5 +1,6 @@
 ---
 name: worktree
+version: 0.1.0
 license: MIT
 description: Use when starting feature work that needs isolation from the current branch, or before executing a plan or fanning out parallel stations - sets up an isolated workspace using the harness's native worktree tool, falling back to a git worktree. Triggers on "worktree", "isolate this work", "don't touch my branch", "work on a copy".
 ---
