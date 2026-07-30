@@ -40,7 +40,7 @@ brigade add skills
 
 | | Job | What you get |
 |---|---|---|
-| **Audit** | See what matters first | line-check, bug-hunt, security-sweep with leverage-sorted backlogs |
+| **Audit** | See what matters first | line-check, bug-hunt, security-sweep, latent-premises, retry-safety with priority-sorted backlogs |
 | **Ship** | Gate what goes public | publish-readiness, garnish, release-cut, plate |
 | **Execute** | Plan, build, upgrade, and measure | recipe, taste, stocktake, thermometer, reduce |
 | **Remember** | File what you learned | memory-handoff compatible with Brigade |
@@ -57,8 +57,8 @@ npx skills add escoffier-labs/skillet          # install the roster
 Then ask your agent naturally, or invoke a skill directly:
 
 ```
-/line-check        # seven-station repo audit, leverage-sorted backlog
-/security-sweep    # defensive security audit, each finding with its fix
+/line-check        # seven-station repo audit, priority-sorted backlog
+/security-sweep    # defensive security audit, each finding with a prescribed fix
 /publish-readiness # leak scan before a repo goes public
 ```
 
@@ -66,9 +66,9 @@ Full install paths (Claude Code marketplace, raw `SKILL.md` copy, per-repo) are 
 
 ## The skills
 
-### The audit trio
+### The audit roster
 
-Three skills, one report contract ([docs/audit-report-format.md](docs/audit-report-format.md)). Run any of them alone, or all three over time; the findings compose into a single leverage-sorted backlog.
+Five skills, one report contract ([docs/audit-report-format.md](docs/audit-report-format.md)). Run any of them alone, or all five over time. The findings compose into a single priority-sorted backlog.
 
 | Skill | What it does |
 |-------|--------------|
@@ -78,11 +78,11 @@ Three skills, one report contract ([docs/audit-report-format.md](docs/audit-repo
 | **latent-premises** | Hunts the assumptions code takes for granted that nothing enforces: input shape, callee contracts, environment, ordering, cardinality. A finding needs a nameable break and ends with one resolution arrow (guard it, document it, or encode it in the type). The forward-looking counterpart to bug-hunt. |
 | **retry-safety** | Checks whether a diff's side effects survive a second run: database writes, migrations, network mutations, payments, queue consumers. The standard is idempotent read-modify-write at the side-effecting edge, and migrations also get the deploy-window lens (expand-migrate-contract). |
 
-The trio is read-only by design. **expedite** is the step that closes the loop:
+The audit roster is read-only by design. **expedite** is the step that closes the loop:
 
 | Skill | What it does |
 |-------|--------------|
-| **expedite** | Takes an audit backlog and drives it to done: highest-leverage finding first, one focused change at a time, each one verified before the next, parking anything destructive or breaking for you to decide. The execution partner to the audit trio. |
+| **expedite** | Takes an audit backlog and drives it to done: highest-priority finding first, one focused change at a time, each one verified before the next, parking anything destructive or breaking for you to decide. The execution partner to the audit roster. |
 
 ### The line
 
@@ -94,7 +94,7 @@ Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflo
 
 | Skill | What it does |
 |-------|--------------|
-| **special** | The chef's special: walks the repo for what is possible rather than what is broken, and proposes net-new features grounded in evidence already in the code (unfinished work, asymmetries, adjacent capability, friction, ecosystem fit). Read-only, leverage-sorted, every proposal tied to a signal in the walk-in and cut if it is ungrounded or fights a stated non-goal. The opportunity-finding counterpart to the audit trio; a chosen special feeds mise. |
+| **special** | The chef's special: walks the repo for what is possible rather than what is broken, and proposes net-new features grounded in evidence already in the code (unfinished work, asymmetries, adjacent capability, friction, ecosystem fit). Read-only, priority-sorted, every proposal tied to a signal in the walk-in and cut if it is ungrounded or fights a stated non-goal. The opportunity-finding counterpart to the audit roster. A chosen special feeds mise. |
 | **mise** | Mise en place for building: turns an idea into a design the user approved and a written spec, before any code. Reads the context, proposes 2-3 approaches with a recommendation, presents the design scaled to its complexity, and hands off to recipe. Composes with pressure-test for hardening the load-bearing decisions; [miseledger](https://github.com/escoffier-labs/miseledger) keeps the receipts. |
 | **recipe** | Turns an approved spec into an implementation plan a zero-context engineer or fresh session can execute without you: a file map, bite-size test-first steps with the actual code, exact commands with expected output, and every decision pinned. The card the line cooks work from. |
 | **fire** | Executes a written plan task by task, the way the line cooks a fired ticket: isolated branch, critical read of the plan against the code first, checkboxes ticked as the live worklist, structural divergences stopped and sent back instead of improvised, and a proper finish (merge, PR, keep, or discard). |
@@ -150,7 +150,7 @@ Ask naturally ("audit this repo", "is this safe to publish", "cut a release") or
 /pressure-test   (add "answer your own questions, I'm going afk" for sous mode)
 ```
 
-line-check, bug-hunt, and security-sweep are read-only by design. They produce reports and backlogs; **expedite** is the separate, opt-in step that applies the fixes, parking anything destructive or breaking for you to decide.
+line-check, bug-hunt, security-sweep, latent-premises, and retry-safety are read-only by design. They produce reports and backlogs. **expedite** is the separate, opt-in step that applies the fixes, parking anything destructive or breaking for you to decide.
 
 ## Why not something else?
 
@@ -167,7 +167,7 @@ skillet is not an agent, a runtime, or a service. It does not:
 - ship a CLI or a binary; the skills are markdown the harness reads
 - carry a runtime dependency or call out to the network on its own
 - replace your harness, your model, or your editor
-- apply changes from the read-only audit skills (line-check, bug-hunt, security-sweep, special); applying findings is the separate, opt-in **expedite** step
+- apply changes from the read-only audit skills (line-check, bug-hunt, security-sweep, latent-premises, retry-safety, special). Applying findings is the separate, opt-in **expedite** step
 - cut releases automatically; **release-cut** runs on request, never per feature
 
 The skills carry the procedure and the discipline. You stay in the loop for anything destructive, breaking, or public.
