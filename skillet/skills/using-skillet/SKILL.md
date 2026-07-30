@@ -74,7 +74,7 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 - `bug-hunt` - sweep for correctness defects.
 - `latent-premises` - hunt unguarded assumptions that hold today and break silently later.
 - `retry-safety` - check whether a diff's side effects are safe to run twice.
-- `security-sweep` - find and fix vulnerabilities, leaked secrets, vulnerable deps.
+- `security-sweep` - find vulnerabilities, leaked secrets, and vulnerable deps. Prescribe fixes. Expedite applies them.
 - `special` - propose what to build next, grounded in the code.
 
 **Simplify:**
