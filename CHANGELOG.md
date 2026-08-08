@@ -8,6 +8,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Script-test contract: a skill that ships executable scripts under `scripts/` must ship deterministic unit tests in a `tests/` directory (executable `test-*` files, no model in the loop). `tests/lint-skills.sh` enforces the pairing and runs the tests, so they execute in CI on every push and pull request. **grill** ships the first set, covering `scripts/grill-scan.sh`.
 - **stagiaire** - one-shot cross-vendor worker dispatch over the user's own CLI logins, with verified headless flags, the per-CLI silent-failure traps, and the write-disabled-chef orchestration pattern. Baseline-tested against live CLIs before it shipped.
 - **t3-code** - portable T3 Code operations for project state, desktop and headless setup, private Tailscale access, updates, launchers, local icons, and user services. The skill uses generic examples and runtime detection instead of private fleet details.
 - **latent-premises** - review lens for unguarded assumptions across five categories (input, contract, environment, ordering, cardinality), each finding with a nameable break and one resolution arrow. Taxonomy adapted from alp-river (MIT, Alper Ortac).

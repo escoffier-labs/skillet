@@ -351,6 +351,35 @@ PY
       rm -rf "$brigade_tmp"
     fi
   fi
+  # Script-test contract: a skill that ships executable helper scripts under
+  # scripts/ must prove them with deterministic unit tests (executable
+  # tests/test-* files, plain shell, no model in the loop). The linter runs
+  # them from the skill directory, so CI executes them on every push.
+  local script_count=0
+  if [ -d "$dir/scripts" ]; then
+    script_count="$(find "$dir/scripts" -maxdepth 1 -type f -perm -u+x | wc -l | tr -d ' ')"
+  fi
+  if [ "$script_count" -gt 0 ]; then
+    if [ ! -d "$dir/tests" ]; then
+      echo "[fail] $id: scripts/ ships executable scripts but tests/ is missing"
+      return 1
+    fi
+    local test_files=() test_file test_output
+    while IFS= read -r test_file; do
+      test_files+=("$test_file")
+    done < <(find "$dir/tests" -maxdepth 1 -type f -name 'test-*' -perm -u+x | sort)
+    if [ "${#test_files[@]}" -eq 0 ]; then
+      echo "[fail] $id: tests/ has no executable test-* unit tests for its scripts"
+      return 1
+    fi
+    for test_file in "${test_files[@]}"; do
+      if ! test_output="$(cd "$dir" && bash "$test_file" 2>&1)"; then
+        echo "[fail] $id: unit test ${test_file##*/} failed"
+        printf '%s\n' "$test_output" | sed 's/^/    /'
+        return 1
+      fi
+    done
+  fi
   if [ "$id" = "t3-code" ]; then
     grep -Fq "references/multi-machine.md" "$md" || {
       echo "[fail] t3-code: multi-machine reference is not routed"; return 1
@@ -838,6 +867,24 @@ check_linter_regressions() {
   cp -a "$ROOT"/. "$fixture"
   sed -i 's/^version: 0.1.0$/version: 0.2.0/' "$fixture/skillet/skills/line-check/SKILL.md"
   assert_fixture_rejected "frontmatter and skill.json version mismatch" "$fixture" line-check
+
+  fixture="$tmp/script-tests-missing"
+  cp -a "$ROOT"/. "$fixture"
+  rm -rf "$fixture/skillet/skills/grill/tests"
+  assert_fixture_rejected "script package without tests/ directory" "$fixture" grill "tests/ is missing"
+
+  fixture="$tmp/script-tests-empty"
+  cp -a "$ROOT"/. "$fixture"
+  rm "$fixture/skillet/skills/grill/tests"/test-*
+  printf 'not a test file\n' >"$fixture/skillet/skills/grill/tests/README.md"
+  assert_fixture_rejected "script package without executable test-* files" "$fixture" grill "no executable test-* unit tests"
+
+  fixture="$tmp/script-tests-failing"
+  cp -a "$ROOT"/. "$fixture"
+  printf '%s\n' '#!/usr/bin/env bash' 'echo deliberate failure; exit 1' \
+    >"$fixture/skillet/skills/grill/tests/test-deliberate-failure.sh"
+  chmod +x "$fixture/skillet/skills/grill/tests/test-deliberate-failure.sh"
+  assert_fixture_rejected "failing script unit test" "$fixture" grill "unit test test-deliberate-failure.sh failed"
 
   fixture="$tmp/brigade-unrelated-failure"
   cp -a "$ROOT"/. "$fixture"

@@ -33,6 +33,8 @@ This is a maintained but small project. What you can expect:
 
 Each skill is a directory under `skillet/skills/<name>/` containing a `SKILL.md` with frontmatter (a `name` and a trigger `description`) and the procedure body. Some skills ship helper scripts alongside the `SKILL.md` (for example `grill` ships `scripts/grill-scan.sh`). The trigger `description` is load-bearing: it is what makes the skill auto-fire, so keep it specific about when to use the skill and when not to.
 
+Script packages carry a test contract: any skill that ships executable scripts under `scripts/` must also ship deterministic unit tests for them in a `tests/` directory, as executable `test-*` files written in plain shell with no model in the loop. `tests/lint-skills.sh` enforces the pairing, runs the tests from the skill directory, and fails the skill if a test fails, so script behavior is proven in CI on every push and pull request instead of only when an agent happens to run the script mid-task. Declare the test command in the skill's `skill.json` `tests` list alongside the lint command (see `grill` for the pattern).
+
 ## Testing a skill before you call it done
 
 A skill is done when a fresh agent with no prior context can follow it and reach the intended outcome. The **skillify** skill documents the fresh-agent test in detail; the short version:

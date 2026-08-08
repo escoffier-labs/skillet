@@ -1,8 +1,9 @@
 {
   "id": "grill",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "tests": [
-    "bash ../../../tests/lint-skills.sh grill"
+    "bash ../../../tests/lint-skills.sh grill",
+    "bash tests/test-grill-scan.sh"
   ],
   "trust_level": "workspace"
 }
