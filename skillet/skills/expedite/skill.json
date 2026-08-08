@@ -1,6 +1,6 @@
 {
   "id": "expedite",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "tests": [
     "bash ../../../tests/lint-skills.sh expedite"
   ],
