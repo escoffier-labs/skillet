@@ -1,6 +1,6 @@
 ---
 name: using-skillet
-version: 0.1.2
+version: 0.1.3
 license: MIT
 description: Use when starting any conversation - establishes how to find and use skillet skills, requiring skill invocation before ANY response including clarifying questions.
 ---
@@ -94,7 +94,7 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 
 **Memory and work loop:**
 - `memory-handoff` - capture durable knowledge at the end of a session.
-- `brigade-work` - in a Brigade-wired repo or workspace, close the measured loop: brief at start, verify via `brigade work verify run --target . --command "<proving command>" --capture <skill-or-card-id>` (or capture from a run receipt), outcome capture, export receipts to MiseLedger when installed, so the next run gets an evidence brief with a measurable `brief_hit_rate` instead of only a handoff.
+- `brigade-work` - provided by Brigade, not shipped by skillet: Brigade's installer (`brigade init`) wires it into the repo. When Brigade is absent, skip this route and verify directly per `check`. In a Brigade-wired repo or workspace, close the measured loop: brief at start, verify via `brigade work verify run --target . --command "<proving command>" --capture <skill-or-card-id>` (or capture from a run receipt), outcome capture, export receipts to MiseLedger when installed, so the next run gets an evidence brief with a measurable `brief_hit_rate` instead of only a handoff.
 
 **Pressure and meta:**
 - `pressure-test` - stress-test an idea, plan, or scope before anyone builds it.
