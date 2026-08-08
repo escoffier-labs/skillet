@@ -10,6 +10,8 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - **stagiaire** - one-shot cross-vendor worker dispatch over the user's own CLI logins, with verified headless flags, the per-CLI silent-failure traps, and the write-disabled-chef orchestration pattern. Baseline-tested against live CLIs before it shipped.
 - **t3-code** - portable T3 Code operations for project state, desktop and headless setup, private Tailscale access, updates, launchers, local icons, and user services. The skill uses generic examples and runtime detection instead of private fleet details.
+- **latent-premises** - review lens for unguarded assumptions across five categories (input, contract, environment, ordering, cardinality), each finding with a nameable break and one resolution arrow. Taxonomy adapted from alp-river (MIT, Alper Ortac).
+- **retry-safety** - review lens for side-effect re-run safety: idempotent read-modify-write standard, double-apply hazards per surface, and the migration deploy-window lens with expand-migrate-contract. Adapted from alp-river (MIT, Alper Ortac).
 
 ### Changed
 
@@ -17,11 +19,6 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **t3-code** - added the complete controller-to-remote setup loop, saved environment pairing, per-host transport choice, and an SSH local-forward fallback when the T3 Tailnet port is blocked.
 - **t3-code** - added a Windows remote-host workflow with a PowerShell launcher, current-user Scheduled Task, Tailscale and firewall checks, listener verification, and safe child-process cleanup.
 - **t3-code** - linked the official installer, source, release, and npm channels and separated stable installs from nightly development builds.
-
-### Added
-
-- **latent-premises** - review lens for unguarded assumptions across five categories (input, contract, environment, ordering, cardinality), each finding with a nameable break and one resolution arrow. Taxonomy adapted from alp-river (MIT, Alper Ortac).
-- **retry-safety** - review lens for side-effect re-run safety: idempotent read-modify-write standard, double-apply hazards per surface, and the migration deploy-window lens with expand-migrate-contract. Adapted from alp-river (MIT, Alper Ortac).
 
 ## [0.6.0] - 2026-07-11
 
