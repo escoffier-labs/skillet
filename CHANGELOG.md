@@ -23,6 +23,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - **latent-premises** and **retry-safety** now emit the shared audit report contract: severity and effort on every finding and a leverage-sorted backlog, so their reports compose with the rest of the audit roster instead of stranding. **expedite** accepts reports from all five auditors. `docs/audit-report-format.md` names the full roster and records which fields skills may rename to their lens vocabulary.
+- **using-skillet** now shows the complete atomic Brigade verification command, including the target, proving command, and outcome capture identifier.
 
 ## [0.6.0] - 2026-07-11
 
