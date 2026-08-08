@@ -1,8 +1,8 @@
 ---
 name: retry-safety
-version: 0.1.0
+version: 0.2.0
 license: MIT
-description: Use when a diff carries side effects - database writes, migrations, file mutations, network calls, payments, queue messages - to check whether running it twice is safe. Also when reviewing retry logic, crash recovery, or anything a scheduler, queue, or impatient caller might re-run. Silent when the diff touches no side-effecting surface.
+description: Use when a diff carries side effects - database writes, migrations, file mutations, network calls, payments, queue messages - to check whether running it twice is safe. Also when reviewing retry logic, crash recovery, or anything a scheduler, queue, or impatient caller might re-run. Silent when the diff touches no side-effecting surface. Read-only review. Applying the fixes belongs to expedite.
 ---
 
 # retry-safety
@@ -11,7 +11,7 @@ Fire the same ticket twice and the kitchen must not charge the table twice. Time
 
 **Core principle:** the standard is idempotent read-modify-write at the side-effecting edge. The operation reads current state before writing, so a re-run over work already done completes the remainder and changes nothing else. Anything short of that needs a named reason it is still safe.
 
-**Read-only.** This is a review lens. Fixing is a separate engagement. When the diff touches no side-effecting surface, say so in one line and stop.
+**Read-only.** This is a review lens. Fixing is a separate engagement: hand the finished report to [expedite](../expedite/SKILL.md), which works the backlog in leverage order. When the diff touches no side-effecting surface, say so in one line and stop.
 
 ## The sweep
 
@@ -43,6 +43,8 @@ The fix arrow is expand-migrate-contract: add the column nullable, backfill, the
 
 ## Report contract
 
+Same spine as the shared [audit report format](../../../docs/audit-report-format.md) so findings compose into one backlog and feed [expedite](../expedite/SKILL.md). Severity is the cost of the second run: **critical** (double charge, double payment, silent corruption) / **high** (duplicate effects a user sees: emails, webhooks, doubled rows) / **medium** (corruption someone can repair by hand, or a hazard that needs a narrow crash window) / **low** (cosmetic duplication). Effort is the fix cost: **S** (under 30 min) / **M** (under half a day) / **L** (multi-day).
+
 ```markdown
 # retry-safety report: <scope> (<date>)
 
@@ -50,11 +52,18 @@ The fix arrow is expand-migrate-contract: add the column nullable, backfill, the
 One paragraph, or the single line "no side-effecting surface in this diff".
 
 ## Findings
-### Short imperative title
-- **Where:** file:line
+Grouped by severity, descending. Each:
+### [SEVERITY] Short imperative title
 - **Surface:** which side-effecting edge
+- **Where:** file:line
 - **Second run does:** the concrete double-apply, duplicate, or corruption
 - **Fix:** the state check or idempotency key that makes the re-run finish the remainder
+- **Effort:** S / M / L
+
+## Backlog
+Findings re-sorted by leverage (impact relative to effort), numbered,
+one line each: `N. [SEVERITY/EFFORT] title (surface)`.
+Cheap high-impact items float to the top regardless of severity.
 ```
 
 ## Common mistakes

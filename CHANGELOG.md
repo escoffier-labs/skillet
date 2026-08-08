@@ -20,6 +20,10 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **t3-code** - added a Windows remote-host workflow with a PowerShell launcher, current-user Scheduled Task, Tailscale and firewall checks, listener verification, and safe child-process cleanup.
 - **t3-code** - linked the official installer, source, release, and npm channels and separated stable installs from nightly development builds.
 
+### Fixed
+
+- **latent-premises** and **retry-safety** now emit the shared audit report contract: severity and effort on every finding and a leverage-sorted backlog, so their reports compose with the rest of the audit roster instead of stranding. **expedite** accepts reports from all five auditors. `docs/audit-report-format.md` names the full roster and records which fields skills may rename to their lens vocabulary.
+
 ## [0.6.0] - 2026-07-11
 
 ### Added

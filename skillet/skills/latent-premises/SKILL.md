@@ -1,8 +1,8 @@
 ---
 name: latent-premises
-version: 0.1.0
+version: 0.2.0
 license: MIT
-description: "Use when reviewing a diff or module for hidden assumptions - things the code takes for granted that nothing guarantees - or when asked \"what could break this later\", \"what does this assume\", or to harden code that works today. Complements bug-hunt: bug-hunt finds defects with triggers today; this finds the ones waiting for tomorrow."
+description: "Use when reviewing a diff or module for hidden assumptions - things the code takes for granted that nothing guarantees - or when asked \"what could break this later\", \"what does this assume\", or to harden code that works today. Complements bug-hunt: bug-hunt finds defects with triggers today; this finds the ones waiting for tomorrow. Read-only review. Applying the resolutions belongs to expedite."
 ---
 
 # latent-premises
@@ -11,7 +11,7 @@ An unguarded premise is an undeclared allergen. The dish is fine for most diners
 
 **Core principle:** a premise is only a finding when it is genuinely unenforced AND you can name what concretely breaks when it fails. Enforced premises are fine. Consequences you cannot name are hypotheses, not findings.
 
-**Read-only.** This is a review lens. Fixing is a separate engagement.
+**Read-only.** This is a review lens. Fixing is a separate engagement: hand the finished report to [expedite](../expedite/SKILL.md), which works the backlog in leverage order.
 
 ## The taxonomy
 
@@ -36,6 +36,8 @@ Hunt in five categories. Each finding gets exactly one.
 
 ## Report contract
 
+Same spine as the shared [audit report format](../../../docs/audit-report-format.md) so findings compose into one backlog and feed [expedite](../expedite/SKILL.md). Severity is the cost of the premise breaking: **critical** (silent corruption or security exposure) / **high** (crash or wrong results on inputs the system will plausibly see soon) / **medium** (breaks under realistic growth or configuration change) / **low** (brittleness worth a note). Effort is the resolution cost: **S** (under 30 min) / **M** (under half a day) / **L** (multi-day).
+
 ```markdown
 # latent-premises report: <scope> (<date>)
 
@@ -43,12 +45,20 @@ Hunt in five categories. Each finding gets exactly one.
 Paragraph: how much unguarded weight the code carries, the scariest premise.
 
 ## Findings
-### [category] Short imperative title
+Grouped by severity, descending. Each:
+### [SEVERITY] Short imperative title
+- **Category:** input | contract | environment | ordering | cardinality
 - **Where:** file:line
 - **Premise:** what the code takes for granted
 - **Unenforced because:** what you checked (types, upstream validation, framework contract)
 - **Breaks when:** the concrete input or state change, and what happens
 - **Resolution:** guard it | document it | encode it in the type - with the specific move
+- **Effort:** S / M / L
+
+## Backlog
+Findings re-sorted by leverage (impact relative to effort), numbered,
+one line each: `N. [SEVERITY/EFFORT] title (category)`.
+Cheap high-impact items float to the top regardless of severity.
 
 ## Not findings
 Premises checked and found enforced (count and one-liners), and premises the plan or a comment explicitly accepted.

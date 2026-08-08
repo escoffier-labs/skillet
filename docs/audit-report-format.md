@@ -1,8 +1,8 @@
 # Audit report format (the spine)
 
-The canonical contract shared by `line-check`, `bug-hunt`, and `security-sweep`. Each skill inlines the short version of this contract so it works standalone; this document is the source of truth when they drift.
+The canonical contract shared by `line-check`, `bug-hunt`, `security-sweep`, `latent-premises`, and `retry-safety`. Each skill inlines the short version of this contract so it works standalone. This document is the source of truth when they drift.
 
-The point of the contract: findings from any of the three skills compose into one backlog. Run line-check today and security-sweep next week, and the results sort into a single prioritized list without translation.
+The point of the contract: findings from any of the five skills compose into one backlog. Run line-check today and security-sweep next week, and the results sort into a single prioritized list without translation. The backlog is also the input to `expedite`, the execution step that works findings in leverage order, so a report without severity, effort, and a backlog cannot be executed.
 
 ## Severity scale
 
@@ -33,6 +33,7 @@ Rules:
 - "Where" must be checkable. A reviewer should be able to jump there and see it.
 - "Fix" is an action, never "consider improving X".
 - Findings the skill could not verify get downgraded one severity and marked `(unverified)` in the title.
+- A skill may rename fields to its lens vocabulary (bug-hunt's Lens and Trigger, latent-premises' Category, Premise, and Resolution, retry-safety's Surface and Second run does) as long as every finding still carries a severity, a checkable location, an actionable fix under whatever name, and an effort estimate, and the report still ends with the leverage-sorted backlog. Severity, effort, location, fix, and backlog are the fields `expedite` consumes. They are not optional.
 
 ## Report layout
 
