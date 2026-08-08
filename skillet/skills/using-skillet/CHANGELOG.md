@@ -2,6 +2,10 @@
 
 Earlier history lives in the repo-level CHANGELOG.md.
 
+## 0.1.4 - 2026-08-08
+
+- The `brigade-work` routing entry now references the canonical Brigade process model (`docs/brigade-process-model.md`) instead of restating the loop.
+
 ## 0.1.3 - 2026-08-08
 
 - Labeled the `brigade-work` route as provided by Brigade (wired in by `brigade init`), not shipped by skillet, and named the fallback when Brigade is absent: skip the route and verify directly per `check`.
