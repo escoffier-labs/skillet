@@ -2,6 +2,10 @@
 
 Earlier history lives in the repo-level CHANGELOG.md.
 
+## 0.1.3 - 2026-08-08
+
+- Labeled the `brigade-work` route as provided by Brigade (wired in by `brigade init`), not shipped by skillet, and named the fallback when Brigade is absent: skip the route and verify directly per `check`.
+
 ## 0.1.2 - 2026-08-08
 
 - The `brigade-work` route now shows the complete atomic verification form with `--target`, `--command`, and `--capture` arguments.

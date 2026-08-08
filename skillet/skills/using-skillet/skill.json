@@ -1,6 +1,6 @@
 {
   "id": "using-skillet",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "tests": [
     "bash ../../../tests/lint-skills.sh using-skillet"
   ],
