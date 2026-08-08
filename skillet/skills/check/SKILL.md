@@ -1,6 +1,6 @@
 ---
 name: check
-version: 0.1.1
+version: 0.1.2
 license: MIT
 description: Use when about to claim anything works, is fixed, is complete, or passes - before committing, replying to the user, or moving to the next task. Also use when relaying a subagent's or tool's success report, and especially at the end of a long session when the pull to say "done" is strongest.
 ---
@@ -31,7 +31,7 @@ Then, when GraphTrail/MiseLedger are installed, feed the next run:
 brigade receipts export miseledger --target . --new-only --import
 ```
 
-Raw `pytest` / `npm test` proves the claim for this response but leaves Brigade dormant (`outcome rank` says "ranking: none"). The differentiated path is receipts that feed the next run's context with a measured brief hit rate. Full loop: skillet's reference to `brigade-work` (wired by `brigade init`).
+Raw `pytest` / `npm test` proves the claim for this response but leaves Brigade dormant (`outcome rank` says "ranking: none"). The differentiated path is receipts that feed the next run's context with a measured brief hit rate. This skill owns the loop's evidence gate. The full loop and the other gates are defined in the [Brigade process model](../../../docs/brigade-process-model.md).
 
 ## The gate
 
