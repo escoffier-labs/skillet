@@ -1,6 +1,6 @@
 ---
 name: graphtrail
-version: 0.1.0
+version: 0.1.1
 license: MIT
 description: Use when answering structural code questions in an indexed repo - who calls this, what does this call, what breaks if I change it, what changed between two versions. Reach for it BEFORE grep whenever the question is about relationships between symbols rather than text. Triggers include "who calls", "what uses", "blast radius", "impact of changing", "callers of", "what depends on", and reviewing a diff's structural effect.
 ---

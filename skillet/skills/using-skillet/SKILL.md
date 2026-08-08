@@ -1,6 +1,6 @@
 ---
 name: using-skillet
-version: 0.1.0
+version: 0.1.1
 license: MIT
 description: Use when starting any conversation - establishes how to find and use skillet skills, requiring skill invocation before ANY response including clarifying questions.
 ---
