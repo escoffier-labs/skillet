@@ -478,6 +478,9 @@ PY
       echo "[fail] t3-code: official Windows installer command missing"; return 1
     }
   fi
+  if [ -f "$dir/evals/evals.json" ]; then
+    bash "$ROOT/tests/lint-evals.sh" "$id" || return 1
+  fi
   echo "[ok] $id"
 }
 
@@ -924,5 +927,7 @@ else
   check_workflow_skill_references || FAIL=1
   check_skill_boundaries || FAIL=1
   check_brigade_verify_commands || FAIL=1
+  LINT_EVALS_SKIP_SELF_TESTS="${LINT_SKILLS_SKIP_SELF_TESTS:-0}" \
+    bash "$ROOT/tests/lint-evals.sh" || FAIL=1
 fi
 exit $FAIL
