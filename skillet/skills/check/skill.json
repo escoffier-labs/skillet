@@ -2,7 +2,8 @@
   "id": "check",
   "version": "0.1.2",
   "tests": [
-    "bash ../../../tests/lint-skills.sh check"
+    "bash ../../../tests/lint-skills.sh check",
+    "bash ../../../tests/lint-evals.sh check"
   ],
   "trust_level": "workspace"
 }
