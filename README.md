@@ -22,7 +22,7 @@
 
 <p align="center">
   <img src="https://shieldcn.dev/github/release/escoffier-labs/skillet.svg" alt="Latest release">
-  <img src="https://shieldcn.dev/badge/skills-36-orange.svg" alt="36 skills">
+  <img src="https://shieldcn.dev/badge/skills-37-orange.svg" alt="37 skills">
   <img src="https://shieldcn.dev/badge/license-MIT-green.svg" alt="MIT license">
 </p>
 
@@ -42,7 +42,7 @@ brigade add skills
 |---|---|---|
 | **Audit** | See what matters first | line-check, bug-hunt, security-sweep, latent-premises, retry-safety with priority-sorted backlogs |
 | **Ship** | Gate what goes public | publish-readiness, garnish, release-cut, plate |
-| **Execute** | Plan, build, upgrade, and measure | recipe, taste, stocktake, thermometer, reduce |
+| **Execute** | Plan, build, upgrade, and measure | recipe, taste, stocktake, thermometer, reduce, fleet-conductor |
 | **Remember** | File what you learned | memory-handoff compatible with Brigade |
 
 
@@ -110,6 +110,7 @@ Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflo
 | **sendback** | Receiving review feedback with rigor instead of reflex: verify each claim against the codebase, YAGNI-gate the "should also support" items, stop on vague items instead of guessing, push back with evidence, and skip the performative "great point!" entirely. |
 | **check** | The expeditor's look at every plate before it leaves: no claim of done, fixed, or passing without fresh verification evidence in the same reply. Subagent success reports are claims to verify, not evidence to relay, and a failing verification is a finding to report, never an invitation to make the command pass. |
 | **stations** | The expeditor's fan-out for parallel agents: cluster failures by root cause before dispatching (a symptom list is not a work breakdown), check write sets for collisions, give each station a complete self-contained ticket, and taste the integrated result yourself. |
+| **fleet-conductor** | Fleet orchestration for burn-downs and multi-repo campaigns across Codex, Cursor cloud agents, and Claude: the frontier session conducts (triggers, decisions, relays) and never implements. Seat ladder, collision rules, landing loop, and quota triage so every expensive lane has a cheaper substitute. |
 | **pressure-test** | Drives a plan or design to explicit decisions before anyone builds, one decision at a time, each pinned to its basis. Includes sous mode: going AFK? The agent makes the reversible calls in your place, tags each answer evidence/constraint/judgment, parks anything it can't take back, and leaves you an auditable transcript. |
 | **pass** | The gate before a pull request leaves your hands: real-fix-not-bandaid, tested and green, one concern, self-reviewed diff, clean artifact, and a PR body the author approves before anything is filed. The chef's inspection at the pass. |
 | **release-cut** | Changelog roll-up, semver bump, tag, GitHub release, drafted announcement. Releases on request, never per feature. |

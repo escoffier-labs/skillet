@@ -53,6 +53,7 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 - `taste` - test-driven: write the failing test first, watch it fail, then the minimal code.
 - `fire` - execute a written plan task by task, verifying and committing each.
 - `stations` - fan out two or more genuinely independent pieces of work to concurrent agents.
+- `fleet-conductor` - orchestrate large parallel campaigns (burn-downs, backlog sweeps, multi-repo) across Codex, Cursor cloud agents, and Claude; conduct, never implement.
 - `worktree` - set up an isolated workspace before risky or parallel work.
 - `stagiaire` - dispatch a one-shot worker on another vendor's CLI (second opinion, cross-model review, cheap bulk model) over the user's own logins.
 

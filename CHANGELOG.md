@@ -15,6 +15,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **t3-code** - portable T3 Code operations for project state, desktop and headless setup, private Tailscale access, updates, launchers, local icons, and user services. The skill uses generic examples and runtime detection instead of private fleet details.
 - **latent-premises** - review lens for unguarded assumptions across five categories (input, contract, environment, ordering, cardinality), each finding with a nameable break and one resolution arrow. Taxonomy adapted from alp-river (MIT, Alper Ortac).
 - **retry-safety** - review lens for side-effect re-run safety: idempotent read-modify-write standard, double-apply hazards per surface, and the migration deploy-window lens with expand-migrate-contract. Adapted from alp-river (MIT, Alper Ortac).
+- **fleet-conductor** - fleet orchestration for burn-downs and multi-repo campaigns: the frontier session conducts (triggers, decisions, relays) and never implements. Seat ladder, prompt contract, collision rules, landing loop, cadence, and quota triage across Codex, Cursor cloud agents, and Claude subagents.
 
 ### Changed
 
