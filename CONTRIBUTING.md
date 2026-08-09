@@ -35,6 +35,8 @@ Each skill is a directory under `skillet/skills/<name>/` containing a `SKILL.md`
 
 Script packages carry a test contract: any skill that ships executable scripts under `scripts/` must also ship deterministic unit tests for them in a `tests/` directory, as executable `test-*` files written in plain shell with no model in the loop. `tests/lint-skills.sh` enforces the pairing, runs the tests from the skill directory, and fails the skill if a test fails, so script behavior is proven in CI on every push and pull request instead of only when an agent happens to run the script mid-task. Declare the test command in the skill's `skill.json` `tests` list alongside the lint command (see `grill` for the pattern).
 
+Skills that fetch or ingest external content (web pages, advisories, review comments, transcripts, pasted artifacts, scanned trees) must include the shared `## Untrusted content` section. The contract, the required bullets, and the in-scope roster are documented in [`docs/untrusted-content.md`](docs/untrusted-content.md); `tests/lint-skills.sh` fails any listed skill that omits the section.
+
 ## Testing a skill before you call it done
 
 A skill is done when a fresh agent with no prior context can follow it and reach the intended outcome. The **skillify** skill documents the fresh-agent test in detail; the short version:

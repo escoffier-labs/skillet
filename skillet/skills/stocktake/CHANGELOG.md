@@ -2,6 +2,10 @@
 
 Earlier history lives in the repository changelog.
 
+## 0.1.1 - 2026-08-08
+
+- Added the shared Untrusted content section required for skills that ingest external data.
+
 ## 0.1.0 - 2026-07-10
 
 - Added dependency, runtime, package-manager, and toolchain inventory workflows.

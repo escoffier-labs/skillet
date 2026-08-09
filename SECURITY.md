@@ -19,7 +19,7 @@ You should get an acknowledgment within 72 hours. If you do not, please follow u
 
 - A skill that instructs an agent to leak secrets, exfiltrate data, or run destructive commands without the documented human-in-the-loop gate.
 - A skill whose procedure causes an agent to write outside the repo it was pointed at, or to push, publish, or release without explicit operator approval.
-- Prompt-injection or untrusted-content handling flaws in a skill that processes external input (for example the leak-scrub and audit skills).
+- Prompt-injection or untrusted-content handling flaws in a skill that processes external input (for example the leak-scrub and audit skills). In-scope skills must declare the shared stance in [`docs/untrusted-content.md`](docs/untrusted-content.md).
 - A skill that bypasses its own stated read-only or review-gated boundary (for example the audit trio applying changes, or release-cut tagging without a request).
 
 ## Skills execute through your agent

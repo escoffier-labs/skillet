@@ -24,6 +24,21 @@ AUDIT_ONLY_SECTIONS=(
 )
 FIX_APPLICATION_PATTERN='(?i)\b(?:apply|implement|execute|perform|make|edit|modify|change|patch|correct|remediate|repair|resolve|write)\b.{0,80}\b(?:fix|fixes|remediation|remediations|recommendation|recommendations|patch|patches|change|changes|edit|edits|file|files|finding|findings)\b'
 
+# Skills that fetch or ingest external content must declare the shared
+# Untrusted content section. Keep the roster next to the other boundary lists;
+# the contract text lives in docs/untrusted-content.md.
+EXTERNAL_CONTENT_SKILLS=(
+  grill
+  plate
+  publish-readiness
+  review
+  sendback
+  security-sweep
+  brigade-handoffs
+  reel-check
+  stocktake
+)
+
 check_skill() {
   local dir="$1" id
   id="$(basename "$dir")"
@@ -697,6 +712,40 @@ PY
   echo "[ok] skill boundaries"
 }
 
+check_untrusted_content_contract() {
+  local id boundary_error
+
+  for id in "${EXTERNAL_CONTENT_SKILLS[@]}"; do
+    if ! boundary_error="$(python3 - "$SKILLS_DIR/$id/SKILL.md" 2>&1 <<'PY'
+import re
+import sys
+
+text = open(sys.argv[1], encoding="utf-8").read()
+match = re.search(r"(?ms)^## Untrusted content\s*$\n(.*?)(?=^## |\Z)", text)
+if not match:
+    print("Untrusted content section missing")
+    raise SystemExit(1)
+section = match.group(1)
+checks = [
+    (r"(?i)\bas data\b", "missing 'as data' bullet"),
+    (r"(?i)\bnot instructions\b", "missing 'not instructions' bullet"),
+    (r"(?i)\bquote\b", "missing quote guidance"),
+    (r"(?i)\bdo not execute\b|\bdon't execute\b", "missing do-not-execute guidance"),
+    (r"(?i)\bescalat", "missing escalation path"),
+]
+for pattern, message in checks:
+    if not re.search(pattern, section):
+        print(message)
+        raise SystemExit(1)
+PY
+)"; then
+      echo "[fail] $id: $boundary_error"
+      return 1
+    fi
+  done
+  echo "[ok] untrusted content contract"
+}
+
 check_brigade_verify_commands() {
   local command_error
   if ! command_error="$(python3 - "$SKILLS_DIR" 2>&1 <<'PY'
@@ -831,6 +880,25 @@ check_linter_regressions() {
   sed -i '/| \*\*memory-handoff\*\* |/a | **Phantom Skill** | Deliberate malformed catalog row. |' "$fixture/README.md"
   assert_fixture_rejected "malformed README catalog row" "$fixture"
 
+  fixture="$tmp/untrusted-content-missing"
+  cp -a "$ROOT"/. "$fixture"
+  python3 - "$fixture/skillet/skills/grill/SKILL.md" <<'PY'
+from pathlib import Path
+import re
+import sys
+path = Path(sys.argv[1])
+text = path.read_text(encoding="utf-8")
+text, n = re.subn(
+    r"(?ms)^## Untrusted content\s*$\n.*?(?=^## |\Z)",
+    "",
+    text,
+    count=1,
+)
+assert n == 1, "expected Untrusted content section to strip"
+path.write_text(text, encoding="utf-8")
+PY
+  assert_fixture_rejected "missing untrusted content section" "$fixture" "" "Untrusted content section missing"
+
   fixture="$tmp/read-only-application"
   cp -a "$ROOT"/. "$fixture"
   sed -i '/\*\*Read-only\.\*\* Never modify the repo during an audit\./a Apply each finding\047s fix directly before reporting it.' "$fixture/skillet/skills/line-check/SKILL.md"
@@ -926,6 +994,7 @@ else
   check_catalog || FAIL=1
   check_workflow_skill_references || FAIL=1
   check_skill_boundaries || FAIL=1
+  check_untrusted_content_contract || FAIL=1
   check_brigade_verify_commands || FAIL=1
   LINT_EVALS_SKIP_SELF_TESTS="${LINT_SKILLS_SKIP_SELF_TESTS:-0}" \
     bash "$ROOT/tests/lint-evals.sh" || FAIL=1
