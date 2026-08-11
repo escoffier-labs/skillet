@@ -7,7 +7,7 @@
   "plugins": [
     {
       "name": "skillet",
-      "description": "Production-tested skills for auditing, improving, and shipping repos with AI coding agents: line-check, bug-hunt, security-sweep, expedite, special, mise, recipe, fire, worktree, taste, demi, reduce, refire, stocktake, thermometer, review, sendback, stations, check, pressure-test, plate, grill, reel-check, garnish, pass, publish-readiness, release-cut, graphtrail, t3-code, memory-handoff, brigade-handoffs, and skillify",
+      "description": "Production-tested skills for auditing, improving, and shipping repos with AI coding agents: line-check, bug-hunt, security-sweep, expedite, special, mise, recipe, fire, worktree, taste, demi, reduce, refire, stocktake, thermometer, review, sendback, stations, fleet-conductor, check, pressure-test, plate, grill, reel-check, garnish, pass, publish-readiness, release-cut, graphtrail, t3-code, memory-handoff, brigade-handoffs, and skillify",
       "source": "./skillet",
       "category": "development",
       "author": {

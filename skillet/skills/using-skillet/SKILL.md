@@ -1,6 +1,6 @@
 ---
 name: using-skillet
-version: 0.1.4
+version: 0.1.5
 license: MIT
 description: Use when starting any conversation - establishes how to find and use skillet skills, requiring skill invocation before ANY response including clarifying questions.
 ---
@@ -64,6 +64,7 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 
 **Review and ship:**
 - `pass` - the pre-PR gate; nothing is filed until it clears.
+- `fleet-conductor` - conduct a large backlog or multi-repo campaign: bounded lanes, collision holds, draft-until-gates landing, merge verification from GitHub evidence.
 - `review` - dispatch an independent reviewer with crafted context.
 - `sendback` - act on review feedback: verify each claim before implementing it.
 - `release-cut` - cut a release, roll the changelog, tag a version (on request).

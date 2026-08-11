@@ -37,6 +37,7 @@ EXTERNAL_CONTENT_SKILLS=(
   brigade-handoffs
   reel-check
   stocktake
+  fleet-conductor
 )
 
 check_skill() {
