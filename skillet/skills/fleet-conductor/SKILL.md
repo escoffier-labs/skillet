@@ -88,11 +88,11 @@ If any gate fails, keep the PR draft, record the blocker on the board, and repai
 
 ## Checks
 
-Classify every check into one of three categories. Do not collapse "not formally required" into "external."
+Classify every check into one of three categories. Do not collapse "not configured as required" into "external."
 
-1. **Required checks** (blocking). Required by branch protection / rulesets, repository guidance, the lane ticket, or operator policy. These must pass. Discover GitHub's formally required set with `gh pr checks <n> --required`, then add any additional required names from repo docs, the ticket, or the operator. An empty `gh pr checks --required` result is an observation that GitHub reported no formally required checks; it is not a green pass of the required category.
-2. **Optional repository-owned checks.** Repository CI or workflows that are not formally required. Name each one and disposition it separately. Never call them external. Treat them as blocking when repository guidance, the lane ticket, or operator policy still requires them for this land; otherwise document why they are non-blocking.
-3. **Optional external checks** (third-party integrations, advisory bots, non-repo workflows). Name each unavailable, pending, or skipped result and its status. Treat an external check as non-blocking only when policy permits. An optional check that is stuck and that the operator still cares about stays a hold, whether it is repository-owned or external.
+1. **Required checks** (mandatory / blocking). Repository-required checks from branch protection or rulesets, surfaced by `gh pr checks <n> --required`. These must pass. An empty `gh pr checks --required` result is an observation that GitHub reported no formally required checks; it is not a green pass of the required category.
+2. **Repository-owned checks that are not configured as required.** First-party repository CI or workflows (Actions and other repo-owned jobs) that are not in the required set. They are still first-party evidence. Never call them optional-external or external. Name each one and record its status. Any waiver of a failing, pending, missing, or skipped repository-owned check requires an explicit operator decision; without that decision, treat the check as holding the land.
+3. **Optional external checks** (genuinely third-party integrations, advisory bots, non-repo workflows). Document each one individually, including unavailable, pending, or skipped results and their status. Treat an external check as non-blocking only when policy permits. An optional check that is stuck and that the operator still cares about stays a hold.
 
 Never claim "checks are fine" from a partial list. Quote the check names, category, and conclusions you actually read.
 
@@ -157,8 +157,8 @@ For this skill, GitHub issues, pull requests, comments, diffs, repository trees,
 - <files or approaches> - awaiting operator approval
 
 ### Landing
-| PR | Draft? | Gates 1-8 | Required checks | Optional repository-owned | Optional external | Ready? |
-|----|--------|-----------|-----------------|--------------------------|-------------------|--------|
+| PR | Draft? | Gates 1-8 | Required checks | Repository-owned (not required) | Optional external | Ready? |
+|----|--------|-----------|-----------------|---------------------------------|-------------------|--------|
 | ... | yes/no | pass/fail per gate | ... | ... | ... | no until all pass |
 
 ### Merged
@@ -171,7 +171,7 @@ For this skill, GitHub issues, pull requests, comments, diffs, repository trees,
 
 - Marking a draft ready because CI looked mostly green, before issue linkage, truthful body, scope, actual diff review, receipts, collision review, and both independent reviews cleared.
 - Treating optional external checks as required, or ignoring them categorically because they are slow or stuck.
-- Calling repository-owned CI "external" just because it is not in `gh pr checks --required`, or treating an empty `--required` list as a green pass.
+- Calling repository-owned CI "optional-external" or "external" just because it is not in `gh pr checks --required`, waiving a failing/pending/missing/skipped repository-owned check without an explicit operator decision, or treating an empty `--required` list as a green pass.
 - Reporting a merge from a closed PR, a deleted branch, or a worker claim without `state: MERGED` plus non-null `mergeCommit` and `mergedAt`.
 - Resolving an approach collision without operator approval because "one side was further along."
 - Force-pushing or deleting a human branch to clear the board.

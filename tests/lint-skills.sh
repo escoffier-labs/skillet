@@ -775,10 +775,13 @@ if re.search(r"(?i)optional-external for this land", section):
     raise SystemExit(1)
 required = [
     (r"(?i)branch protection|ruleset", "missing required-check discovery from branch protection/rulesets"),
-    (r"(?i)repository guidance|lane ticket|operator policy", "missing required-check sources beyond GitHub --required"),
+    (r"(?i)gh pr checks.*--required|--required", "missing gh pr checks --required for required class"),
     (r"(?i)empty.*--required|`--required`.*observation|observation.*(?:not|never).*(?:green|pass)", "missing empty --required observation-not-pass rule"),
-    (r"(?i)optional repository-owned|repository-owned(?: checks)? that are not", "missing optional repository-owned check class"),
-    (r"(?i)never call them external|do not call them external|not call them external", "missing ban on calling repository-owned checks external"),
+    (r"(?i)repository-owned|first-party", "missing repository-owned / first-party check class"),
+    (r"(?i)first-party evidence", "missing first-party evidence wording for repository-owned checks"),
+    (r"(?i)never call them (?:optional-)?external|do not call them (?:optional-)?external|not call them (?:optional-)?external|never (?:call|label).*(?:optional-)?external", "missing ban on calling repository-owned checks external"),
+    (r"(?i)explicit operator decision", "missing explicit operator decision for repository-owned waivers"),
+    (r"(?i)failing.*pending.*missing.*skipped|pending.*missing.*skipped", "missing failing/pending/missing/skipped waiver coverage"),
     (r"(?i)optional external|third-party", "missing optional external third-party check class"),
     (r"(?i)unavailable|pending|skipped", "missing naming of unavailable/pending/skipped external results"),
     (r"(?i)operator.*(?:care|cares|cared).*hold|stuck.*hold|stays a hold", "missing operator-cared stuck-check hold"),
@@ -787,19 +790,19 @@ for pattern, message in required:
     if not re.search(pattern, section):
         print(message)
         raise SystemExit(1)
-# Landing table must not collapse internal vs external optional checks.
+# Landing table must not collapse repository-owned vs external checks.
 landing = re.search(r"(?ms)^### Landing\s*$\n(.*?)(?=^### |\Z)", text)
 if not landing:
     print("Landing output table missing")
     raise SystemExit(1)
 table = landing.group(1)
 if re.search(r"(?i)Optional checks noted", table) and not re.search(
-    r"(?i)Optional repository-owned|Optional external", table
+    r"(?i)Repository-owned|Optional external", table
 ):
     print("Landing table collapses optional checks into one column")
     raise SystemExit(1)
-if not re.search(r"(?i)Optional repository-owned", table):
-    print("Landing table missing optional repository-owned column")
+if not re.search(r"(?i)Repository-owned", table):
+    print("Landing table missing repository-owned column")
     raise SystemExit(1)
 if not re.search(r"(?i)Optional external", table):
     print("Landing table missing optional external column")
@@ -1074,7 +1077,15 @@ text, n = re.subn(
     count=1,
 )
 assert n == 1, "expected Checks section to replace"
-# Also collapse the Landing table optional column if present.
+# Also collapse the Landing table repository-owned column if present.
+text = text.replace(
+    "| PR | Draft? | Gates 1-8 | Required checks | Repository-owned (not required) | Optional external | Ready? |",
+    "| PR | Draft? | Gates 1-8 | Required checks | Optional checks noted | Ready? |",
+)
+text = text.replace(
+    "|----|--------|-----------|-----------------|---------------------------------|-------------------|--------|",
+    "|----|--------|-----------|-----------------|----------------------|--------|",
+)
 text = text.replace(
     "| PR | Draft? | Gates 1-8 | Required checks | Optional repository-owned | Optional external | Ready? |",
     "| PR | Draft? | Gates 1-8 | Required checks | Optional checks noted | Ready? |",
