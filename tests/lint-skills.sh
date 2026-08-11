@@ -1077,23 +1077,6 @@ text, n = re.subn(
     count=1,
 )
 assert n == 1, "expected Checks section to replace"
-# Also collapse the Landing table repository-owned column if present.
-text = text.replace(
-    "| PR | Draft? | Gates 1-8 | Required checks | Repository-owned (not required) | Optional external | Ready? |",
-    "| PR | Draft? | Gates 1-8 | Required checks | Optional checks noted | Ready? |",
-)
-text = text.replace(
-    "|----|--------|-----------|-----------------|---------------------------------|-------------------|--------|",
-    "|----|--------|-----------|-----------------|----------------------|--------|",
-)
-text = text.replace(
-    "| PR | Draft? | Gates 1-8 | Required checks | Optional repository-owned | Optional external | Ready? |",
-    "| PR | Draft? | Gates 1-8 | Required checks | Optional checks noted | Ready? |",
-)
-text = text.replace(
-    "|----|--------|-----------|-----------------|--------------------------|-------------------|--------|",
-    "|----|--------|-----------|-----------------|----------------------|--------|",
-)
 path.write_text(text, encoding="utf-8")
 PY
   assert_fixture_rejected \
@@ -1102,6 +1085,41 @@ PY
     "" \
     "collapses non-required checks into optional-external"
 
+  fixture="$tmp/fleet-conductor-collapse-landing-table"
+  cp -a "$ROOT"/. "$fixture"
+  python3 - "$fixture/skillet/skills/fleet-conductor/SKILL.md" <<'PY'
+from pathlib import Path
+import re
+import sys
+
+path = Path(sys.argv[1])
+text = path.read_text(encoding="utf-8")
+checks_before = re.search(r"(?ms)^## Checks\s*$\n.*?(?=^## |\Z)", text)
+assert checks_before, "Checks section missing in fixture source"
+header = "| PR | Draft? | Gates 1-8 | Required checks | Repository-owned (not required) | Optional external | Ready? |"
+divider = "|----|--------|-----------|-----------------|---------------------------------|-------------------|--------|"
+assert text.count(header) == 1, "expected Landing table header to replace"
+assert text.count(divider) == 1, "expected Landing table divider to replace"
+text = text.replace(
+    header,
+    "| PR | Draft? | Gates 1-8 | Required checks | Optional checks noted | Ready? |",
+)
+text = text.replace(
+    divider,
+    "|----|--------|-----------|-----------------|----------------------|--------|",
+)
+checks_after = re.search(r"(?ms)^## Checks\s*$\n.*?(?=^## |\Z)", text)
+assert checks_after and checks_after.group(0) == checks_before.group(0), (
+    "Landing-only fixture changed the Checks section"
+)
+path.write_text(text, encoding="utf-8")
+PY
+  assert_fixture_rejected \
+    "fleet-conductor Landing table check-class collapse" \
+    "$fixture" \
+    "" \
+    "Landing table collapses optional checks into one column"
+
   rm -rf "$tmp"
   if [ "$regression_failures" -ne 0 ]; then
     return 1
@@ -1109,7 +1127,9 @@ PY
   echo "[ok] linter regression boundaries"
 }
 
-if [ "$#" -ge 1 ]; then
+if [ "${1:-}" = "--fleet-conductor-checks-contract" ]; then
+  check_fleet_conductor_checks_contract || FAIL=1
+elif [ "$#" -ge 1 ]; then
   check_skill "$SKILLS_DIR/$1" || FAIL=1
 else
   if [ "${LINT_SKILLS_SKIP_SELF_TESTS:-0}" != "1" ]; then
