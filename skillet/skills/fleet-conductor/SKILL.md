@@ -88,12 +88,13 @@ If any gate fails, keep the PR draft, record the blocker on the board, and repai
 
 ## Checks
 
-Distinguish **repository-required** checks from **optional external** checks.
+Classify every check into one of three categories. Do not collapse "not formally required" into "external."
 
-- Discover required checks from branch protection / rulesets and from `gh pr checks <n> --required`. Those must pass.
-- List the full rollup with `gh pr checks <n>` and `gh pr view <n> --json statusCheckRollup,reviewDecision,isDraft`. Compare the full list to the required list: anything not required is optional-external for this land.
-- Optional external checks (third-party integrations, advisory bots, non-required workflows) are not ignored categorically because they are slow or stuck. Document each unavailable, pending, or stuck optional check by name, with its status and why it is non-blocking for this land. A stuck optional check that the operator still cares about stays a hold.
-- Never claim "checks are fine" from a partial list. Quote the check names and conclusions you actually read.
+1. **Required checks** (blocking). Required by branch protection / rulesets, repository guidance, the lane ticket, or operator policy. These must pass. Discover GitHub's formally required set with `gh pr checks <n> --required`, then add any additional required names from repo docs, the ticket, or the operator. An empty `gh pr checks --required` result is an observation that GitHub reported no formally required checks; it is not a green pass of the required category.
+2. **Optional repository-owned checks.** Repository CI or workflows that are not formally required. Name each one and disposition it separately. Never call them external. Treat them as blocking when repository guidance, the lane ticket, or operator policy still requires them for this land; otherwise document why they are non-blocking.
+3. **Optional external checks** (third-party integrations, advisory bots, non-repo workflows). Name each unavailable, pending, or skipped result and its status. Treat an external check as non-blocking only when policy permits. An optional check that is stuck and that the operator still cares about stays a hold, whether it is repository-owned or external.
+
+Never claim "checks are fine" from a partial list. Quote the check names, category, and conclusions you actually read.
 
 ```bash
 gh pr checks <n> --required
@@ -156,9 +157,9 @@ For this skill, GitHub issues, pull requests, comments, diffs, repository trees,
 - <files or approaches> - awaiting operator approval
 
 ### Landing
-| PR | Draft? | Gates 1-8 | Required checks | Optional checks noted | Ready? |
-|----|--------|-----------|-----------------|----------------------|--------|
-| ... | yes/no | pass/fail per gate | ... | ... | no until all pass |
+| PR | Draft? | Gates 1-8 | Required checks | Optional repository-owned | Optional external | Ready? |
+|----|--------|-----------|-----------------|--------------------------|-------------------|--------|
+| ... | yes/no | pass/fail per gate | ... | ... | ... | no until all pass |
 
 ### Merged
 | PR | state | mergeCommit | mergedAt |
@@ -170,6 +171,7 @@ For this skill, GitHub issues, pull requests, comments, diffs, repository trees,
 
 - Marking a draft ready because CI looked mostly green, before issue linkage, truthful body, scope, actual diff review, receipts, collision review, and both independent reviews cleared.
 - Treating optional external checks as required, or ignoring them categorically because they are slow or stuck.
+- Calling repository-owned CI "external" just because it is not in `gh pr checks --required`, or treating an empty `--required` list as a green pass.
 - Reporting a merge from a closed PR, a deleted branch, or a worker claim without `state: MERGED` plus non-null `mergeCommit` and `mergedAt`.
 - Resolving an approach collision without operator approval because "one side was further along."
 - Force-pushing or deleting a human branch to clear the board.

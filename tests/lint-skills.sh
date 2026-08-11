@@ -747,6 +747,71 @@ PY
   echo "[ok] untrusted content contract"
 }
 
+# fleet-conductor must keep three check classes distinct: required, optional
+# repository-owned, and optional external. Collapsing "not required" into
+# "optional-external" mislabels repository CI and weakens the landing contract.
+check_fleet_conductor_checks_contract() {
+  local md="$SKILLS_DIR/fleet-conductor/SKILL.md"
+  local contract_error
+  if [ ! -f "$md" ]; then
+    echo "[fail] fleet-conductor: SKILL.md missing for checks contract"
+    return 1
+  fi
+  if ! contract_error="$(python3 - "$md" 2>&1 <<'PY'
+import re
+import sys
+
+text = open(sys.argv[1], encoding="utf-8").read()
+match = re.search(r"(?ms)^## Checks\s*$\n(.*?)(?=^## |\Z)", text)
+if not match:
+    print("Checks section missing")
+    raise SystemExit(1)
+section = match.group(1)
+if re.search(r"(?i)anything not required is optional-external", section):
+    print("collapses non-required checks into optional-external")
+    raise SystemExit(1)
+if re.search(r"(?i)optional-external for this land", section):
+    print("labels non-required checks as optional-external for this land")
+    raise SystemExit(1)
+required = [
+    (r"(?i)branch protection|ruleset", "missing required-check discovery from branch protection/rulesets"),
+    (r"(?i)repository guidance|lane ticket|operator policy", "missing required-check sources beyond GitHub --required"),
+    (r"(?i)empty.*--required|`--required`.*observation|observation.*(?:not|never).*(?:green|pass)", "missing empty --required observation-not-pass rule"),
+    (r"(?i)optional repository-owned|repository-owned(?: checks)? that are not", "missing optional repository-owned check class"),
+    (r"(?i)never call them external|do not call them external|not call them external", "missing ban on calling repository-owned checks external"),
+    (r"(?i)optional external|third-party", "missing optional external third-party check class"),
+    (r"(?i)unavailable|pending|skipped", "missing naming of unavailable/pending/skipped external results"),
+    (r"(?i)operator.*(?:care|cares|cared).*hold|stuck.*hold|stays a hold", "missing operator-cared stuck-check hold"),
+]
+for pattern, message in required:
+    if not re.search(pattern, section):
+        print(message)
+        raise SystemExit(1)
+# Landing table must not collapse internal vs external optional checks.
+landing = re.search(r"(?ms)^### Landing\s*$\n(.*?)(?=^### |\Z)", text)
+if not landing:
+    print("Landing output table missing")
+    raise SystemExit(1)
+table = landing.group(1)
+if re.search(r"(?i)Optional checks noted", table) and not re.search(
+    r"(?i)Optional repository-owned|Optional external", table
+):
+    print("Landing table collapses optional checks into one column")
+    raise SystemExit(1)
+if not re.search(r"(?i)Optional repository-owned", table):
+    print("Landing table missing optional repository-owned column")
+    raise SystemExit(1)
+if not re.search(r"(?i)Optional external", table):
+    print("Landing table missing optional external column")
+    raise SystemExit(1)
+PY
+)"; then
+    echo "[fail] fleet-conductor checks contract: $contract_error"
+    return 1
+  fi
+  echo "[ok] fleet-conductor checks contract"
+}
+
 check_brigade_verify_commands() {
   local command_error
   if ! command_error="$(python3 - "$SKILLS_DIR" 2>&1 <<'PY'
@@ -976,6 +1041,56 @@ PY
     regression_failures=1
   fi
 
+  fixture="$tmp/fleet-conductor-collapse-external"
+  cp -a "$ROOT"/. "$fixture"
+  python3 - "$fixture/skillet/skills/fleet-conductor/SKILL.md" <<'PY'
+from pathlib import Path
+import sys
+path = Path(sys.argv[1])
+text = path.read_text(encoding="utf-8")
+old = (
+    "Compare the full list to the required list: anything not required "
+    "is optional-external for this land."
+)
+# Force the collapse wording even after the live skill is repaired.
+needle = "## Checks\n"
+if needle not in text:
+    raise SystemExit("Checks section missing in fixture source")
+# Replace the entire Checks section body with a deliberately collapsed one.
+import re
+collapsed = """## Checks
+
+Distinguish repository-required checks from optional external checks.
+
+- Discover required checks from `gh pr checks <n> --required`. Those must pass.
+- Compare the full list to the required list: anything not required is optional-external for this land.
+- Optional external checks may be slow; ignore them when stuck.
+
+"""
+text, n = re.subn(
+    r"(?ms)^## Checks\s*$\n.*?(?=^## |\Z)",
+    collapsed,
+    text,
+    count=1,
+)
+assert n == 1, "expected Checks section to replace"
+# Also collapse the Landing table optional column if present.
+text = text.replace(
+    "| PR | Draft? | Gates 1-8 | Required checks | Optional repository-owned | Optional external | Ready? |",
+    "| PR | Draft? | Gates 1-8 | Required checks | Optional checks noted | Ready? |",
+)
+text = text.replace(
+    "|----|--------|-----------|-----------------|--------------------------|-------------------|--------|",
+    "|----|--------|-----------|-----------------|----------------------|--------|",
+)
+path.write_text(text, encoding="utf-8")
+PY
+  assert_fixture_rejected \
+    "fleet-conductor non-required collapse into optional-external" \
+    "$fixture" \
+    "" \
+    "collapses non-required checks into optional-external"
+
   rm -rf "$tmp"
   if [ "$regression_failures" -ne 0 ]; then
     return 1
@@ -996,6 +1111,7 @@ else
   check_workflow_skill_references || FAIL=1
   check_skill_boundaries || FAIL=1
   check_untrusted_content_contract || FAIL=1
+  check_fleet_conductor_checks_contract || FAIL=1
   check_brigade_verify_commands || FAIL=1
   LINT_EVALS_SKIP_SELF_TESTS="${LINT_SKILLS_SKIP_SELF_TESTS:-0}" \
     bash "$ROOT/tests/lint-evals.sh" || FAIL=1
