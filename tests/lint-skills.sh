@@ -18,6 +18,7 @@ READ_ONLY_SKILLS=(
   special
   latent-premises
   retry-safety
+  research-brief
 )
 AUDIT_ONLY_SECTIONS=(
   garnish:AUDIT
@@ -32,6 +33,7 @@ EXTERNAL_CONTENT_SKILLS=(
   grill
   plate
   publish-readiness
+  research-brief
   review
   sendback
   security-sweep
