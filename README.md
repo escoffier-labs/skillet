@@ -22,7 +22,7 @@
 
 <p align="center">
   <img src="https://shieldcn.dev/github/release/escoffier-labs/skillet.svg" alt="Latest release">
-  <img src="https://shieldcn.dev/badge/skills-37-orange.svg" alt="37 skills">
+  <img src="https://shieldcn.dev/badge/skills-38-orange.svg" alt="38 skills">
   <img src="https://shieldcn.dev/badge/license-MIT-green.svg" alt="MIT license">
 </p>
 
@@ -94,6 +94,7 @@ Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflo
 
 | Skill | What it does |
 |-------|--------------|
+| **research-brief** | Produces a read-only factual brief from a scoped question, dated source register, claim-to-source map, recorded disagreements, and a fresh citation-support pass. Reports inaccessible and unchecked evidence instead of filling gaps. |
 | **special** | The chef's special: walks the repo for what is possible rather than what is broken, and proposes net-new features grounded in evidence already in the code (unfinished work, asymmetries, adjacent capability, friction, ecosystem fit). Read-only, priority-sorted, every proposal tied to a signal in the walk-in and cut if it is ungrounded or fights a stated non-goal. The opportunity-finding counterpart to the audit roster. A chosen special feeds mise. |
 | **mise** | Mise en place for building: turns an idea into a design the user approved and a written spec, before any code. Reads the context, proposes 2-3 approaches with a recommendation, presents the design scaled to its complexity, and hands off to recipe. Composes with pressure-test for hardening the load-bearing decisions; [miseledger](https://github.com/escoffier-labs/miseledger) keeps the receipts. |
 | **recipe** | Turns an approved spec into an implementation plan a zero-context engineer or fresh session can execute without you: a file map, bite-size test-first steps with the actual code, exact commands with expected output, and every decision pinned. The card the line cooks work from. |
@@ -151,7 +152,7 @@ Ask naturally ("audit this repo", "is this safe to publish", "cut a release") or
 /pressure-test   (add "answer your own questions, I'm going afk" for sous mode)
 ```
 
-line-check, bug-hunt, security-sweep, latent-premises, and retry-safety are read-only by design. They produce reports and backlogs. **expedite** is the separate, opt-in step that applies the fixes, parking anything destructive or breaking for you to decide.
+line-check, bug-hunt, security-sweep, latent-premises, retry-safety, and research-brief are read-only by design. The audit skills produce reports and backlogs; research-brief produces sourced findings. **expedite** is the separate, opt-in step that applies audit fixes, parking anything destructive or breaking for you to decide.
 
 ## Why not something else?
 
@@ -168,7 +169,7 @@ skillet is not an agent, a runtime, or a service. It does not:
 - ship a CLI or a binary; the skills are markdown the harness reads
 - carry a runtime dependency or call out to the network on its own
 - replace your harness, your model, or your editor
-- apply changes from the read-only audit skills (line-check, bug-hunt, security-sweep, latent-premises, retry-safety, special). Applying findings is the separate, opt-in **expedite** step
+- apply changes from read-only skills (line-check, bug-hunt, security-sweep, latent-premises, retry-safety, special, research-brief). Applying audit findings is the separate, opt-in **expedite** step
 - cut releases automatically; **release-cut** runs on request, never per feature
 
 The skills carry the procedure and the discipline. You stay in the loop for anything destructive, breaking, or public.

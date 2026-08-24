@@ -71,6 +71,7 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 - `expedite` - work the backlog from an audit, fix the findings in priority order.
 
 **Audit and direction:**
+- `research-brief` - gather sources for researched, evidence-backed, or current findings; map factual claims to sources and report disagreements and unchecked items. Skip it for single-page summaries, ordinary code inspection, existing-post review, or pressure-testing supplied evidence.
 - `line-check` - audit a repo's health, find the highest-value improvements.
 - `bug-hunt` - sweep for correctness defects.
 - `latent-premises` - hunt unguarded assumptions that hold today and break silently later.
