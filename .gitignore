@@ -9,3 +9,5 @@ __pycache__/
 .brigade/
 .graphtrail/
 .skill-eval-workspace/
+/error.log
+/memory/outcome/

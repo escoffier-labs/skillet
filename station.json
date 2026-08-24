@@ -14,8 +14,8 @@
         {
           "kind": "verify-exit",
           "probe": ["bash", "tests/lint-skills.sh"],
-          "probe_contains": ["[ok] catalog (38 skills)"],
-          "timeout_seconds": 60
+          "probe_contains": ["[ok] catalog (39 skills)"],
+          "timeout_seconds": 90
         }
       ]
     }

@@ -2,6 +2,10 @@
 
 Earlier history lives in the repo-level CHANGELOG.md.
 
+## 0.1.5 - 2026-08-24
+
+- Routes `brief` at a decision point: lead with the judgment, keep the basis auditable, and split recommendation from report.
+
 ## 0.1.4 - 2026-08-08
 
 - The `brigade-work` routing entry now references the canonical Brigade process model (`docs/brigade-process-model.md`) instead of restating the loop.

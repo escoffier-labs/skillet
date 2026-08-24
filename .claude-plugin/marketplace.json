@@ -1,13 +1,13 @@
 {
   "name": "skillet",
-  "description": "A skillet full of agent skills: repo auditing, bug hunting, security sweeps, publish gates, releases, memory handoffs, and skill extraction",
+  "description": "A skillet full of agent skills for repo audits, publish gates, execution discipline, memory handoffs, and decision-ready briefs",
   "owner": {
     "name": "Solomon Neas"
   },
   "plugins": [
     {
       "name": "skillet",
-      "description": "Production-tested skills for auditing, improving, and shipping repos with AI coding agents: line-check, bug-hunt, security-sweep, expedite, special, research-brief, mise, recipe, fire, worktree, taste, demi, reduce, refire, stocktake, thermometer, review, sendback, stations, fleet-conductor, check, pressure-test, plate, grill, reel-check, garnish, pass, publish-readiness, release-cut, graphtrail, t3-code, memory-handoff, brigade-handoffs, and skillify",
+      "description": "Production-tested SKILL.md workflows for auditing, improving, and shipping repos with AI coding agents. Covers audits, security sweeps, publish gates, releases, memory handoffs, skill extraction, and decision-ready briefs",
       "source": "./skillet",
       "category": "development",
       "author": {

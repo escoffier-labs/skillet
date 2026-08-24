@@ -1,6 +1,6 @@
 ---
 name: using-skillet
-version: 0.1.4
+version: 0.1.5
 license: MIT
 description: Use when starting any conversation - establishes how to find and use skillet skills, requiring skill invocation before ANY response including clarifying questions.
 ---
@@ -60,6 +60,7 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 **Debug and verify:**
 - `refire` - anything misbehaving: find the root cause before proposing any fix.
 - `check` - before claiming anything works, is fixed, or passes: run it, read the output, then claim with evidence.
+- `brief` - at a decision point: lead with the judgment, keep the basis auditable, and split recommendation from report.
 - `stocktake` - audit or change dependencies, runtimes, package managers, lockfiles, and toolchains from the resolved graph.
 - `thermometer` - profile a measured performance problem and compare the same workload before and after one change.
 

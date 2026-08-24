@@ -22,7 +22,7 @@
 
 <p align="center">
   <img src="https://shieldcn.dev/github/release/escoffier-labs/skillet.svg" alt="Latest release">
-  <img src="https://shieldcn.dev/badge/skills-38-orange.svg" alt="38 skills">
+  <img src="https://shieldcn.dev/badge/skills-39-orange.svg" alt="39 skills">
   <img src="https://shieldcn.dev/badge/license-MIT-green.svg" alt="MIT license">
 </p>
 
@@ -31,6 +31,9 @@
 ```bash
 # Claude Code plugin marketplace
 /plugin marketplace add escoffier-labs/skillet
+
+# any npx skills-compatible harness
+npx skills add escoffier-labs/skillet
 
 # or via Brigade skills station
 brigade add skills
@@ -61,8 +64,6 @@ Then ask your agent naturally, or invoke a skill directly:
 /security-sweep    # defensive security audit, each finding with a prescribed fix
 /publish-readiness # leak scan before a repo goes public
 ```
-
-Full install paths (Claude Code marketplace, raw `SKILL.md` copy, per-repo) are under [Install](#install).
 
 ## The skills
 
@@ -110,6 +111,7 @@ Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflo
 | **review** | The second palate: dispatches a fresh reviewer with crafted context (the diff and the requirements, never your session history) to catch what you have gone nose-blind to. The independent pass that pass calls for; hands its findings to sendback. |
 | **sendback** | Receiving review feedback with rigor instead of reflex: verify each claim against the codebase, YAGNI-gate the "should also support" items, stop on vague items instead of guessing, push back with evidence, and skip the performative "great point!" entirely. |
 | **check** | The expeditor's look at every plate before it leaves: no claim of done, fixed, or passing without fresh verification evidence in the same reply. Subagent success reports are claims to verify, not evidence to relay, and a failing verification is a finding to report, never an invitation to make the command pass. |
+| **brief** | Decision-ready BLUF answers: leads with the judgment, keeps the basis on screen, and splits recommendation from report so an observed result does not get a confidence marking. |
 | **stations** | The expeditor's fan-out for parallel agents: cluster failures by root cause before dispatching (a symptom list is not a work breakdown), check write sets for collisions, give each station a complete self-contained ticket, and taste the integrated result yourself. |
 | **fleet-conductor** | Conducts large backlogs and multi-repository campaigns with bounded lanes, explicit held triggers, collision records, draft-readiness gates, and GitHub merge evidence. Preserves human branches and requires operator approval for competing valid approaches. |
 | **pressure-test** | Drives a plan or design to explicit decisions before anyone builds, one decision at a time, each pinned to its basis. Includes sous mode: going AFK? The agent makes the reversible calls in your place, tags each answer evidence/constraint/judgment, parks anything it can't take back, and leaves you an auditable transcript. |

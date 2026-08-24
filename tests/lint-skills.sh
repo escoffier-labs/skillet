@@ -496,6 +496,98 @@ PY
       echo "[fail] t3-code: official Windows installer command missing"; return 1
     }
   fi
+  if [ "$id" = "brief" ]; then
+    grep -Fq "## Triggers" "$md" || {
+      echo "[fail] brief: trigger list missing"; return 1
+    }
+    grep -Fq "references/estimative-language.md" "$md" || {
+      echo "[fail] brief: estimative language reference is not routed"; return 1
+    }
+    [ -f "$dir/references/estimative-language.md" ] || {
+      echo "[fail] brief: estimative language reference missing"; return 1
+    }
+    local brief_meta_error
+    if ! brief_meta_error="$(python3 - "$sj" "$dir" 2>&1 <<'PY'
+import json
+import sys
+from pathlib import Path
+
+skill_json = Path(sys.argv[1])
+skill_dir = Path(sys.argv[2])
+meta = json.loads(skill_json.read_text(encoding="utf-8"))
+tests = meta.get("tests")
+required_tests = [
+    "bash ../../../tests/lint-skills.sh brief",
+    "bash ../../../tests/lint-evals.sh brief",
+]
+if not isinstance(tests, list) or any(item not in tests for item in required_tests):
+    print("skill.json must declare lint-skills.sh brief and lint-evals.sh brief")
+    raise SystemExit(1)
+manifest = skill_dir / "evals" / "evals.json"
+if not manifest.is_file():
+    print("evals/evals.json missing")
+    raise SystemExit(1)
+try:
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+except json.JSONDecodeError as exc:
+    print(f"evals/evals.json is not valid JSON: {exc}")
+    raise SystemExit(1)
+if data.get("schema_version") != "skillet.evals.v1":
+    print("evals schema_version must be skillet.evals.v1")
+    raise SystemExit(1)
+if data.get("skill_name") != "brief":
+    print("evals skill_name must be brief")
+    raise SystemExit(1)
+evals = data.get("evals")
+if not isinstance(evals, list):
+    print("evals/evals.json evals must be an array")
+    raise SystemExit(1)
+cases = {
+    case.get("id"): case
+    for case in evals
+    if isinstance(case, dict) and isinstance(case.get("id"), str)
+}
+required_ids = (
+    "recommendation-shape",
+    "report-shape-no-confidence-on-facts",
+    "no-real-alternative",
+    "non-trigger-single-fact",
+)
+for case_id in required_ids:
+    if case_id not in cases:
+        print(f"evals/evals.json must include required case {case_id}")
+        raise SystemExit(1)
+
+def case_text(case):
+    assertions = case.get("assertions") if isinstance(case.get("assertions"), list) else []
+    content = " ".join(
+        [str(case.get("prompt") or ""), str(case.get("expected_output") or "")]
+        + [str(item) for item in assertions]
+    ).lower()
+    assertion_text = " ".join(str(item) for item in assertions).lower()
+    return content, assertion_text
+
+checks = (
+    ("recommendation-shape", ("recommendation shape", "bluf"), ("recommendation shape", "confidence")),
+    ("report-shape-no-confidence-on-facts", ("report shape", "observed", "confidence"), ("report shape", "confidence")),
+    ("no-real-alternative", ("no real alternative",), ("no real alternative",)),
+    ("non-trigger-single-fact", ("single-fact", "non-trigger"), ("single-fact", "non-trigger")),
+)
+for case_id, content_needles, assertion_needles in checks:
+    content, assertion_text = case_text(cases[case_id])
+    if any(needle not in content for needle in content_needles):
+        print(f"{case_id} must cover case-specific content")
+        raise SystemExit(1)
+    if any(needle not in assertion_text for needle in assertion_needles):
+        print(f"{case_id} must cover case-specific assertions")
+        raise SystemExit(1)
+raise SystemExit(0)
+PY
+)"; then
+      echo "[fail] brief: $brief_meta_error"
+      return 1
+    fi
+  fi
   if [ -f "$dir/evals/evals.json" ]; then
     bash "$ROOT/tests/lint-evals.sh" "$id" || return 1
   fi
@@ -614,6 +706,73 @@ assert surface.get("probe_contains") == [f"[ok] catalog ({count} skills)"]
 PY
   then
     echo "[fail] catalog: station.json invalid"
+    return 1
+  fi
+  local marketplace="$ROOT/.claude-plugin/marketplace.json"
+  if [ ! -f "$marketplace" ]; then
+    echo "[fail] catalog: marketplace.json missing"
+    return 1
+  fi
+  if ! catalog_error="$(python3 - "$marketplace" "$ROOT" 2>&1 <<'PY'
+import json
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+root = Path(sys.argv[2]).resolve()
+try:
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+except json.JSONDecodeError as exc:
+    print(f"marketplace.json is not valid JSON: {exc}")
+    raise SystemExit(1)
+if not isinstance(manifest, dict):
+    print("marketplace.json must be an object")
+    raise SystemExit(1)
+if not isinstance(manifest.get("name"), str) or not manifest["name"].strip():
+    print("marketplace.json name missing")
+    raise SystemExit(1)
+if not isinstance(manifest.get("description"), str) or not manifest["description"].strip():
+    print("marketplace.json description missing")
+    raise SystemExit(1)
+plugins = manifest.get("plugins")
+if not isinstance(plugins, list) or not plugins:
+    print("marketplace.json plugins must be a non-empty array")
+    raise SystemExit(1)
+for index, plugin in enumerate(plugins):
+    if not isinstance(plugin, dict):
+        print(f"marketplace plugin {index} must be an object")
+        raise SystemExit(1)
+    name = plugin.get("name")
+    if not isinstance(name, str) or not name.strip():
+        print(f"marketplace plugin {index} name missing")
+        raise SystemExit(1)
+    source = plugin.get("source")
+    if not isinstance(source, str) or not source.strip():
+        print(f"marketplace plugin {name!r} source missing")
+        raise SystemExit(1)
+    if Path(source).is_absolute():
+        print(f"marketplace plugin source {source!r} must be a relative path")
+        raise SystemExit(1)
+    resolved = (root / source).resolve()
+    try:
+        resolved.relative_to(root)
+    except ValueError:
+        print(f"marketplace plugin source {source!r} must stay under the repository root")
+        raise SystemExit(1)
+    if not resolved.exists():
+        print(f"marketplace plugin source {source!r} does not resolve")
+        raise SystemExit(1)
+    if not resolved.is_dir():
+        print(f"marketplace plugin source {source!r} must be a directory")
+        raise SystemExit(1)
+    plugin_json = resolved / ".claude-plugin" / "plugin.json"
+    if not plugin_json.is_file():
+        print(f"marketplace plugin source {source!r} must contain .claude-plugin/plugin.json")
+        raise SystemExit(1)
+raise SystemExit(0)
+PY
+)"; then
+    echo "[fail] catalog: $catalog_error"
     return 1
   fi
   echo "[ok] catalog ($count skills)"
@@ -890,6 +1049,63 @@ check_linter_regressions() {
   sed -i '/| \*\*memory-handoff\*\* |/a | **Phantom Skill** | Deliberate malformed catalog row. |' "$fixture/README.md"
   assert_fixture_rejected "malformed README catalog row" "$fixture"
 
+  fixture="$tmp/marketplace-invalid-source"
+  cp -a "$ROOT"/. "$fixture"
+  python3 - "$fixture/.claude-plugin/marketplace.json" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+manifest = json.loads(path.read_text(encoding="utf-8"))
+manifest["plugins"][0]["source"] = "./missing-plugin-source"
+path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+PY
+  assert_fixture_rejected "invalid marketplace plugin source" "$fixture" "" "marketplace plugin source"
+
+  fixture="$tmp/marketplace-escape"
+  cp -a "$ROOT"/. "$fixture"
+  python3 - "$fixture/.claude-plugin/marketplace.json" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+manifest = json.loads(path.read_text(encoding="utf-8"))
+manifest["plugins"][0]["source"] = ".."
+path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+PY
+  assert_fixture_rejected "marketplace relative parent path" "$fixture" "" "must stay under the repository root"
+
+  mkdir -p "$tmp/outside-plugin-source"
+  ln -sfn "../outside-plugin-source" "$fixture/escaped-plugin-source"
+  python3 - "$fixture/.claude-plugin/marketplace.json" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+manifest = json.loads(path.read_text(encoding="utf-8"))
+manifest["plugins"][0]["source"] = "./escaped-plugin-source"
+path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+PY
+  assert_fixture_rejected "marketplace symlink escape" "$fixture" "" "must stay under the repository root"
+
+  python3 - "$fixture/skillet/skills/brief/evals/evals.json" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+data = json.loads(path.read_text(encoding="utf-8"))
+for case in data.get("evals", []):
+    if case.get("id") == "recommendation-shape":
+        case["id"] = "renamed-recommendation"
+        break
+path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+PY
+  assert_fixture_rejected "brief eval required id rename with keywords intact" "$fixture" brief "recommendation-shape"
+
   fixture="$tmp/untrusted-content-missing"
   cp -a "$ROOT"/. "$fixture"
   python3 - "$fixture/skillet/skills/grill/SKILL.md" <<'PY'
@@ -948,6 +1164,16 @@ PY
   cp -a "$ROOT"/. "$fixture"
   sed -i 's/^version: 0.1.0$/version: 0.2.0/' "$fixture/skillet/skills/line-check/SKILL.md"
   assert_fixture_rejected "frontmatter and skill.json version mismatch" "$fixture" line-check
+
+  fixture="$tmp/brief-estimative-unrouted"
+  cp -a "$ROOT"/. "$fixture"
+  sed -i '/references\/estimative-language.md/d' "$fixture/skillet/skills/brief/SKILL.md"
+  assert_fixture_rejected "brief estimative language not routed" "$fixture" brief "estimative language reference is not routed"
+
+  fixture="$tmp/brief-estimative-missing"
+  cp -a "$ROOT"/. "$fixture"
+  rm -f "$fixture/skillet/skills/brief/references/estimative-language.md"
+  assert_fixture_rejected "brief estimative language file missing" "$fixture" brief "estimative language reference missing"
 
   fixture="$tmp/script-tests-missing"
   cp -a "$ROOT"/. "$fixture"
