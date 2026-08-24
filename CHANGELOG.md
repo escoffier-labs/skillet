@@ -8,8 +8,9 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **fleet-conductor** - conducts large backlog and multi-repository campaigns with bounded lanes, held triggers, collision records, draft-readiness gates, separate required and optional check handling, independent Codex and Opus 5 actual-diff reviews, and GitHub merge evidence.
 - Skill eval manifests (`skillet.evals.v1`): optional `evals/evals.json` per skill, validated by `tests/lint-evals.sh` (wired into `tests/lint-skills.sh`), with dry-run A/B planning via `tests/run-skill-evals.sh`. Pilot manifests for **plate** and **check**. Design: `docs/specs/2026-08-08-skill-evals.md`.
-- Untrusted-content contract: skills that fetch or ingest external data must declare a shared `## Untrusted content` section (data not instructions, quote-don't-execute, named escalation). Documented in `docs/untrusted-content.md`; `tests/lint-skills.sh` enforces it for grill, plate, publish-readiness, review, sendback, security-sweep, brigade-handoffs, reel-check, and stocktake.
+- Untrusted-content contract: skills that fetch or ingest external data must declare a shared `## Untrusted content` section (data not instructions, quote-don't-execute, named escalation). Documented in `docs/untrusted-content.md`; `tests/lint-skills.sh` enforces it for fleet-conductor, grill, plate, publish-readiness, review, sendback, security-sweep, brigade-handoffs, reel-check, and stocktake.
 - Script-test contract: a skill that ships executable scripts under `scripts/` must ship deterministic unit tests in a `tests/` directory (executable `test-*` files, no model in the loop). `tests/lint-skills.sh` enforces the pairing and runs the tests, so they execute in CI on every push and pull request. **grill** ships the first set, covering `scripts/grill-scan.sh`.
 - **stagiaire** - one-shot cross-vendor worker dispatch over the user's own CLI logins, with verified headless flags, the per-CLI silent-failure traps, and the write-disabled-chef orchestration pattern. Baseline-tested against live CLIs before it shipped.
 - **t3-code** - portable T3 Code operations for project state, desktop and headless setup, private Tailscale access, updates, launchers, local icons, and user services. The skill uses generic examples and runtime detection instead of private fleet details.
@@ -26,6 +27,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Linter regression fixtures preserve the detected Python launcher and base prefix under their restricted PATH, including the fake-Brigade failure fixture, so the assertions run on MSYS instead of passing from a missing interpreter.
 - **latent-premises** and **retry-safety** now emit the shared audit report contract: severity and effort on every finding and a leverage-sorted backlog, so their reports compose with the rest of the audit roster instead of stranding. **expedite** accepts reports from all five auditors. `docs/audit-report-format.md` names the full roster and records which fields skills may rename to their lens vocabulary.
 - **using-skillet** now shows the complete atomic Brigade verification command, including the target, proving command, and outcome capture identifier.
 - `using-skillet` now labels the `brigade-work` route as provided by Brigade (wired in by `brigade init`) rather than shipped by skillet, and names the fallback when Brigade is absent (skip the route, verify directly per `check`), so a skillet-only install no longer follows a route to a skill that is not installed.

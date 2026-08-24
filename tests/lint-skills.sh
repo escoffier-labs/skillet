@@ -28,6 +28,7 @@ FIX_APPLICATION_PATTERN='(?i)\b(?:apply|implement|execute|perform|make|edit|modi
 # Untrusted content section. Keep the roster next to the other boundary lists;
 # the contract text lives in docs/untrusted-content.md.
 EXTERNAL_CONTENT_SKILLS=(
+  fleet-conductor
   grill
   plate
   publish-readiness
@@ -786,7 +787,14 @@ PY
 }
 
 check_linter_regressions() {
-  local tmp valid invalid fixture description_1024 description_1025 regression_failures=0
+  local tmp valid invalid fixture description_1024 description_1025 python3_base self_test_path brigade_failure_output regression_failures=0
+  python3_base="$(python3 -c 'import sys; print(sys.base_prefix)')"
+  if command -v cygpath >/dev/null 2>&1; then
+    python3_base="$(cygpath -u "$python3_base")"
+  fi
+  # MSYS Python may need both its detected launcher directory and base prefix
+  # when the inherited PATH is intentionally hidden.
+  self_test_path="$(dirname "$(command -v python3)"):$python3_base:/usr/bin:/bin"
   tmp="$(mktemp -d)"
   valid="$tmp/skillet/skills/valid-length"
   invalid="$tmp/skillet/skills/invalid-length"
@@ -802,30 +810,30 @@ check_linter_regressions() {
   : >"$valid/CHANGELOG.md"
   : >"$invalid/CHANGELOG.md"
 
-  if ! PATH=/usr/bin:/bin bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1; then
+  if ! PATH="$self_test_path" bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1; then
     echo "[fail] self-test: parsed 1024-character description was rejected"
     rm -rf "$tmp"
     return 1
   fi
-  if PATH=/usr/bin:/bin bash "$tmp/tests/lint-skills.sh" invalid-length >/dev/null 2>&1; then
+  if PATH="$self_test_path" bash "$tmp/tests/lint-skills.sh" invalid-length >/dev/null 2>&1; then
     echo "[fail] self-test: parsed 1025-character description was accepted"
     rm -rf "$tmp"
     return 1
   fi
   printf '%s\n' '---' 'name: valid-length' 'version: 0.1.0' "description: 'single ''quoted'' scalar'" 'license: MIT' '---' >"$valid/SKILL.md"
-  PATH=/usr/bin:/bin bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1 || {
+  PATH="$self_test_path" bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1 || {
     echo "[fail] self-test: single-quoted YAML scalar was rejected"; rm -rf "$tmp"; return 1
   }
   printf '%s\n' '---' 'name: valid-length' 'version: 0.1.0' 'description: "double \x41 \U00000042 scalar"' 'license: MIT' '---' >"$valid/SKILL.md"
-  PATH=/usr/bin:/bin bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1 || {
+  PATH="$self_test_path" bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1 || {
     echo "[fail] self-test: double-quoted YAML escapes were rejected"; rm -rf "$tmp"; return 1
   }
   printf '%s\n' '---' 'name: valid-length' 'version: 0.1.0' 'description: |-' '  literal' '  scalar' 'license: MIT' '---' >"$valid/SKILL.md"
-  PATH=/usr/bin:/bin bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1 || {
+  PATH="$self_test_path" bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1 || {
     echo "[fail] self-test: literal YAML scalar was rejected"; rm -rf "$tmp"; return 1
   }
   printf '%s\n' '---' 'name: valid-length' 'version: 0.1.0' 'description: >-' '  folded' '  scalar' 'license: MIT' '---' >"$valid/SKILL.md"
-  PATH=/usr/bin:/bin bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1 || {
+  PATH="$self_test_path" bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1 || {
     echo "[fail] self-test: folded YAML scalar was rejected"; rm -rf "$tmp"; return 1
   }
 
@@ -835,7 +843,7 @@ check_linter_regressions() {
     if [ -n "$skill" ]; then
       args=("$skill")
     fi
-    if output="$(LINT_SKILLS_SKIP_SELF_TESTS=1 PATH=/usr/bin:/bin bash "$fixture/tests/lint-skills.sh" "${args[@]}" 2>&1)"; then
+    if output="$(LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$self_test_path" bash "$fixture/tests/lint-skills.sh" "${args[@]}" 2>&1)"; then
       echo "[fail] self-test: $label violation was accepted"
       regression_failures=1
     elif [ -n "$expected" ] && ! printf '%s\n' "$output" | grep -Fq "$expected"; then
@@ -969,9 +977,13 @@ PY
     'echo "fatal: validator crashed"' \
     'exit 1' >"$fixture/bin/brigade"
   chmod +x "$fixture/bin/brigade"
-  if LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$fixture/bin:/usr/bin:/bin" \
-    bash "$fixture/tests/lint-skills.sh" line-check >/dev/null 2>&1; then
+  if brigade_failure_output="$(LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$fixture/bin:$self_test_path" \
+    bash "$fixture/tests/lint-skills.sh" line-check 2>&1)"; then
     echo "[fail] self-test: unrelated Brigade validator failure was masked"
+    regression_failures=1
+  elif ! printf '%s\n' "$brigade_failure_output" |
+    grep -Fq '[fail] line-check: brigade skills lint failed'; then
+    echo "[fail] self-test: fake Brigade validator was not exercised"
     regression_failures=1
   fi
 
