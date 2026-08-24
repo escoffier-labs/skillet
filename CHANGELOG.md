@@ -8,6 +8,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **brief** - decision-ready output with a recommendation/report split, estimative-language reference, and eval coverage for recommendation shape, report-shape facts without confidence, invented-alternative refusal, and a single-fact non-trigger.
 - **research-brief** - read-only source acquisition and synthesis with a scoped question, query map, dated source register, claim register, disagreement and unchecked-item tracking, and a fresh citation-support pass.
 - **fleet-conductor** - conducts large backlog and multi-repository campaigns with bounded lanes, held triggers, collision records, draft-readiness gates, separate required and optional check handling, independent Codex and Opus 5 actual-diff reviews, and GitHub merge evidence.
 - Skill eval manifests (`skillet.evals.v1`): optional `evals/evals.json` per skill, validated by `tests/lint-evals.sh` (wired into `tests/lint-skills.sh`), with dry-run A/B planning via `tests/run-skill-evals.sh`. Pilot manifests for **plate** and **check**. Design: `docs/specs/2026-08-08-skill-evals.md`.
