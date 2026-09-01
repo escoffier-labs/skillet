@@ -1,0 +1,8 @@
+{
+  "id": "skill-refresh",
+  "version": "0.1.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh skill-refresh"
+  ],
+  "trust_level": "workspace"
+}

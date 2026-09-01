@@ -1,6 +1,6 @@
 ---
 name: using-skillet
-version: 0.1.5
+version: 0.1.6
 license: MIT
 description: Use when starting any conversation - establishes how to find and use skillet skills, requiring skill invocation before ANY response including clarifying questions.
 ---
@@ -101,6 +101,7 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 
 **Pressure and meta:**
 - `pressure-test` - stress-test an idea, plan, or scope before anyone builds it.
+- `skill-refresh` - audit installed skills for catalog and policy drift, classify each id, report, then apply only after the report.
 - `skillify` - turn a repeated workflow or runbook into a reusable skill.
 - `using-skillet` - this skill.
 

@@ -22,7 +22,7 @@
 
 <p align="center">
   <img src="https://shieldcn.dev/github/release/escoffier-labs/skillet.svg" alt="Latest release">
-  <img src="https://shieldcn.dev/badge/skills-39-orange.svg" alt="39 skills">
+  <img src="https://shieldcn.dev/badge/skills-40-orange.svg" alt="40 skills">
   <img src="https://shieldcn.dev/badge/license-MIT-green.svg" alt="MIT license">
 </p>
 
@@ -120,6 +120,7 @@ Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflo
 | **memory-handoff** | Ends a session by writing durable knowledge into a structured handoff a memory owner can review and file. Pairs with brigade, works standalone. |
 | **skillify** | The meta-skill: turn a script, runbook, or repeated workflow into a new skill, with a fresh-agent test before you call it done. |
 | **t3-code** | Sets up and troubleshoots T3 Code across Linux and Windows machines: project state, saved environments, headless services, Windows Scheduled Tasks, direct Tailnet access, Tailscale Serve, local SSH tunnels, updates, launchers, and icons. |
+| **skill-refresh** | Audits installed skills across harnesses against skillet, AGENTS.md, and the roster. Classifies each id (sync, keep-local-patch, install-missing, retire, leave), reports, then applies only after the report. Treats fleet `unknown` as unregistered, not current. |
 | **using-skillet** | The line check before service: the bootstrap that maps every skillet skill to its job and requires invoking the relevant one before any response. Injected at session start (via the plugin's SessionStart hook) so skills auto-trigger from the catalog routes. |
 
 ### Plating
