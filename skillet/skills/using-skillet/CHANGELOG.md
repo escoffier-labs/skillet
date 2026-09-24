@@ -2,6 +2,10 @@
 
 Earlier history lives in the repo-level CHANGELOG.md.
 
+## 0.1.6 - 2026-09-24
+
+- Routes `trim` for writing tests and pruning low-value ones.
+
 ## 0.1.5 - 2026-08-24
 
 - Routes `brief` at a decision point: lead with the judgment, keep the basis auditable, and split recommendation from report.

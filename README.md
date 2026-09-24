@@ -22,7 +22,7 @@
 
 <p align="center">
   <img src="https://shieldcn.dev/github/release/escoffier-labs/skillet.svg" alt="Latest release">
-  <img src="https://shieldcn.dev/badge/skills-39-orange.svg" alt="39 skills">
+  <img src="https://shieldcn.dev/badge/skills-40-orange.svg" alt="40 skills">
   <img src="https://shieldcn.dev/badge/license-MIT-green.svg" alt="MIT license">
 </p>
 
@@ -45,7 +45,7 @@ brigade add skills
 |---|---|---|
 | **Audit** | See what matters first | line-check, bug-hunt, security-sweep, latent-premises, retry-safety with priority-sorted backlogs |
 | **Ship** | Gate what goes public | publish-readiness, garnish, release-cut, plate |
-| **Execute** | Plan, build, upgrade, and measure | recipe, taste, stocktake, thermometer, reduce, fleet-conductor |
+| **Execute** | Plan, build, upgrade, and measure | recipe, taste, stocktake, thermometer, reduce, trim, fleet-conductor |
 | **Remember** | File what you learned | memory-handoff compatible with Brigade |
 
 
@@ -105,6 +105,7 @@ Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflo
 | **taste** | Test-first discipline that survives pressure: the failing test is written and watched failing before any implementation, especially when production is down and the instruction is "just make it work". Nothing leaves the kitchen untasted. |
 | **demi** | Pre-build simplicity gate: starts with the smallest useful implementation that satisfies the request, fits the repo, and can be verified. Climbs the ladder before custom code (existing behavior, repo primitives, standard library, platform features, installed dependencies, then one local change), cuts speculative scaffolding, names the growth trigger that would justify more, and refuses to treat YAGNI as skimping on validation, security, accessibility, data-loss handling, compatibility shims, or checks. |
 | **reduce** | Behavior-preserving simplification: boils the excess off code you just changed and concentrates the intent without altering what it does. Establishes a behavior lock (tests green before and after) before touching anything, refuses load-bearing redundancy and premature abstraction, applies one category per commit, and hands correctness or design issues to bug-hunt, security-sweep, or line-check. Applies by default, drops to a report when behavior cannot be locked. |
+| **trim** | Holds every test to one value bar: it must protect behavior, a credible regression, or an independent contract. An authoring gate rejects junk tests at write time; audit and campaign modes prune tests that restate the source, duplicate stronger proof, or keep test-only production seams alive, with written evidence and a mutation check before anything is deleted. Adapted from OpenClaw's test-audit skill. |
 | **refire** | Root-cause-first debugging: when something misbehaves, find out why the plate came back before cooking it again. Reproduce, check what changed, check the contract, trace to the source, pin the bug with a failing test, then one minimal fix. Three failed fixes means question the architecture. |
 | **stocktake** | Dependency and toolchain maintenance: inventories manifests, lockfiles, runtime pins, CI pins, and the resolved graph before changing one compatibility boundary. Reads maintainer release and migration notes, reviews transitive deltas, and verifies the final resolved versions. |
 | **thermometer** | Measured performance work: pins a workload and metric, collects multiple baseline samples, profiles the bottleneck, changes one hypothesis, and compares the same samples again without trading away correctness. |

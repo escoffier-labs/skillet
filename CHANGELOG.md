@@ -8,6 +8,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **trim** - test value bar with three modes: an authoring gate for every new test, a read-only-first audit of junk patterns with per-candidate evidence, and a subsystem campaign procedure (lanes, ledger, keepers, preservation review with mutations). Adapted from OpenClaw's MIT-licensed `test-audit` skill. **taste** now runs the trim authoring gate before writing each test.
 - **brief** - decision-ready output with a recommendation/report split, estimative-language reference, and eval coverage for recommendation shape, report-shape facts without confidence, invented-alternative refusal, and a single-fact non-trigger.
 - **research-brief** - read-only source acquisition and synthesis with a scoped question, query map, dated source register, claim register, disagreement and unchecked-item tracking, and a fresh citation-support pass.
 - **fleet-conductor** - conducts large backlog and multi-repository campaigns with bounded lanes, held triggers, collision records, draft-readiness gates, separate required and optional check handling, independent Codex and Opus 5 actual-diff reviews, and GitHub merge evidence.

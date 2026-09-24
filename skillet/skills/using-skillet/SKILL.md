@@ -1,6 +1,6 @@
 ---
 name: using-skillet
-version: 0.1.5
+version: 0.1.6
 license: MIT
 description: Use when starting any conversation - establishes how to find and use skillet skills, requiring skill invocation before ANY response including clarifying questions.
 ---
@@ -51,6 +51,7 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 - `recipe` - turn an approved spec into a concrete implementation plan.
 - `demi` - start from the smallest useful code path; avoid speculative architecture.
 - `taste` - test-driven: write the failing test first, watch it fail, then the minimal code.
+- `trim` - gate every new test against a value bar, and prune low-value tests and the test-only seams they keep alive.
 - `fire` - execute a written plan task by task, verifying and committing each.
 - `stations` - fan out two or more genuinely independent pieces of work to concurrent agents.
 - `fleet-conductor` - conduct a large backlog or multi-repository campaign with bounded lanes, held triggers, collision records, and evidence-based PR landing.
