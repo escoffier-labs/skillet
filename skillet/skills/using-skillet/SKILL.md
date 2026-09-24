@@ -1,6 +1,6 @@
 ---
 name: using-skillet
-version: 0.1.5
+version: 0.1.6
 license: MIT
 description: Use when starting any conversation - establishes how to find and use skillet skills, requiring skill invocation before ANY response including clarifying questions.
 ---
@@ -82,6 +82,7 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 
 **Simplify:**
 - `reduce` - simplify and tidy code without changing behavior.
+- `trim` - gate every new test against a value bar, and prune low-value tests and the test-only seams they keep alive.
 
 **Writing and publishing:**
 - `grill` - harden a technical writeup for a skeptical audience (HN, Lobsters).

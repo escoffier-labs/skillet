@@ -1,6 +1,6 @@
 ---
 name: taste
-version: 0.1.0
+version: 0.2.0
 license: MIT
 description: Use when implementing any feature, bugfix, or behavior change, before writing the implementation code. Especially use under pressure - production is down, "just make it work", "quick fix" - which is when it gets skipped.
 ---
@@ -19,7 +19,7 @@ Applies to features, bugfixes, refactors, behavior changes. The only exceptions 
 
 ## The loop
 
-1. **RED - write one minimal failing test.** One behavior, a name that describes it, real code over mocks. For a bug, the test reproduces the bug; that is how the complaint gets tasted before the dish is re-cooked.
+1. **RED - write one minimal failing test.** One behavior, a name that describes it, real code over mocks. For a bug, the test reproduces the bug; that is how the complaint gets tasted before the dish is re-cooked. Before writing it, pass [trim's authoring gate](../trim/SKILL.md#authoring-gate): name the behavior it protects, the regression that breaks it, why existing coverage misses it, and confirm it needs no test-only production seam.
 2. **Watch it fail.** Run it, read the output. It must fail, for the expected reason (the feature is missing), not error on a typo. Passes immediately? It tests existing behavior; fix the test.
 3. **GREEN - minimal code to pass.** Just enough. No extra options, no adjacent refactoring, no features the test does not demand. YAGNI.
 4. **Watch it pass.** Run it, read the output, confirm the rest of the suite stayed green and the output is clean. Fails? Fix the code, never the test.
@@ -80,3 +80,5 @@ All of these mean: delete the code, start the loop at RED.
 - Weakening an assertion to get to green instead of fixing the code.
 - Bundling three behaviors into one test so the failure points nowhere.
 - Treating the suite's existing green as evidence the new function works.
+- An expected value computed by the code under test, or a mock that implements the behavior being asserted. The test passes by construction; see trim's junk patterns.
+- Replaying the same bug regression at every layer it crosses. One regression at the owner boundary covers it.
