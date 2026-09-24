@@ -19,7 +19,7 @@ Applies to features, bugfixes, refactors, behavior changes. The only exceptions 
 
 ## The loop
 
-1. **RED - write one minimal failing test.** One behavior, a name that describes it, real code over mocks. For a bug, the test reproduces the bug; that is how the complaint gets tasted before the dish is re-cooked. Before writing it, pass [trim's authoring gate](../trim/SKILL.md#authoring-gate): name the behavior it protects, the regression that breaks it, why existing coverage misses it, and confirm it needs no test-only production seam.
+1. **RED - write one minimal failing test.** One behavior, a name that describes it, real code over mocks. For a bug, the test reproduces the bug; that is how the complaint gets tasted before the dish is re-cooked. Before writing it, pass [trim's authoring gate](../trim/SKILL.md#authoring-gate): name the behavior it protects, the regression that breaks it, why existing coverage misses it, confirm it needs no test-only production seam, and check it against trim's junk patterns. If no test passes the gate, stop and resolve that before writing any code.
 2. **Watch it fail.** Run it, read the output. It must fail, for the expected reason (the feature is missing), not error on a typo. Passes immediately? It tests existing behavior; fix the test.
 3. **GREEN - minimal code to pass.** Just enough. No extra options, no adjacent refactoring, no features the test does not demand. YAGNI.
 4. **Watch it pass.** Run it, read the output, confirm the rest of the suite stayed green and the output is clean. Fails? Fix the code, never the test.

@@ -22,3 +22,6 @@ SOFTWARE.
 
 Third-party notices for incorporated or adapted code are recorded in
 THIRD_PARTY_NOTICES.md.
+
+---
+Note (skillet): THIRD_PARTY_NOTICES.md above refers to the upstream openclaw/openclaw repository, not to skillet.

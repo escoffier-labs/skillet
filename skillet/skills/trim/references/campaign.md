@@ -1,5 +1,7 @@
 # trim campaign mode
 
+Adapted from OpenClaw's `test-audit/CAMPAIGN.md`, MIT License; see [openclaw-LICENSE](openclaw-LICENSE).
+
 Campaign mode prunes one subsystem's whole test surface in one pass: a plugin, a package, or one core area. The value bar, retention bar, candidate evidence, and validation in [SKILL.md](../SKILL.md) apply to every lane. This file adds the order of work. Each step ends on its completion criterion; do not start the next step early.
 
 The worked example throughout is OpenClaw's Telegram campaign (openclaw/openclaw#155040: +15,424 / -64,067 lines across 280 files), which this procedure was extracted from.
@@ -37,7 +39,7 @@ Done when each lane plan names its retired files, its keeper per contract, the a
 
 ## 5. Cutover
 
-Edit lane by lane. Serialize changes to shared harnesses and support files through one owner. With each lane, remove the test-only production seams it unlocks: injection parameters, getters, reset exports, and indirection layers. Register moved suites in CI routing and test inventories. Update any shrink-only line-cap baselines. Put durable test-ownership rules in the subsystem's `AGENTS.md`, drawn only from mistakes this campaign actually found.
+Edit lane by lane. Serialize changes to shared harnesses and support files through one owner. With each lane, remove the test-only production seams it unlocks: injection parameters, getters, reset exports, and indirection layers. Register moved suites in CI routing and test inventories. Update any shrink-only line-cap baselines. Unless repo policy says otherwise, put durable test-ownership rules in the subsystem's `AGENTS.md`, drawn only from mistakes this campaign actually found.
 
 Done when every lane plan is applied and each lane's keepers pass.
 
@@ -45,7 +47,7 @@ Done when every lane plan is applied and each lane's keepers pass.
 
 Before claiming completion, have independent reviewers ([review](../../review/SKILL.md), one per boundary group) compare deleted coverage against the keepers. They look for contracts that lost their only proof, and for new assertions that cannot fail, such as a rejection row the production code never reaches. The Telegram review found nine real gaps and one unreachable assertion.
 
-For each restored contract, make one deliberate **mutation** of the production owner and confirm the keeper goes red. Then restore the source byte for byte.
+For each restored contract and every `C` or `D` row, make one deliberate **mutation** of the production owner and confirm the named keeper goes red. Then restore the source byte for byte.
 
 Done when every reported gap is restored or rejected with source evidence, and every restored contract has a caught mutation.
 
@@ -57,7 +59,7 @@ Done when each repaired defect has a failing control and a passing candidate on 
 
 ## 8. Reconcile and hand off
 
-Campaigns outlive many default-branch commits. Merge the default branch rather than rebasing a long campaign. When the default branch modified a file the campaign deleted, keep the deletion, port the new contract into the keeper, and confirm every new regression it added still has a home. Rerun the whole subsystem suite and repeat live proof on the merged head.
+Campaigns outlive many default-branch commits. Unless repo policy says otherwise, merge the default branch rather than rebasing a long campaign. When the default branch modified a file the campaign deleted, keep the deletion, port the new contract into the keeper, and confirm every new regression it added still has a home. Rerun the whole subsystem suite and repeat live proof on the merged head.
 
 Review tooling may show a truncated file list on a diff this large. Record maintainer decisions for compatibility flags in the PR evidence rather than editing gates.
 
