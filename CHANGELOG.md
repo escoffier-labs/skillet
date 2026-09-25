@@ -30,6 +30,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **trim** validation now repairs consolidated rows that survive their mutation, disables bytecode caches during mutation runs (a same-size restore can leave a stale cache serving the mutant), and warns that shell `&` jobs ignore SIGINT, which fails signal tests in a full gate.
 - Linter regression fixtures preserve the detected Python launcher and base prefix under their restricted PATH, including the fake-Brigade failure fixture, so the assertions run on MSYS instead of passing from a missing interpreter.
 - **latent-premises** and **retry-safety** now emit the shared audit report contract: severity and effort on every finding and a leverage-sorted backlog, so their reports compose with the rest of the audit roster instead of stranding. **expedite** accepts reports from all five auditors. `docs/audit-report-format.md` names the full roster and records which fields skills may rename to their lens vocabulary.
 - **using-skillet** now shows the complete atomic Brigade verification command, including the target, proving command, and outcome capture identifier.
