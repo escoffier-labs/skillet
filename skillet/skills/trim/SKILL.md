@@ -1,6 +1,6 @@
 ---
 name: trim
-version: 0.1.0
+version: 0.1.1
 license: MIT
 description: Use when writing, changing, reviewing the quality of, or sweeping tests - before adding a test, when a suite feels bloated, slow to change, or full of tests that break on harmless refactors, when asked to "prune the tests", "cut low-value tests", "audit test quality", or to clean up a whole subsystem's test surface. Also use when a production export, flag, or hook seems to exist only so a test can reach it.
 ---
@@ -108,9 +108,10 @@ Never edit source or tests while the test runner is running in the same checkout
 
 1. Run the smallest owner and sibling tests, plus every keeper outside the audited files. The repo's own verification policy (its `AGENTS.md` command shape, focused-check script, and capture id) wins over anything here. With no repo rule, in a Brigade-wired repo run each through `brigade work verify run --target . --argv-json '["<runner>","<selector>"]' --capture <skill-or-repo-id>`; otherwise run them directly per [check](../check/SKILL.md).
 2. For removed source greps or plan assertions, run the executable, script, or dry-run that owns the real contract.
-3. For each `C` or `D` row, make one deliberate mutation of the production owner, confirm the named keeper goes red, then restore the source byte for byte.
+3. For each `C` or `D` row, make one deliberate mutation of the production owner, confirm the named keeper goes red, then restore the source byte for byte. A consolidated row that survives its mutation is vacuous: repair it (`F`) before landing.
+   - Disable bytecode and compile caches during mutation runs (`PYTHONDONTWRITEBYTECODE=1` for Python), then clear them before the real gate. A same-size edit restored within the same second leaves a cache entry whose mtime and size still match, so later runs import the mutant and fail on a clean tree.
 4. Run the project formatter on changed files, then `git diff --check`.
-5. Run the full gate the repo's policy requires.
+5. Run the full gate the repo's policy requires, in the foreground or through the harness's own background runner. A shell `&` job starts with SIGINT ignored, so signal and interrupt tests fail for reasons unrelated to the change; if a gate fails only on those, rerun them in the foreground before blaming the batch.
 6. Inspect `git diff --numstat`; report production and tooling LOC separately from test and test-support LOC.
 7. Get an independent pass with [review](../review/SKILL.md) that compares deleted coverage against the keepers.
 

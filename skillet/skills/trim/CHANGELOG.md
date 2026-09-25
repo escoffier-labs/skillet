@@ -1,5 +1,9 @@
 # trim changelog
 
+## 0.1.1 - 2026-09-25
+
+- Validation: a consolidated row that survives its mutation is repaired before landing; disable bytecode caches during mutation runs; run the full gate outside shell `&` jobs, which ignore SIGINT. All three came from landing the first trim batch on a real repo.
+
 ## 0.1.0 - 2026-09-24
 
 - Added trim: authoring gate, audit mode, and subsystem campaign mode for test value, adapted from OpenClaw's MIT-licensed `test-audit` skill with Brigade and skillet tooling in place of OpenClaw-specific scripts.
