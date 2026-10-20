@@ -22,7 +22,7 @@
 
 <p align="center">
   <img src="https://shieldcn.dev/github/release/escoffier-labs/skillet.svg" alt="Latest release">
-  <img src="https://shieldcn.dev/badge/skills-40-orange.svg" alt="40 skills">
+  <img src="https://shieldcn.dev/badge/skills-48-orange.svg" alt="48 skills">
   <img src="https://shieldcn.dev/badge/license-MIT-green.svg" alt="MIT license">
 </p>
 
@@ -44,9 +44,9 @@ brigade add skills
 | | Job | What you get |
 |---|---|---|
 | **Audit** | See what matters first | line-check, bug-hunt, security-sweep, latent-premises, retry-safety with priority-sorted backlogs |
-| **Ship** | Gate what goes public | publish-readiness, garnish, release-cut, plate |
+| **Ship** | Gate what goes public and get PRs merge-ready | publish-readiness, garnish, release-cut, plate, runner |
 | **Execute** | Plan, build, upgrade, and measure | recipe, taste, stocktake, thermometer, reduce, trim, fleet-conductor |
-| **Remember** | File what you learned | memory-handoff compatible with Brigade |
+| **Remember** | File what you learned | memory-handoff compatible with Brigade; relief for in-flight task state |
 
 
 ## Try it in 60 seconds
@@ -110,7 +110,8 @@ Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflo
 | **stocktake** | Dependency and toolchain maintenance: inventories manifests, lockfiles, runtime pins, CI pins, and the resolved graph before changing one compatibility boundary. Reads maintainer release and migration notes, reviews transitive deltas, and verifies the final resolved versions. |
 | **thermometer** | Measured performance work: pins a workload and metric, collects multiple baseline samples, profiles the bottleneck, changes one hypothesis, and compares the same samples again without trading away correctness. |
 | **review** | The second palate: dispatches a fresh reviewer with crafted context (the diff and the requirements, never your session history) to catch what you have gone nose-blind to. The independent pass that pass calls for; hands its findings to sendback. |
-| **sendback** | Receiving review feedback with rigor instead of reflex: verify each claim against the codebase, YAGNI-gate the "should also support" items, stop on vague items instead of guessing, push back with evidence, and skip the performative "great point!" entirely. |
+| **sendback** | Receiving review feedback with rigor instead of reflex: verify each claim against the codebase, YAGNI-gate the "should also support" items, stop on vague items instead of guessing, push back with evidence, and skip the performative "great point!" entirely. Includes a fix / dismiss / ask rubric for bot reviewers that asks by default on security, auth, data, migration, and concurrency findings. |
+| **runner** | The runner who does not leave until the plate is down: drives an open PR to merge-ready from a declared mode (drive, background, threads-only, check), working conflicts, then review threads, then CI in one batched push. Classifies a CI failure before any retry (a flake earns one fresh run, an identical second failure was never a flake, a failure outside the diff means a stale base). Skipped or stale reviews are not approval, and merge-ready never authorizes the merge. Adapted from pstack (MIT). |
 | **check** | The expeditor's look at every plate before it leaves: no claim of done, fixed, or passing without fresh verification evidence in the same reply. Subagent success reports are claims to verify, not evidence to relay, and a failing verification is a finding to report, never an invitation to make the command pass. |
 | **brief** | Decision-ready BLUF answers: leads with the judgment, keeps the basis on screen, and splits recommendation from report so an observed result does not get a confidence marking. |
 | **stations** | The expeditor's fan-out for parallel agents: cluster failures by root cause before dispatching (a symptom list is not a work breakdown), check write sets for collisions, give each station a complete self-contained ticket, and taste the integrated result yourself. |
@@ -119,6 +120,13 @@ Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflo
 | **pass** | The gate before a pull request leaves your hands: real-fix-not-bandaid, tested and green, one concern, self-reviewed diff, clean artifact, and a PR body the author approves before anything is filed. The chef's inspection at the pass. |
 | **release-cut** | Changelog roll-up, semver bump, tag, GitHub release, drafted announcement. Releases on request, never per feature. |
 | **memory-handoff** | Ends a session by writing durable knowledge into a structured handoff a memory owner can review and file. Pairs with brigade, works standalone. |
+| **relief** | The shift change: pauses in-flight work at a safe boundary with a local wip checkpoint (named files, never on the default branch, never pushed) and an untracked resume note, or picks work up by reading the trail, rebuilding state from git, picking a verdict, and verifying inherited claims on the real artifact. Task state only; durable findings still go through memory-handoff. Adapted from pstack (MIT). |
+| **lineage** | Why does this code exist: git archaeology (blame, pickaxe, PR bodies and review threads, ADRs, tests), Brigade evidence searched first, five confidence tiers from direct to unknown, mechanics kept apart from motivation, and a Preserve / Change / Avoid / Risk close before an edit. Adapted from pstack (MIT). |
+| **eighty-six** | Takes a repeated agent mistake off the menu: mines commits, reverts, and review threads for classes (twice counts), fixes each at the highest working level (remove the capability, types, a lint whose error names the replacement, a test, docs last), proves each check fails on a real past mistake, and keeps a rule-to-enforcer table. Report first, apply an approved subset. Adapted from pstack (MIT). |
+| **hone** | Deepens a prompt or worker brief before it is sent: what a top practitioner would do, the rawest source material, the methods and tools, and independent proof of correctness. Rewrites without deciding the author's open choices and without running the task. Adapted from pstack (MIT). |
+| **ticket-rail** | Issue intake and repro gate: frozen source coordinates, whole-thread reading, a bounded cause trace, classification, four dedupe outcomes, create only for a clear live net-new bug. An existing PR or claimed fix means hold or verify, never a competing patch, and no confirmed repro means no authored fix. Internal verdict by default. Adapted from pstack (MIT). |
+| **test-kitchen** | Creates and maintains a project-local verify skill that drives the real app: launch, read-only doctor, drive recipes with stable handles, evidence rules, cleanup that kills only what the run started, and a feature map. Maintain mode ends clean, changed, or blocked and never edits product code. Runs only on request. Adapted from pstack (MIT). |
+| **diagnose-session** | Evidence-first diagnosis of a misbehaving agent run: intake before analysis, current-project transcripts only, every finding cites path:line, every number computed, human turns only count as prompts, context-safe extraction, redaction before sharing. Starts with plan adherence, repeated work, and cost and time. Runs only on request. Adapted from obra/superpowers (MIT). |
 | **skillify** | The meta-skill: turn a script, runbook, or repeated workflow into a new skill, with a fresh-agent test before you call it done. |
 | **t3-code** | Sets up and troubleshoots T3 Code across Linux and Windows machines: project state, saved environments, headless services, Windows Scheduled Tasks, direct Tailnet access, Tailscale Serve, local SSH tunnels, updates, launchers, and icons. |
 | **using-skillet** | The line check before service: the bootstrap that maps every skillet skill to its job and requires invoking the relevant one before any response. Injected at session start (via the plugin's SessionStart hook) so skills auto-trigger from the catalog routes. |

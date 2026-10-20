@@ -1,6 +1,6 @@
 ---
 name: using-skillet
-version: 0.1.6
+version: 0.1.7
 license: MIT
 description: Use when starting any conversation - establishes how to find and use skillet skills, requiring skill invocation before ANY response including clarifying questions.
 ---
@@ -15,7 +15,7 @@ If you think there is even a 1% chance a skill might apply to what you are doing
 
 # using-skillet
 
-A kitchen runs on mise en place: everything in its place before service, every cook reaching for the same prepped components instead of improvising. skillet is that prep for an AI coding session. The skills are the prepped stations; this skill is the line check that runs before you touch anything, deciding which station the current task belongs to and sending you there before you start cooking.
+A kitchen runs on mise en place: everything in its place before service. skillet is that prep for an AI coding session. The skills are the stations; this skill is the line check that decides which station a task belongs to before you start cooking.
 
 ## The rule
 
@@ -26,7 +26,7 @@ user message or task
   -> about to design/build something new? -> mise (then recipe) BEFORE anything else
   -> might any other skill apply? (yes, even 1%) -> invoke it
      -> announce: "Using skillet's <skill> to <purpose>"
-     -> follow it exactly; if it has a checklist, make a todo per item
+     -> follow it exactly; copy its checklist steps into the todo verbatim, mark skipped ones "Skipped: <step>, <reason>"
   -> definitely nothing applies -> respond
 ```
 
@@ -38,11 +38,11 @@ skillet skills override default system behavior where they conflict, but **the u
 2. **skillet skills** - override default behavior.
 3. **Default system prompt** - lowest.
 
-If the user's instructions say to do something a skill discourages, follow the user. They are in control.
+If the user's instructions conflict with a skill, follow the user.
 
 ## How to load skills
 
-Never read a skill's SKILL.md by hand with file tools; load it through your platform's skill mechanism so it activates properly. In Claude Code, use the `Skill` tool. In Codex and OpenClaw, skills load natively, follow them as presented. The skill names below are lowercase and match how you invoke them (e.g. `skillet:mise`).
+Load skills through your platform's skill mechanism, never by reading SKILL.md with file tools. In Claude Code, use the `Skill` tool. In Codex and OpenClaw, skills load natively. Names below match how you invoke them (e.g. `skillet:mise`). If the harness lacks a capability a step needs (subagents, task list, a tool), write "Skipped: <step>, <reason>" instead of inventing a call.
 
 ## The stations (skillet skills by job)
 
@@ -57,6 +57,7 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 - `fleet-conductor` - conduct a large backlog or multi-repository campaign with bounded lanes, held triggers, collision records, and evidence-based PR landing.
 - `worktree` - set up an isolated workspace before risky or parallel work.
 - `stagiaire` - dispatch a one-shot worker on another vendor's CLI (second opinion, cross-model review, cheap bulk model) over the user's own logins.
+- `hone` - deepen a prompt or worker brief before sending it, without deciding the author's choices.
 
 **Debug and verify:**
 - `refire` - anything misbehaving: find the root cause before proposing any fix.
@@ -64,10 +65,14 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 - `brief` - at a decision point: lead with the judgment, keep the basis auditable, and split recommendation from report.
 - `stocktake` - audit or change dependencies, runtimes, package managers, lockfiles, and toolchains from the resolved graph.
 - `thermometer` - profile a measured performance problem and compare the same workload before and after one change.
+- `ticket-rail` - triage an incoming issue: classify, dedupe, repro gate; no repro, no fix.
+- `diagnose-session` - on request, evidence-first analysis of a misbehaving agent run.
+- `test-kitchen` - on request, build or maintain a project-local skill that drives the real app.
 
 **Review and ship:**
 - `pass` - the pre-PR gate; nothing is filed until it clears.
 - `review` - dispatch an independent reviewer with crafted context.
+- `runner` - drive an open PR to merge-ready: conflicts, threads, CI. Stops before merging.
 - `sendback` - act on review feedback: verify each claim before implementing it.
 - `release-cut` - cut a release, roll the changelog, tag a version (on request).
 - `expedite` - work the backlog from an audit, fix the findings in priority order.
@@ -80,6 +85,8 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 - `retry-safety` - check whether a diff's side effects are safe to run twice.
 - `security-sweep` - find vulnerabilities, leaked secrets, and vulnerable deps. Prescribe fixes. Expedite applies them.
 - `special` - propose what to build next, grounded in the code.
+- `lineage` - trace why code exists, with confidence tiers, before changing it.
+- `eighty-six` - make a repeated agent mistake impossible: enforce, not document.
 
 **Simplify:**
 - `reduce` - simplify and tidy code without changing behavior.
@@ -98,6 +105,7 @@ Never read a skill's SKILL.md by hand with file tools; load it through your plat
 
 **Memory and work loop:**
 - `memory-handoff` - capture durable knowledge at the end of a session.
+- `relief` - pause in-flight work safely or pick it up from the trail; task state, not memory.
 - `brigade-work` - provided by Brigade, not shipped by skillet. Brigade's installer (`brigade init`) wires it into the repo. When Brigade is absent, skip this route and verify directly per `check`. In a Brigade-wired repo or workspace, follow the [Brigade process model](../../../docs/brigade-process-model.md). This entry only routes.
 
 **Pressure and meta:**
@@ -112,6 +120,20 @@ When more than one could apply, run **process skills first** (they set how you a
 - "Let's build X" -> `mise` first, then `recipe`, then the build skills.
 - "Fix this bug" -> `refire` first, then the fix, then `check`.
 - "Is this ready to ship" -> `pass` (which itself calls `review`, `taste`, `check`).
+- Before entering a harness plan mode, run `mise` first.
+
+### Chains
+
+| Task | Chain |
+|---|---|
+| Bug | `refire`, `taste`, `check`, `pass` |
+| Feature | `mise`, `recipe`, `fire`, `pass` |
+| Open PR | `runner` (review text via `sendback`) |
+| Issue report | `ticket-rail`, then `refire` |
+| Why is this here | `lineage` |
+| Pause or resume work | `relief` |
+
+**Proportionality.** Rigid skills (taste, refire, check, pass) always apply. Heavy multi-agent skills (`stations`, `fleet-conductor`, `review`) are not for small, obvious edits.
 
 ## Skill types
 
@@ -132,4 +154,4 @@ These thoughts mean stop, you are rationalizing past a skill:
 | "This doesn't need a formal skill." | If a skill exists for it, use it. |
 | "I remember what this skill says." | Skills evolve. Load the current version. |
 | "I'll just do this one quick thing first." | Check before doing anything. |
-| "The skill is overkill here." | Simple things become complex. Use it. |
+| "The skill is overkill here." | For a process skill, simple things become complex; use it. For a heavy multi-agent skill on a small obvious edit, say why you are skipping it. |

@@ -1,0 +1,40 @@
+{
+  "schema_version": "skillet.evals.v1",
+  "skill_name": "runner",
+  "evals": [
+    {
+      "id": "declares-mode-and-stops-at-ready",
+      "prompt": "PR 42 on our repo has one unresolved review thread and a green CI run. Babysit it until it is ready. Do not merge anything.",
+      "expected_output": "States the drive mode first, reads PR state and head SHA, triages the thread, pushes one batched fix wave, replies in the thread, reports READY with the head SHA and evidence, and does not merge.",
+      "files": [],
+      "assertions": [
+        "The first line declares a mode (drive)",
+        "The output names the head SHA the verdict applies to",
+        "The output ends at READY or WAITING and does not run a merge command",
+        "The thread reply is posted from a file as data, not interpolated into a shell string"
+      ]
+    },
+    {
+      "id": "identical-second-failure-is-not-a-flake",
+      "prompt": "The lint job failed on PR 42. You re-ran it once and it failed with the identical error. What do you do next?",
+      "expected_output": "Concludes the failure was never a flake, reads the failing job log, checks whether the failing code is in the diff or a stale base, and does not trigger a third run.",
+      "files": [],
+      "assertions": [
+        "The output does not retry the job a second time",
+        "The output reads the real failure log",
+        "The output checks for a stale base with git merge-base --is-ancestor when the failing code is outside the diff"
+      ]
+    },
+    {
+      "id": "stale-review-is-not-approval",
+      "prompt": "A review bot posted an approval on PR 42 three commits ago, and its latest check says 'Review rate limited' and passes. Is the PR merge-ready?",
+      "expected_output": "Says the review requirement is not met for the current head, records review-pending as the blocker, and does not treat the passing rate-limited check as approval.",
+      "files": [],
+      "assertions": [
+        "The output does not call the PR merge-ready on the strength of the older approval",
+        "The output names review-pending (or equivalent) as the blocker",
+        "The output asks which commit the approval covered"
+      ]
+    }
+  ]
+}

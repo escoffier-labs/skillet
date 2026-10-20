@@ -15,22 +15,22 @@
     {
       "title": "Debug and verify",
       "description": "Root cause before fixes, evidence before claims, measurements before performance changes.",
-      "skills": ["refire", "check", "brief", "stocktake", "thermometer"]
+      "skills": ["refire", "check", "brief", "stocktake", "thermometer", "ticket-rail", "diagnose-session", "test-kitchen"]
     },
     {
       "title": "Review and ship",
       "description": "Pre-PR gate, independent review, acting on feedback, and release cuts.",
-      "skills": ["pass", "review", "sendback", "release-cut", "expedite"]
+      "skills": ["pass", "review", "runner", "sendback", "release-cut", "expedite"]
     },
     {
       "title": "Audit and direction",
       "description": "Repo health, correctness and security sweeps, risky assumptions, sourced research, and what to build next.",
-      "skills": ["line-check", "bug-hunt", "security-sweep", "latent-premises", "retry-safety", "research-brief", "pressure-test", "special"]
+      "skills": ["line-check", "bug-hunt", "security-sweep", "latent-premises", "retry-safety", "research-brief", "pressure-test", "special", "lineage", "eighty-six"]
     },
     {
       "title": "Parallel agents and fleets",
       "description": "Fan out independent work, run multi-repo campaigns, and dispatch workers on other vendors' CLIs.",
-      "skills": ["stations", "fleet-conductor", "stagiaire", "t3-code"]
+      "skills": ["stations", "fleet-conductor", "stagiaire", "hone", "t3-code"]
     },
     {
       "title": "Writing and publishing",
@@ -40,7 +40,7 @@
     {
       "title": "Memory and Brigade",
       "description": "Session handoffs and code-graph questions, backed by Brigade when it is installed.",
-      "skills": ["memory-handoff", "brigade-handoffs", "graphtrail"]
+      "skills": ["memory-handoff", "relief", "brigade-handoffs", "graphtrail"]
     }
   ]
 }

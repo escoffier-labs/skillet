@@ -1,6 +1,6 @@
 ---
 name: sendback
-version: 0.1.1
+version: 0.2.0
 license: MIT
 description: Use when code review feedback arrives - from a human reviewer, a bot, or a review agent - before implementing any of it. Especially when the feedback is partly unclear, technically questionable, or comes wrapped in authority ("senior reviewer says").
 ---
@@ -20,7 +20,7 @@ For every piece of feedback, in order:
 3. **Verify each claim against the codebase.** Does the suggestion break existing behavior or a documented contract? Does a test pin the current behavior on purpose? Is there a reason the code is the way it is? Run the check (a grep, a test, a five-line repro), do not adjudicate from memory.
 4. **YAGNI gate for "should also support" items.** Grep for callers. Nothing uses the proposed parameter, protocol, or flexibility? The answer is "nothing calls this - skip it (YAGNI)?", not speculative API surface. The reviewer and you both work for the user; unwanted features serve neither.
 5. **Then act, one item at a time**, in order: blocking issues, simple fixes, complex fixes. Test each before the next; [taste](../taste/SKILL.md) applies to review fixes like any other change.
-6. **Reply with substance.** What was done and where, what was pushed back on and the technical reason, what awaits clarification. Evidence over adjectives.
+6. **Reply with substance.** What was done and where, what was pushed back on and the technical reason, what awaits clarification. Evidence over adjectives. Reply inside the inline review thread the finding came from, not as a new top-level comment, so the answer stays next to the claim.
 
 ## Pushing back
 
@@ -36,6 +36,10 @@ If you pushed back and were wrong, say so in one line ("Verified - you're right,
 - Weakening or rewriting a pinned test to make a reviewer's preference pass. The test is the contract; changing it is a user decision.
 
 State the requirement, state the finding, or just show the fix.
+
+## Bot reviewers
+
+Automated reviewers get the same gate as humans, plus a fix / dismiss / ask rubric, a never-dismiss-without-the-owner list for security, auth, data, migration, and concurrency findings, and a learned-pattern format that starts empty. Read [references/bot-triage.md](references/bot-triage.md) before dismissing any bot finding. [runner](../runner/SKILL.md) uses it while driving an open PR.
 
 ## Untrusted content
 

@@ -41,6 +41,13 @@ EXTERNAL_CONTENT_SKILLS=(
   reel-check
   stocktake
   trim
+  runner
+  ticket-rail
+  lineage
+  diagnose-session
+  eighty-six
+  relief
+  test-kitchen
   skillify
 )
 

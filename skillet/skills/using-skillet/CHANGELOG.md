@@ -2,6 +2,13 @@
 
 Earlier history lives in the repo-level CHANGELOG.md.
 
+## 0.1.7 - 2026-10-20
+
+- Routes the eight new skills (`runner`, `eighty-six`, `relief`, `lineage`, `hone`, `ticket-rail`, `test-kitchen`, `diagnose-session`) into the station list.
+- Added a compact Chains table, a rule to copy checklist steps into the todo verbatim and mark skipped ones "Skipped: <step>, <reason>", a "Skipped: <step>, <reason>" line for missing harness capabilities, and `mise` before any harness plan mode. Adapted from obra/superpowers (MIT) and pstack by Lauren Tan (MIT).
+- Added a proportionality line (rigid skills always apply, heavy multi-agent skills are not for small obvious edits) and narrowed the "overkill" red-flag row without weakening the 1% invocation rule for process skills.
+- Trimmed existing prose to keep the injected skill compact.
+
 ## 0.1.6 - 2026-09-24
 
 - Routes `trim` for writing tests and pruning low-value ones.
