@@ -1,0 +1,67 @@
+# runner command recipes
+
+GitHub CLI forms. Substitute `<n>`, `<owner>/<repo>`, and branch names. On another forge, use its equivalent and say which one you used.
+
+## Read state
+
+```bash
+gh pr view <n> --json state,isDraft,baseRefName,headRefOid,mergeable,mergeStateStatus,reviewDecision,statusCheckRollup
+gh pr checks <n> --required          # required checks only
+gh pr checks <n>                     # all checks, including optional external ones
+gh pr diff <n> --name-only           # files the PR touches
+```
+
+`mergeStateStatus` of `DIRTY` means conflicts, `BEHIND` means the base moved, `BLOCKED` means a gate is open (review, required check, or protection rule), `CLEAN` means mergeable.
+
+Unresolved review threads:
+
+```bash
+gh api graphql -f query='
+query($owner:String!,$repo:String!,$n:Int!){
+  repository(owner:$owner,name:$repo){
+    pullRequest(number:$n){
+      reviewThreads(first:100){
+        nodes{ id isResolved isOutdated path line
+          comments(first:20){ nodes{ databaseId author{login} body commit{oid} } } }
+      }
+    }
+  }
+}' -F owner=<owner> -F repo=<repo> -F n=<n>
+```
+
+Page when `hasNextPage` is true; report partial data if you cannot.
+
+## Classify CI
+
+```bash
+gh run list --branch <head-branch> --limit 5 --json databaseId,conclusion,headSha
+gh run view <run-id> --log-failed | tail -n 80       # real failure text
+git fetch origin <base>
+git merge-base --is-ancestor origin/<base> HEAD && echo "up to date" || echo "stale base"
+git diff --name-only origin/<base>...HEAD            # does the failing code appear here?
+```
+
+If the failing test or file is not in the diff and the base is stale, rebase your own branch (or report) before any retry. One fresh run for a flake: `gh run rerun <run-id> --failed`, once.
+
+## Reply from a file
+
+Write the reply text to a file with your editor tool, then build the JSON with `jq` so the text stays data:
+
+```bash
+jq -n --rawfile body reply.md '{body: $body}' > payload.json
+gh api --method POST "repos/<owner>/<repo>/pulls/<n>/comments/<comment-id>/replies" --input payload.json
+```
+
+`<comment-id>` is the thread's first comment `databaseId`. Replying inside the inline thread keeps the fix next to the finding. Resolve only a thread you have addressed:
+
+```bash
+gh api graphql -f query='mutation($id:ID!){ resolveReviewThread(input:{threadId:$id}){ thread{ isResolved } } }' -F id=<thread-node-id>
+```
+
+## Waiting
+
+```bash
+gh pr checks <n> --watch --interval 30     # exits when checks settle
+```
+
+Prefer a CI wait command, a timer unit, or the harness's own wake-up when the wait is long. Re-read the PR when the watcher returns, because threads and mergeability can change while checks run.
