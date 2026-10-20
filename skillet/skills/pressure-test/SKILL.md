@@ -1,13 +1,13 @@
 ---
 name: pressure-test
-version: 0.1.0
+version: 0.2.0
 license: MIT
 description: Use when an idea, plan, design, or scope needs to be stress-tested before anyone builds it, when the user says "pressure test this", "poke holes in this", or wants the fuzzy parts made concrete. Also use in sous mode when the user hands off and says to answer the open questions yourself, figure it out, or that they are going AFK.
 ---
 
 # pressure-test
 
-The gate between "I have an idea" and "here is a plan." A plan only earns the build when its load-bearing decisions are explicit and its unresolved branches are closed. This skill drives toward that, one decision at a time, and refuses to let a vague idea coast into implementation on momentum.
+The gate between "I have an idea" and "here is a plan." A plan only earns the build when the decisions that matter are explicit and its unresolved branches are closed. This skill drives toward that, one decision at a time, and refuses to let a vague idea coast into implementation on momentum.
 
 Two modes, one job. In **interactive mode** the user answers. In **sous mode** the user has stepped away and the agent answers in their place, on the record. Either way the deliverable is the same: a set of decisions someone can build from, each one traceable to why it was made.
 
@@ -35,6 +35,10 @@ A workable spine, when nothing more specific suggests itself. Treat it as a depe
 7. What can be deferred without blocking the first move.
 8. The smallest credible thing to build first.
 
+**An observable question gets a spike, not a question.** If the answer is a fact you can watch (how a library behaves, how long a call takes, whether two pieces fit, how a layout renders), do not ask the user and do not guess. Build the smallest throwaway script or page in a scratch directory outside the source tree, never committed, run it, and record what you saw as `evidence` (in sous mode) or as the basis you put to the user (interactive mode). A spike stays local: no paid services, no writes to shared or production systems, no publishing. No tests, no polish, and nothing from the scratch directory ships. Ask the user only about what they must decide: preference, priority, risk appetite.
+
+**Do not invent risks for an unbuilt plan.** Listing speculative implementation-level risks and edge cases against a plan with no code behind it produces theoretical problems that never happen. When a risk turns on observable behavior, spike it (previous paragraph) and judge what you saw. The decision spine above still applies to plans on paper: the problem, the owner, what done looks like, the real constraints, the non-goals.
+
 Push back on anything vague, self-contradictory, or driven by vanity rather than the problem. Stop the moment the remaining uncertainty no longer changes what gets built. Pressing a plan that is already settled is its own failure.
 
 ## Sous mode (the handoff)
@@ -56,6 +60,7 @@ Sous mode produces decisions the user can see and challenge, never decisions mad
 - One decision at a time. No wall-of-questions, no wall-of-assumptions.
 - Never ask what the repo or conversation already answers. Inspect first.
 - Never let `judgment` masquerade as `evidence`. The label is the honesty mechanism.
+- Never ask the user an observable question. Run the spike and report what happened.
 - Stop when the answer is clear enough to act. Theater is not rigor.
 - In sous mode, when in doubt about whether a call is in bounds, it is not. Park it.
 
@@ -72,7 +77,8 @@ Blunt, useful, short.
 ## Common mistakes
 
 - Running it as an interview script instead of following the dependency tree, asking question 4 before question 1's answer reshapes it.
-- Asking the user what a `grep` would have told you.
+- Asking the user what a `grep` would have told you, or what a ten-minute spike would have shown.
+- Generating a long list of hypothetical implementation risks for an unbuilt plan, then treating the list as findings.
 - In sous mode, quietly upgrading a guess to a fact by dropping the `judgment` label.
 - Making a destructive or public-facing call in sous mode because it "seemed obvious", the threshold for parking is reversibility, not confidence.
 - Pressing past the point of decision, turning a sharp plan into a stalled one.
