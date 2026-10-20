@@ -1,0 +1,8 @@
+{
+  "id": "ticket-rail",
+  "version": "0.1.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh ticket-rail"
+  ],
+  "trust_level": "workspace"
+}
