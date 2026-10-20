@@ -1,0 +1,8 @@
+{
+  "id": "pr-security-review",
+  "version": "0.1.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh pr-security-review"
+  ],
+  "trust_level": "workspace"
+}

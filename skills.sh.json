@@ -20,12 +20,12 @@
     {
       "title": "Review and ship",
       "description": "Pre-PR gate, independent review, acting on feedback, and release cuts.",
-      "skills": ["pass", "review", "runner", "sendback", "release-cut", "expedite"]
+      "skills": ["pass", "review", "pr-security-review", "runner", "sendback", "release-cut", "expedite", "supply-chain-harden"]
     },
     {
       "title": "Audit and direction",
       "description": "Repo health, correctness and security sweeps, risky assumptions, sourced research, and what to build next.",
-      "skills": ["line-check", "bug-hunt", "security-sweep", "latent-premises", "retry-safety", "research-brief", "pressure-test", "special", "lineage", "eighty-six"]
+      "skills": ["line-check", "bug-hunt", "security-sweep", "mcp-server-review", "latent-premises", "retry-safety", "research-brief", "pressure-test", "special", "lineage", "eighty-six"]
     },
     {
       "title": "Parallel agents and fleets",

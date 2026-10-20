@@ -1,6 +1,6 @@
 ---
 name: using-skillet
-version: 0.1.7
+version: 0.1.8
 license: MIT
 description: Use when starting any conversation - establishes how to find and use skillet skills, requiring skill invocation before ANY response including clarifying questions.
 ---
@@ -72,10 +72,12 @@ Load skills through your platform's skill mechanism, never by reading SKILL.md w
 **Review and ship:**
 - `pass` - the pre-PR gate; nothing is filed until it clears.
 - `review` - dispatch an independent reviewer with crafted context.
+- `pr-security-review` - security-review a PR, commit range, or staged diff before merge. Whole-repo audits go to security-sweep.
 - `runner` - drive an open PR to merge-ready: conflicts, threads, CI. Stops before merging.
 - `sendback` - act on review feedback: verify each claim before implementing it.
 - `release-cut` - cut a release, roll the changelog, tag a version (on request).
 - `expedite` - work the backlog from an audit, fix the findings in priority order.
+- `supply-chain-harden` - harden a repo's supply chain: pin actions to SHAs, lock down workflow tokens, add Dependabot and CI scanners, move npm publishing to trusted publishing. Opens one reviewable branch.
 
 **Audit and direction:**
 - `research-brief` - gather sources for researched, evidence-backed, or current findings; map factual claims to sources and report disagreements and unchecked items. Skip it for single-page summaries, ordinary code inspection, existing-post review, or pressure-testing supplied evidence.
@@ -84,6 +86,7 @@ Load skills through your platform's skill mechanism, never by reading SKILL.md w
 - `latent-premises` - hunt unguarded assumptions that hold today and break silently later.
 - `retry-safety` - check whether a diff's side effects are safe to run twice.
 - `security-sweep` - find vulnerabilities, leaked secrets, and vulnerable deps. Prescribe fixes. Expedite applies them.
+- `mcp-server-review` - security-review an MCP server you build or are about to install: tool gates, transport and auth, exec, credentials, TLS, tool descriptions, supply chain. Read-only.
 - `special` - propose what to build next, grounded in the code.
 - `lineage` - trace why code exists, with confidence tiers, before changing it.
 - `eighty-six` - make a repeated agent mistake impossible: enforce, not document.

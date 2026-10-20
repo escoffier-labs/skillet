@@ -2,6 +2,10 @@
 
 Earlier history lives in the repo-level CHANGELOG.md.
 
+## 0.1.8 - 2026-10-20
+
+- Routes `pr-security-review`, `supply-chain-harden`, and `mcp-server-review` into the station list.
+
 ## 0.1.7 - 2026-10-20
 
 - Routes the eight new skills (`runner`, `eighty-six`, `relief`, `lineage`, `hone`, `ticket-rail`, `test-kitchen`, `diagnose-session`) into the station list.

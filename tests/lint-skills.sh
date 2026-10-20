@@ -15,6 +15,7 @@ READ_ONLY_SKILLS=(
   line-check
   bug-hunt
   security-sweep
+  mcp-server-review
   special
   latent-premises
   retry-safety
@@ -29,6 +30,9 @@ FIX_APPLICATION_PATTERN='(?i)\b(?:apply|implement|execute|perform|make|edit|modi
 # Untrusted content section. Keep the roster next to the other boundary lists;
 # the contract text lives in docs/untrusted-content.md.
 EXTERNAL_CONTENT_SKILLS=(
+  mcp-server-review
+  pr-security-review
+  supply-chain-harden
   fleet-conductor
   grill
   plate

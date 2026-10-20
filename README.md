@@ -22,7 +22,7 @@
 
 <p align="center">
   <img src="https://shieldcn.dev/github/release/escoffier-labs/skillet.svg" alt="Latest release">
-  <img src="https://shieldcn.dev/badge/skills-48-orange.svg" alt="48 skills">
+  <img src="https://shieldcn.dev/badge/skills-51-orange.svg" alt="51 skills">
   <img src="https://shieldcn.dev/badge/license-MIT-green.svg" alt="MIT license">
 </p>
 
@@ -69,13 +69,14 @@ Then ask your agent naturally, or invoke a skill directly:
 
 ### The audit roster
 
-Five skills, one report contract ([docs/audit-report-format.md](docs/audit-report-format.md)). Run any of them alone, or all five over time. The findings compose into a single priority-sorted backlog.
+Six skills, one report contract ([docs/audit-report-format.md](docs/audit-report-format.md)). Run any of them alone, or all six over time. The findings compose into a single priority-sorted backlog.
 
 | Skill | What it does |
 |-------|--------------|
 | **line-check** | The flagship. A chef's line check for your repo: walks seven stations (docs, agent-readiness, tests/CI, hygiene, structure, release hygiene, TODO mining), scores each, and delivers a backlog sorted by impact relative to effort. Brigade-aware: if the repo uses [brigade](https://github.com/escoffier-labs/brigade), its handoff and memory health get audited too. |
 | **bug-hunt** | Correctness sweep across five lenses with mandatory adversarial verification. Only bugs that survive a refutation attempt make the report, each with a concrete trigger. |
 | **security-sweep** | Defensive security audit: secrets (tree and history), dependency CVEs, injection surfaces, authn/authz, exposure. Every finding ships with its remediation. |
+| **mcp-server-review** | Read-only security review of one MCP server, one you build or one you are about to install. Eight lenses: tool inventory and gate consistency, transport and auth, process execution, credentials, TLS and SSRF, output fencing, tool description integrity, supply chain. Reports in the security-sweep spine. |
 | **latent-premises** | Hunts the assumptions code takes for granted that nothing enforces: input shape, callee contracts, environment, ordering, cardinality. A finding needs a nameable break and ends with one resolution arrow (guard it, document it, or encode it in the type). The forward-looking counterpart to bug-hunt. |
 | **retry-safety** | Checks whether a diff's side effects survive a second run: database writes, migrations, network mutations, payments, queue consumers. The standard is idempotent read-modify-write at the side-effecting edge, and migrations also get the deploy-window lens (expand-migrate-contract). |
 
@@ -110,12 +111,14 @@ Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflo
 | **stocktake** | Dependency and toolchain maintenance: inventories manifests, lockfiles, runtime pins, CI pins, and the resolved graph before changing one compatibility boundary. Reads maintainer release and migration notes, reviews transitive deltas, and verifies the final resolved versions. |
 | **thermometer** | Measured performance work: pins a workload and metric, collects multiple baseline samples, profiles the bottleneck, changes one hypothesis, and compares the same samples again without trading away correctness. |
 | **review** | The second palate: dispatches a fresh reviewer with crafted context (the diff and the requirements, never your session history) to catch what you have gone nose-blind to. The independent pass that pass calls for; hands its findings to sendback. |
+| **pr-security-review** | Security review scoped to a diff: a PR, commit range, or staged changes. Traces each changed input to its sink and covers OWASP classes plus CI/CD workflows, new dependencies, agent and LLM surfaces, SSRF, deserialization, crypto, and security-relevant literals. Reports secrets by location and type only, treats PR text as attacker-controlled, and opens with a block, fix-before-merge, or ok verdict. Read-only. |
 | **sendback** | Receiving review feedback with rigor instead of reflex: verify each claim against the codebase, YAGNI-gate the "should also support" items, stop on vague items instead of guessing, push back with evidence, and skip the performative "great point!" entirely. Includes a fix / dismiss / ask rubric for bot reviewers that asks by default on security, auth, data, migration, and concurrency findings. |
 | **runner** | The runner who does not leave until the plate is down: drives an open PR to merge-ready from a declared mode (drive, background, threads-only, check), working conflicts, then review threads, then CI in one batched push. Classifies a CI failure before any retry (a flake earns one fresh run, an identical second failure was never a flake, a failure outside the diff means a stale base). Skipped or stale reviews are not approval, and merge-ready never authorizes the merge. Adapted from pstack (MIT). |
 | **check** | The expeditor's look at every plate before it leaves: no claim of done, fixed, or passing without fresh verification evidence in the same reply. Subagent success reports are claims to verify, not evidence to relay, and a failing verification is a finding to report, never an invitation to make the command pass. |
 | **brief** | Decision-ready BLUF answers: leads with the judgment, keeps the basis on screen, and splits recommendation from report so an observed result does not get a confidence marking. |
 | **stations** | The expeditor's fan-out for parallel agents: cluster failures by root cause before dispatching (a symptom list is not a work breakdown), check write sets for collisions, give each station a complete self-contained ticket, and taste the integrated result yourself. |
 | **fleet-conductor** | Conducts large backlogs and multi-repository campaigns with bounded lanes, explicit held triggers, collision records, draft-readiness gates, and GitHub merge evidence. Preserves human branches and requires operator approval for competing valid approaches. |
+| **supply-chain-harden** | Hardens a repository's software supply chain as one reviewable branch, one commit per control: actions pinned to commit SHAs, least-privilege workflow tokens, workflow injection fixes, grouped Dependabot, zizmor and gitleaks in CI, npm trusted publishing with provenance, digest-pinned Docker bases, `.env` ignores, and `SECURITY.md`. Never weakens an existing check. Fleet mode hands one lane per repo to fleet-conductor. |
 | **pressure-test** | Drives a plan or design to explicit decisions before anyone builds, one decision at a time, each pinned to its basis. Includes sous mode: going AFK? The agent makes the reversible calls in your place, tags each answer evidence/constraint/judgment, parks anything it can't take back, and leaves you an auditable transcript. |
 | **pass** | The gate before a pull request leaves your hands: real-fix-not-bandaid, tested and green, one concern, self-reviewed diff, clean artifact, and a PR body the author approves before anything is filed. The chef's inspection at the pass. |
 | **release-cut** | Changelog roll-up, semver bump, tag, GitHub release, drafted announcement. Releases on request, never per feature. |

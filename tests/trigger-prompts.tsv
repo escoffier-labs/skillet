@@ -17,3 +17,16 @@ run-plan	fire	The plan is written and approved in docs/plans/export.md. Fire it.
 cut-release	release-cut	Cut a release for this repo.
 second-opinion	stagiaire|review	Get a second opinion from a different model family on my approach.
 repeat-mistake	eighty-six	I keep correcting agents for the same mistake. They wrap everything in try/except. Make that stop.
+mcp-review-install	mcp-server-review	I'm about to add a third-party MCP server to my agent. Can you review it for security before I connect it?
+mcp-review-build	mcp-server-review	I built an MCP server with a few write tools and an HTTP transport. Security-review it for me.
+mcp-review-descriptions	mcp-server-review	Check this MCP server's tool descriptions and exec calls for anything dangerous before I install it.
+mcp-review-neg-repo	security-sweep	Security-audit this whole repository for leaked secrets and vulnerable dependencies.
+pr-sec-pr	pr-security-review	Can you security-review PR 128 before I merge it? It touches the login handler and a new CI workflow.
+pr-sec-staged	pr-security-review	Check my staged changes for vulnerabilities and leaked secrets before I commit.
+pr-sec-outside	pr-security-review	An outside contributor opened a PR that adds two npm dependencies and edits a GitHub Actions workflow. Is it safe to merge?
+pr-sec-neg-review	review	Review my branch for correctness and design before merge, I am not worried about security specifically.
+harden-actions	supply-chain-harden	Pin all our GitHub Actions to commit SHAs and lock down the workflow token permissions in this repo.
+harden-publish	supply-chain-harden	This package publishes to npm with a long-lived NPM_TOKEN. Move it to trusted publishing with provenance and add Dependabot while you are there.
+harden-fleet	supply-chain-harden	Harden the software supply chain across all of our public repos: pinned actions, zizmor and gitleaks in CI, digest-pinned Docker bases.
+not-harden-audit	security-sweep	Audit this repo for vulnerabilities and leaked secrets and give me a report. Do not change anything.
+not-harden-publish	publish-readiness	We are about to make this repo public. Scan the tree and git history for leaks first.
