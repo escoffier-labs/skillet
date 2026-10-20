@@ -16,8 +16,9 @@
 #             present before the first run.
 #
 # Each file runs alone, so this finds files that pollute by themselves. A
-# polluter that only misbehaves after another test ran first needs a pair
-# search: put the suspected earlier file first in the list and rerun.
+# file that only misbehaves after another test ran first needs an ordered
+# two-file reproduction: list the suspected earlier file before the suspected
+# later one and rerun. This script does not search pairs itself.
 # Set FIND_POLLUTER_VERBOSE=1 to see test output.
 set -uo pipefail
 

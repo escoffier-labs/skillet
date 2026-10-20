@@ -8,6 +8,7 @@ Earlier history lives in the repo-level CHANGELOG.md.
 - Reviewer prompt gains: read-only, no helper agents, author report as unverified claim, reasonable-user judgment for unnamed behavior graded by effect, severity calibration, and a "Declined to judge" list before the verdict. Adapted from obra/superpowers (MIT).
 - Trigger description rewritten to state when to use the skill, not the process.
 - Added `git fetch origin` before the merge-base, an after-the-fact fallback for a plan task's base, and a note that the reviewer may run checks that write nothing tracked.
+- Default-branch detection no longer assumes `origin/main` (tries `origin/main`, `origin/master`, else stops); without TASK_START or a ledger entry the task scope is declared unknown and the branch merge-base is labeled wider; Critical severity narrowed.
 
 ## 0.1.1 - 2026-08-08
 

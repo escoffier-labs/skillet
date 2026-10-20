@@ -27,17 +27,22 @@ A one-line, obviously-safe change (a dependency bump, a typo) does not need this
 ```bash
 # Branch review: where this branch left the default branch
 git fetch origin
-DEFAULT=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null || echo origin/main)
+DEFAULT=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null)
+for c in origin/main origin/master; do   # origin/HEAD unset: try common names
+  [ -n "$DEFAULT" ] || { git rev-parse --verify -q "$c" >/dev/null && DEFAULT=$c; }
+done
+[ -n "$DEFAULT" ] || { echo "cannot find the default branch; set DEFAULT by hand" >&2; exit 1; }
 BASE_SHA=$(git merge-base "$DEFAULT" HEAD)
 
 # Plan task: record the commit before the task starts, then reuse it
 #   TASK_START=$(git rev-parse HEAD)    # run before the first edit
 # BASE_SHA=$TASK_START
 #
-# Forgot to record it? The task's first commit is the oldest one in:
-#   git log --oneline "$(git merge-base "$DEFAULT" HEAD)..HEAD"
-# and BASE_SHA is that commit's parent. If fire's ledger exists, it records
-# each task's commit range directly.
+# Forgot to record it? Use fire's ledger if one exists: it records each
+# task's commit range. With neither TASK_START nor a ledger entry, the task's
+# scope is unknown: the oldest branch commit may belong to an earlier task.
+# Keep the merge-base above and label the review "whole branch, wider than the
+# task" in the prompt.
 
 HEAD_SHA=$(git rev-parse HEAD)
 git diff --stat "$BASE_SHA..$HEAD_SHA"   # empty range? stop, the pin is wrong
@@ -68,7 +73,7 @@ Check, in order:
 - Scope: is this one concern, or are unrelated changes bundled in?
 - Leaks: secrets, internal hostnames, private IPs, AI-authorship trailers in the diff or messages.
 
-Severity: Critical = wrong result, data loss, security hole, or a broken build for users. Important = a real defect or missing test that will bite later. Minor = style, naming, nits. Grade by what happens to a user, not by how the code looks. Do not inflate to look thorough or soften to look agreeable.
+Severity: Critical = data loss, a security hole, a release-blocking build failure, or a wrong result on the change's main path. Important = a real defect on a meaningful workflow, or a missing test that will bite later. Minor = localized low-impact defects, style, naming, nits. Grade by what happens to a user, not by how the code looks. Do not inflate to look thorough or soften to look agreeable.
 
 Return findings bucketed Critical / Important / Minor, each with file:line and a concrete fix. Then a "Declined to judge" list: every area you did not or could not assess (needs a running service, outside the diff, domain knowledge you lack), each with the reason. Silence is not approval, so name the gaps. End with a one-line verdict: ready to merge, or what blocks it.
 ```

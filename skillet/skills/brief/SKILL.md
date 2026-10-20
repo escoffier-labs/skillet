@@ -93,7 +93,7 @@ For a reader who was away. Read only what changed since their last message, then
 
 1. **First line:** what waits on them, in one sentence, or that nothing does.
 2. **What changed:** a few plain bullets in the reader's words, not commit hashes and file lists.
-3. **Pending decisions:** every one as its own item, with what it is, what it changes for them, the evidence for your pick, the risk, and the pick. Group items that one call settles. Riskiest first.
+3. **Pending decisions:** every one as its own item, with what it is, what it changes for them, the evidence for your pick, the risk, and the pick. A deadline or risk that needs their action (an expiring key) is an item too. Group items that one call settles. Riskiest first.
 
 The reply grows with the number of items and never drops one to stay short; a decision left out is a decision made silently. Anything reported as done keeps [check](../check/SKILL.md)'s evidence line (the command and its output), even here, because the reader may act on it.
 
