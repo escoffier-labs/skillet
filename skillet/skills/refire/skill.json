@@ -1,8 +1,9 @@
 {
   "id": "refire",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "tests": [
-    "bash ../../../tests/lint-skills.sh refire"
+    "bash ../../../tests/lint-skills.sh refire",
+    "bash tests/test-find-polluter.sh"
   ],
   "trust_level": "workspace"
 }

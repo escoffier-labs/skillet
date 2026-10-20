@@ -48,6 +48,7 @@ EXTERNAL_CONTENT_SKILLS=(
   eighty-six
   relief
   test-kitchen
+  skillify
 )
 
 check_skill() {
