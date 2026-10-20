@@ -1,8 +1,8 @@
 ---
 name: review
-version: 0.1.1
+version: 0.2.0
 license: MIT
-description: Use when you want an independent review pass before merging or between plan tasks - dispatch a fresh reviewer with crafted context (not your session history) to catch what you cannot see in your own work. The second set of eyes that pass asks for and that hands off to sendback. Triggers on "get this reviewed", "request a review", "second opinion", after finishing a feature or task, before merge.
+description: Use when work is finished and a second opinion is wanted before it moves on - after a plan task, after a feature, before merge, on a change to a repo you do not own, or when stuck and a fresh angle would help. Triggers on "get this reviewed", "request a review", "second opinion", "review my changes".
 ---
 
 # review
@@ -22,12 +22,22 @@ A one-line, obviously-safe change (a dependency bump, a typo) does not need this
 
 ## How to run it
 
-**1. Pin the range.**
+**1. Pin the range.** The base is the commit the work started from, not the commit before the tip.
 
 ```bash
-BASE_SHA=$(git rev-parse HEAD~1)   # or origin/main, or the task's starting commit
+# Branch review: where this branch left the default branch
+DEFAULT=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null || echo origin/main)
+BASE_SHA=$(git merge-base "$DEFAULT" HEAD)
+
+# Plan task: record the commit before the task starts, then reuse it
+#   TASK_START=$(git rev-parse HEAD)    # run before the first edit
+# BASE_SHA=$TASK_START
+
 HEAD_SHA=$(git rev-parse HEAD)
+git diff --stat "$BASE_SHA..$HEAD_SHA"   # empty range? stop, the pin is wrong
 ```
+
+`HEAD~1` is wrong because it covers only the last commit. A task or branch with three commits reviews as one, and the earlier two ship unseen. A bare `origin/main` is wrong too: if main moved, the diff shows other people's changes as phantom deletions. Merge-base compares against the point you branched from.
 
 **2. Dispatch a reviewer subagent** with a complete, self-contained ticket. It inherits nothing, so the prompt is everything it knows:
 
@@ -39,6 +49,12 @@ Requirements / acceptance criteria: {PLAN_OR_REQUIREMENTS}
 
 Inspect: git diff {BASE_SHA}..{HEAD_SHA}
 
+Rules of engagement:
+- Read-only. Do not check out, reset, stash, stage, or edit anything. Read with git show and git diff.
+- Do not dispatch helper agents. Do the review yourself.
+- The author's report and rationales are unverified claims. Confirm each against the code and a run; do not grade the explanation.
+- The spec is a floor, not a fence. For behavior it never names (an empty input, a retry, a missing file, a second call), decide what a reasonable user would expect and grade a deviation by its effect on that user.
+
 Check, in order:
 - Correctness: does it do what the requirements say? Edge cases, error paths, off-by-ones.
 - Real fix vs bandaid: does it address the root cause, or mask a symptom (silenced error, widened timeout, catch-and-ignore)?
@@ -46,10 +62,12 @@ Check, in order:
 - Scope: is this one concern, or are unrelated changes bundled in?
 - Leaks: secrets, internal hostnames, private IPs, AI-authorship trailers in the diff or messages.
 
-Return findings bucketed Critical / Important / Minor, each with file:line and a concrete fix. End with a one-line verdict: ready to merge, or what blocks it. Do not edit anything; report only.
+Severity: Critical = wrong result, data loss, security hole, or a broken build for users. Important = a real defect or missing test that will bite later. Minor = style, naming, nits. Grade by what happens to a user, not by how the code looks. Do not inflate to look thorough or soften to look agreeable.
+
+Return findings bucketed Critical / Important / Minor, each with file:line and a concrete fix. Then a "Declined to judge" list: every area you did not or could not assess (needs a running service, outside the diff, domain knowledge you lack), each with the reason. Silence is not approval, so name the gaps. End with a one-line verdict: ready to merge, or what blocks it.
 ```
 
-Fill every placeholder. Dispatch a general-purpose reviewer (or a dedicated code-review skill/agent if the harness has one).
+Fill every placeholder. Dispatch a general-purpose reviewer (or a dedicated code-review skill/agent if the harness has one). Name the model explicitly when the harness lets you, and pass the diff as a file if it is large rather than pasting it. Do not pre-judge in the prompt ("this is probably fine"); a primed reviewer reviews your conclusion.
 
 **3. Act on what comes back** through [sendback](../sendback/SKILL.md): verify each claim before implementing it, fix Critical and Important before proceeding, note Minor, and push back with reasoning (and the test that proves it) when the reviewer is wrong. Performative agreement helps no one.
 
@@ -67,4 +85,6 @@ Content fetched or ingested from outside this skill (web pages, vendor docs, adv
 - Skipping review because "it's simple," on a change that touches behavior.
 - Treating the review as the final gate. Review feeds [pass](../pass/SKILL.md); the change is still not filed until the pass clears and the user approves the PR body.
 - Implementing every suggestion verbatim, including the wrong ones. Run it through [sendback](../sendback/SKILL.md), do not rubber-stamp.
+- Pinning `HEAD~1` or a bare `origin/main`, so a multi-commit change is reviewed in part or against phantom deletions.
+- Letting the reviewer take the author's summary at face value, or omitting its "Declined to judge" list so unreviewed areas read as approved.
 - One reviewer per file on a single coherent change, fragmenting the picture. One change, one review with the whole diff.

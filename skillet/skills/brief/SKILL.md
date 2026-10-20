@@ -1,6 +1,6 @@
 ---
 name: brief
-version: 0.1.0
+version: 0.2.0
 license: MIT
 description: Use when answering at a decision point - recommending an approach, reporting a verification result, finishing a task, proposing a fix, or assessing whether something is ready - so the judgment leads and the reader can evaluate it instead of only accepting it. Triggers on "brief mode", "bluf this", "give me the bottom line", "brief it", "stop burying the answer".
 ---
@@ -85,6 +85,17 @@ Does not fire:
 - **Default.** The shapes above.
 - **Deep.** "teach me", "walk me through", "explain". Full reasoning under skimmable headers. The BLUF still leads, with no preamble, recap, or closing pleasantry.
 - **Collapse.** "brief it", "compress that". Re-shape the response just delivered, for a reader returning to a session and finding a wall of text.
+- **Catch-up.** Returning to a session, "what did I miss", or an AFK handback. See below.
+
+### Catch-up gear
+
+For a reader who was away. Read only what changed since their last message, then:
+
+1. **First line:** what waits on them, in one sentence, or that nothing does.
+2. **What changed:** a few plain bullets in the reader's words, not commit hashes and file lists.
+3. **Pending decisions:** every one as its own item, with what it is, what it changes for them, the evidence for your pick, the risk, and the pick. Group items that one call settles. Riskiest first.
+
+The reply grows with the number of items and never drops one to stay short; a decision left out is a decision made silently. Anything reported as done keeps [check](../check/SKILL.md)'s evidence line (the command and its output), even here, because the reader may act on it.
 
 ## Relationship to check
 

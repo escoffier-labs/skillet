@@ -43,6 +43,19 @@
         "The output treats the request as a single-fact lookup",
         "The output does not use the recommendation or report shape because this is a non-trigger"
       ]
+    },
+    {
+      "id": "catch-up-after-afk",
+      "prompt": "I was away for four hours. While I was gone you finished the retry refactor (tests: the full suite ran and printed `212 passed, 0 failed`), found that the staging deploy key expires Friday, and hit two open questions: whether to drop Python 3.9 support, and whether to keep or remove the legacy /v1/export endpoint (both settle together if we cut the old client). Catch me up.",
+      "expected_output": "A catch-up reply: first line says what waits on the user, a few plain bullets of what changed, then every pending decision as its own item with what it is, what it changes for the user, evidence, risk, and a pick, with the two linked questions grouped and the riskiest item first. The finished work keeps its evidence line.",
+      "files": [],
+      "assertions": [
+        "The first line names what waits on the user, or says that nothing does",
+        "Every pending decision (Python 3.9 support, the /v1/export endpoint, the expiring deploy key) appears; none is dropped to stay short",
+        "Each decision states what it changes for the user, the evidence, the risk, and the pick",
+        "Decisions that one call settles are grouped, and the riskiest item comes first",
+        "The retry refactor reported as done carries its evidence line (the command and the 212 passed output)"
+      ]
     }
   ]
 }

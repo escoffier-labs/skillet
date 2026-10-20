@@ -1,6 +1,6 @@
 ---
 name: check
-version: 0.1.2
+version: 0.1.3
 license: MIT
 description: Use when about to claim anything works, is fixed, is complete, or passes - before committing, replying to the user, or moving to the next task. Also use when relaying a subagent's or tool's success report, and especially at the end of a long session when the pull to say "done" is strongest.
 ---
@@ -59,6 +59,11 @@ The proving command failed? Then the status is "not working", and that is what g
 | "Committed / in HEAD" | `git status` clean now, and the named commit's diff shows the change | A commit hash existing, work sitting untracked in the tree |
 | "Subagent finished X" | You checked the diff and ran the verification yourself | The subagent's "verified" paragraph |
 | "Requirements met" | Line-by-line against the spec or plan | Tests green |
+| Any claim, but the check was inconclusive or ran on the wrong surface (a stand-in environment, a mock, a different config than the user's) | Report "not verified" with what was and was not observed | Treating inconclusive or wrong-surface as a pass |
+
+## Suspect a check that passes too easily
+
+When verification passes on the first try, immediately after a change that should have taken effort, or on something you expected to fail, doubt the observation method before believing the result. Ask: could this command pass if the claim were false? Break the thing on purpose (revert the fix, corrupt the input, point it at a known-bad case) and confirm the check turns red. A check that cannot fail has verified nothing.
 
 ## Subagent reports are claims, not evidence
 
@@ -100,4 +105,5 @@ Run these now and reconcile them in the reply; a report that skips this list is 
 - Testing a fragment by hand, then attributing the fragment's success to the whole pipeline.
 - Committing, replying, or moving to the next task first, planning to verify after. The order is the discipline.
 - Relaying a fabricated or mistaken success report because checking felt redundant.
+- Counting an inconclusive or wrong-surface run (skipped tests, a mock, a different environment) as a pass.
 - Calling work "in HEAD" off a hash glance, when the commit predates the work entirely.
