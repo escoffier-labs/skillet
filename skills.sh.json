@@ -1,0 +1,46 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Start here",
+      "description": "Routes each task to the right skill before any work starts, and turns a repeated workflow into a new skill.",
+      "skills": ["using-skillet", "skillify"]
+    },
+    {
+      "title": "Design and build",
+      "description": "Idea to approved spec to plan to tested code, starting from the smallest useful path.",
+      "skills": ["mise", "recipe", "demi", "taste", "trim", "fire", "reduce", "worktree"]
+    },
+    {
+      "title": "Debug and verify",
+      "description": "Root cause before fixes, evidence before claims, measurements before performance changes.",
+      "skills": ["refire", "check", "brief", "stocktake", "thermometer"]
+    },
+    {
+      "title": "Review and ship",
+      "description": "Pre-PR gate, independent review, acting on feedback, and release cuts.",
+      "skills": ["pass", "review", "sendback", "release-cut", "expedite"]
+    },
+    {
+      "title": "Audit and direction",
+      "description": "Repo health, correctness and security sweeps, risky assumptions, sourced research, and what to build next.",
+      "skills": ["line-check", "bug-hunt", "security-sweep", "latent-premises", "retry-safety", "research-brief", "pressure-test", "special"]
+    },
+    {
+      "title": "Parallel agents and fleets",
+      "description": "Fan out independent work, run multi-repo campaigns, and dispatch workers on other vendors' CLIs.",
+      "skills": ["stations", "fleet-conductor", "stagiaire", "t3-code"]
+    },
+    {
+      "title": "Writing and publishing",
+      "description": "Harden technical writeups and scrub identity and infrastructure leaks from prose, repos, video, and site metadata.",
+      "skills": ["grill", "plate", "publish-readiness", "reel-check", "garnish"]
+    },
+    {
+      "title": "Memory and Brigade",
+      "description": "Session handoffs and code-graph questions, backed by Brigade when it is installed.",
+      "skills": ["memory-handoff", "brigade-handoffs", "graphtrail"]
+    }
+  ]
+}
