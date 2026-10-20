@@ -669,7 +669,7 @@ for number, line in enumerate(lines[end + 1:], start=end + 2):
 
     def script_first_token(command):
         for segment in SEGMENT_SPLIT.split(command):
-            segment = segment.strip().lstrip("$ ").lstrip("\"'").strip()
+            segment = re.sub(r"^\$\s+", "", segment.strip()).lstrip("\"'").strip()
             found = SCRIPT_START.match(segment)
             if found:
                 return found.group(0)
