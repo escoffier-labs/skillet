@@ -23,6 +23,10 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **recipe** - leaner plans: steps record decisions (tests with the spec's literal values, signatures, commands) instead of code bodies, with a `transcribe` switch for cheap workers; header gains Spec, Global Constraints, and Review Focus; tasks gain Interfaces and a "You see" line; self-review adds a proportion check; handoff recommends solo or subagent execution after the user reads the plan. Adapted from obra/superpowers (MIT) and pstack by Lauren Tan (MIT).
+- **mise** - size table replaces "however small", intent-first opening, "how it gets made" probe, caller usage before types, structurally distinct approaches, throwaway prototypes for feel-or-fact forks, a design red-flags screen (`references/design-red-flags.md`), and a builder check replacing self-review. Description is triggers only. Adapted from obra/superpowers (MIT) and pstack by Lauren Tan (MIT).
+- **pressure-test** - observable questions are answered by a spike instead of asked, and abstract plans are prototyped rather than adversarially reviewed. Adapted from pstack by Lauren Tan (MIT).
+- **skillify** - baseline-first method, match the form to the failure, wording micro-tests, a validation step, a revise-from-session-evidence mode with accept filters, and new `references/blind-eval.md` and `references/skill-testing.md`. Adapted from obra/superpowers (MIT) and pstack by Lauren Tan (MIT).
 - The Brigade work loop (brief -> work -> verify with capture -> handoff) is now defined once in `docs/brigade-process-model.md` as a process model with named gates. `using-skillet`, `check`, and `memory-handoff` reference it instead of restating their own versions of the loop.
 - The README catalog now names **plate** in the Ship workflow and includes **pi** in **stagiaire**'s supported dispatch targets.
 - **t3-code** - added the complete controller-to-remote setup loop, saved environment pairing, per-host transport choice, and an SSH local-forward fallback when the T3 Tailnet port is blocked.
