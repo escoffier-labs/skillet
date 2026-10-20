@@ -153,8 +153,15 @@ ls package-lock.json pnpm-lock.yaml yarn.lock bun.lockb uv.lock poetry.lock Pipf
 grep -nE "\"(preinstall|install|postinstall|prepare|prepublish)\"" package.json
 grep -nE "\"[^\"]+\":\s*\"(\*|latest|\^|~|>=)" package.json
 grep -nE "(>=|~=|\*)" requirements*.txt pyproject.toml 2>/dev/null
-grep -rnE "provenance|--provenance|id-token:\s*write|attest|sigstore|cosign|SLSA" .github $EXCL . 2>/dev/null
+grep -rnE "provenance|--provenance|id-token:\s*write|attest|sigstore|cosign|SLSA" $EXCL . 2>/dev/null
 grep -nE "\"(bin|files|main|repository|publishConfig)\"" package.json
 ```
 
-For a package you are about to install, compare the published tarball to the tagged source when you can (`npm pack --dry-run` lists contents without installing). Treat unexplained files, minified code with no source, and install scripts that fetch remote content as stop conditions. Do not run the install to find out.
+For a package you are about to install, compare the published tarball to the tagged source when you can. `npm pack --dry-run` runs `prepack` and `prepare` scripts, so do not use it on unvetted source. List the published tarball instead, with scripts disabled:
+
+```bash
+npm pack <name>@<version> --dry-run --json --ignore-scripts
+# or list it without writing a file: curl -sSL "$(npm view <name>@<version> dist.tarball)" | tar -tz
+```
+
+Treat unexplained files, minified code with no source, and install scripts that fetch remote content as stop conditions. Do not run the install to find out.

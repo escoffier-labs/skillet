@@ -9,7 +9,7 @@ Start from these when a recipe needs checking. They change, so confirm current b
 - GitHub Docs, Automatic token authentication and `permissions`: https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication
 - GitHub Docs, Dependabot options reference (`groups`, `cooldown`): https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference
 - GitHub Docs, Privately reporting a security vulnerability: https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability
-- npm Docs, Trusted publishing for npm packages: https://docs.npmjs.com/trusted-publishers
+- npm Docs, Trusted publishing for npm packages: https://docs.npmjs.com/trusted-publishers (retrieved 2026-10-20 through PageForge, page last edited 2026-10-06). Basis for control 6: npm CLI 11.5.1 and Node 22.14.0 minimums, exact `repository.url` match, exact workflow filename, GitHub-hosted runners only, automatic provenance for public repositories and public packages only, no provenance for private repositories, the 2-day first-publish window, and the migration order (verify, restrict tokens, revoke).
 - npm Docs, Generating provenance statements: https://docs.npmjs.com/generating-provenance-statements
 - gitleaks: https://github.com/gitleaks/gitleaks
 - OSV-Scanner: https://google.github.io/osv-scanner/

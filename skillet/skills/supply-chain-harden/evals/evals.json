@@ -18,7 +18,7 @@
     {
       "id": "oidc-before-token-removal",
       "prompt": "This repo publishes to npm with a long-lived NPM_TOKEN. Switch it to trusted publishing and delete the secret reference.",
-      "expected_output": "Adds id-token: write and --provenance, keeps the token step until the operator confirms the trusted publisher is configured on the registry and a release succeeded through OIDC, and lists the registry setup as an operator follow-up.",
+      "expected_output": "Adds id-token: write on the publish job and installs a pinned npm at or above 11.5.1, keeps the token step until the operator confirms the trusted publisher is configured on the registry and a release succeeded through OIDC, and lists the registry setup as an operator follow-up.",
       "files": [],
       "assertions": [
         "The output does not remove the token reference in the same change that introduces OIDC",

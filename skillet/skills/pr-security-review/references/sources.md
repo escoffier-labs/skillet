@@ -11,4 +11,4 @@ Retrieved 2026-10-20. Cite these by name. Re-check the edition before quoting a 
 - **osv-scanner**, lockfile vulnerability scanner: https://github.com/google/osv-scanner
 - **claude-code-security-review** by Anthropic (MIT license): https://github.com/anthropics/claude-code-security-review . Informed the structure of a diff-scoped review with explicit false-positive filtering and per-finding confidence. No text is copied.
 
-This skill replaces a private generic OWASP diff checklist. Its output template pasted the offending code into each finding, which leaks secrets into reports. The location-only rule here exists for that reason.
+Findings carry a location and secret type, never the offending line, because a quoted line can leak the secret into the report. The location-only rule exists for that reason.

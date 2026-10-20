@@ -7,7 +7,7 @@ description: Use when asked to harden a repository's software supply chain, pin 
 
 # supply-chain-harden
 
-Most repositories ship with the same gaps: third-party actions on mutable tags, workflows with default write tokens, no dependency updater, no secret scanning in CI, publishing with a long-lived registry token, and Docker bases that float. One survey of 117 repositories found no secret scanning or static analysis in CI anywhere, 11 of 290 third-party action refs pinned to a SHA, 42 of 73 workflow files with no `permissions:` block, and 3 of 87 manifest repos with an updater. This skill closes those gaps in one reviewable change per repository.
+Many repositories ship with the same gaps: third-party actions on mutable tags, workflows with default write tokens, no dependency updater, no secret scanning in CI, publishing with a long-lived registry token, and Docker bases that float. This skill closes those gaps in one reviewable change per repository.
 
 **Applies changes.** It edits workflow, config, and ignore files on a new branch, one commit per control. It never pushes, opens a PR, or changes repository settings without an explicit operator request. It never prints a secret value.
 
@@ -15,7 +15,7 @@ Most repositories ship with the same gaps: third-party actions on mutable tags, 
 
 - Read-only audit that reports findings and fixes: [security-sweep](../security-sweep/SKILL.md). Its backlog can feed this skill, and [expedite](../expedite/SKILL.md) applies general findings.
 - Leak scan before a repository goes public: [publish-readiness](../publish-readiness/SKILL.md).
-- Reviewing one PR's security: use a PR review. This skill changes the whole repo.
+- Reviewing one PR's security: [pr-security-review](../pr-security-review/SKILL.md). This skill changes the whole repo.
 - Dependency upgrades and CVE fixes in the code itself: [stocktake](../stocktake/SKILL.md).
 
 ## 1. Preflight

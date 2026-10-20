@@ -6,4 +6,4 @@ Earlier history lives in the repo-level CHANGELOG.md.
 
 - Initial release. Diff-scoped security review for a PR, commit range, or staged changes, with CI/CD, dependency, agent and LLM, SSRF, deserialization, crypto, and security-literal lenses on top of the OWASP checklist.
 - Location-only secret handling (no code field that quotes secret-bearing lines), scanner recipes that read gitleaks, zizmor, actionlint, and osv-scanner output through projections, and explicit reviewer-safety rules for attacker-controlled PR text.
-- Replaces a generic private OWASP diff checklist. Named to avoid the built-in /security-review command.
+- Named to avoid the built-in /security-review command.

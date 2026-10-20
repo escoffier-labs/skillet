@@ -120,7 +120,13 @@ Add one workflow, for example `.github/workflows/security.yml`, triggered on `pu
 
 ## 6. Publishing
 
-npm trusted publishing replaces `NPM_TOKEN` with a short-lived OIDC credential and publishes provenance. Requirements to verify against current npm docs: a recent npm CLI, a GitHub-hosted runner, and a trusted publisher configured on the package page that names the owner, repository, and exact workflow file name.
+npm trusted publishing replaces `NPM_TOKEN` with a short-lived OIDC credential. npm documents these requirements (see [sources.md](sources.md), retrieved 2026-10-20):
+
+- npm CLI 11.5.1 or later and Node 22.14.0 or later. Node 22's bundled npm is older than 11.5.1, so the workflow must install a newer npm itself. Pin the version (`npm install -g npm@<version at or above 11.5.1>`), check `npm --version` in the job, and do not float to `latest` in a release job.
+- A GitHub-hosted runner. Self-hosted runners are not supported.
+- A trusted publisher on the package's npm settings page that names the owner, repository, and exact workflow file name (filename only, with the `.yml` or `.yaml` extension, case-sensitive). npm does not validate the configuration when it is saved, so an error shows up only at publish time. Environment name is optional.
+- `package.json` `repository.url` must exactly match the GitHub repository.
+- `id-token: write` on the publishing job. When a workflow is invoked through `workflow_call`, give the permission to both parent and child, and configure the name of the calling workflow.
 
 ```yaml
 permissions:
@@ -135,19 +141,26 @@ jobs:
       - uses: <checkout pinned>
       - uses: <setup-node pinned>
         with:
-          node-version: <supported LTS>
+          node-version: <supported LTS at or above 22.14.0>
           registry-url: https://registry.npmjs.org
+          package-manager-cache: false   # no cache in release builds
+      - run: npm install -g npm@<pinned version at or above 11.5.1>
       - run: npm ci
-      - run: npm publish --provenance --access public
+      - run: npm publish
 ```
 
-Do not set `NODE_AUTH_TOKEN` on the OIDC path. Order of operations:
+Keep the package's existing publish flags and access setting. Do not add `--access public`, which would change the access of a package that is not meant to be public. `--provenance` is unnecessary: with trusted publishing from GitHub Actions npm generates provenance by default, so leaving the flag on is harmless and removing it is optional.
 
-1. Add the workflow change with `id-token: write` and `--provenance`.
-2. Keep the token step until the operator confirms the trusted publisher is configured and a release published through OIDC.
-3. Only then remove the token reference and tell the operator to revoke the secret.
+Provenance is generated only when the repository is public and the package is public. A private repository gets no provenance even for a public package. Trusted publishing itself still works for private packages, so a private package is not a reason to keep the token.
 
-If the registry configuration is missing, or the package is private, or the runner is self-hosted, keep the token path, add `--provenance` only where supported, and record the blocker. For other registries, use the equivalent trusted publishing flow if one exists, and report the rest as deferred.
+Do not set `NODE_AUTH_TOKEN` on the OIDC path. A read-only token for installing private dependencies is a separate matter and stays out of the publish step. Order of operations:
+
+1. Change the workflow: `id-token: write`, a current npm, and the publish step without a token.
+2. Keep the token step until the operator confirms the trusted publisher is configured and a release has published through OIDC. A new trusted publisher configuration must complete its first successful publish within 2 days or it expires and has to be recreated, so tell the operator to configure it close to the release.
+3. Confirm OIDC worked. For a public repository and package, check that the newly published version carries a provenance attestation on its npm package page. For a private package there is no attestation, so confirm the release succeeded with no token in the workflow.
+4. Only then remove the token reference and tell the operator to revoke the secret. npm also recommends the package setting "Require two-factor authentication and disallow tokens" once trusted publishing works. That is an operator setting.
+
+If the trusted publisher cannot be configured, or the runner is self-hosted, keep the token path and record the blocker. For other registries, use the equivalent trusted publishing flow if one exists, and report the rest as deferred.
 
 ## 7. Docker bases
 
