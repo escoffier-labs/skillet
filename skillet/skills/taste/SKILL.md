@@ -1,6 +1,6 @@
 ---
 name: taste
-version: 0.2.0
+version: 0.2.1
 license: MIT
 description: Use when implementing any feature, bugfix, or behavior change, before writing the implementation code. Especially use under pressure - production is down, "just make it work", "quick fix" - which is when it gets skipped.
 ---
@@ -20,9 +20,9 @@ Applies to features, bugfixes, refactors, behavior changes. The only exceptions 
 ## The loop
 
 1. **RED - write one minimal failing test.** One behavior, a name that describes it, real code over mocks. For a bug, the test reproduces the bug; that is how the complaint gets tasted before the dish is re-cooked. Before writing it, pass [trim's authoring gate](../trim/SKILL.md#authoring-gate): name the behavior it protects, the regression that breaks it, why existing coverage misses it, confirm it needs no test-only production seam, and check it against trim's junk patterns. If no test passes the gate, stop and resolve that before writing any code.
-2. **Watch it fail.** Run it, read the output. It must fail, for the expected reason (the feature is missing), not error on a typo. Passes immediately? It tests existing behavior; fix the test.
+2. **Watch it fail.** Run it, read the output. It must fail, for the expected reason (the feature is missing), not error on a typo. Passes immediately? It tests existing behavior; fix the test. Regression test for a fix that already exists (merged earlier, cherry-picked, written before the test)? Temporarily revert just that fix with a reversible edit (reverse-apply the hunk, keep a copy), watch the test fail for the bug's reason, restore the fix, watch it pass. A regression test never seen red guards nothing.
 3. **GREEN - minimal code to pass.** Just enough. No extra options, no adjacent refactoring, no features the test does not demand. YAGNI.
-4. **Watch it pass.** Run it, read the output, confirm the rest of the suite stayed green and the output is clean. Fails? Fix the code, never the test.
+4. **Watch it pass, then run the project's own suite.** Run the new test, read the output, then run the project's full test command even when the task named one file or one test. Report every failure by name, including ones you did not cause; "unrelated, was already red" is a finding to report, not a reason to omit it. Fails? Fix the code, never the test. A suite too slow to run whole? Run the affected subset and name exactly what was not run; do not call the suite green. A scope statement bounds the deliverable, not the verification.
 5. **REFACTOR on green only.** Duplication out, names improved, tests stay green, no new behavior.
 6. Next behavior, next failing test.
 
@@ -80,5 +80,6 @@ All of these mean: delete the code, start the loop at RED.
 - Weakening an assertion to get to green instead of fixing the code.
 - Bundling three behaviors into one test so the failure points nowhere.
 - Treating the suite's existing green as evidence the new function works.
+- Running only the file the task named and reporting "tests pass", while the rest of the suite was never run or its failures went unlisted.
 - An expected value computed by the code under test, or a mock that implements the behavior being asserted. The test passes by construction; see trim's junk patterns.
 - Replaying the same bug regression at every layer it crosses. One regression at the owner boundary covers it.
