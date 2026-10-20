@@ -302,7 +302,7 @@ def make_plugin(arm_dir):
     plugin = arm_dir / "plugin"
     (plugin / ".claude-plugin").mkdir(parents=True)
     (plugin / ".claude-plugin" / "plugin.json").write_text(
-        json.dumps({"name": "skillet-eval", "version": "0.0.0",
+        json.dumps({"name": "skillet", "version": "0.0.0",
                     "description": "single-skill eval arm"}) + "\n",
         encoding="utf-8",
     )
@@ -325,6 +325,18 @@ def stage_files(case, work_dir):
 
 
 def run_arm(case, arm, eval_dir):
+    foreign = []
+
+    def on_event(event):
+        # Built-in harness skills have no namespace. A namespaced skill other
+        # than the single skillet:<id> under test means another plugin leaked
+        # into the arm, which would invalidate the comparison.
+        if event.get("type") == "system" and event.get("subtype") == "init":
+            allowed = {"skillet:" + skill_id} if arm == "with_skill" else set()
+            foreign.extend(s for s in event.get("skills") or [] if ":" in s and s not in allowed)
+            return bool(foreign)
+        return False
+
     arm_dir = eval_dir / arm
     outputs = arm_dir / "outputs"
     work = arm_dir / "work"
@@ -344,7 +356,7 @@ def run_arm(case, arm, eval_dir):
     stream_log = outputs / "stream.jsonl"
     stream_log.write_text("", encoding="utf-8")
     try:
-        result = run_stream(cmd, case["prompt"], str(scratch), timeout, str(stream_log))
+        result = run_stream(cmd, case["prompt"], str(scratch), timeout, str(stream_log), on_event)
     finally:
         shutil.copytree(scratch, work, dirs_exist_ok=True)
         shutil.rmtree(scratch, ignore_errors=True)
@@ -360,7 +372,9 @@ def run_arm(case, arm, eval_dir):
             if name == "Skill":
                 skills_called.append(str(tool_input.get("skill") or ""))
 
-    if result["timed_out"]:
+    if foreign:
+        status = "error"
+    elif result["timed_out"]:
         status = "timeout"
     elif result["returncode"] != 0 or not text.strip():
         status = "error"
@@ -373,7 +387,9 @@ def run_arm(case, arm, eval_dir):
         "skills_called": skills_called,
         "tools_called": tools_called,
     }
-    if status != "ok":
+    if foreign:
+        timing["stderr_tail"] = "init lists skills from outside the arm: " + ", ".join(foreign[:3])
+    elif status != "ok":
         timing["stderr_tail"] = result["stderr"].strip()[-300:]
     (arm_dir / "timing.json").write_text(json.dumps(timing, indent=2) + "\n", encoding="utf-8")
     return arm_dir, text, timing
@@ -478,7 +494,7 @@ for case in data["evals"]:
             "tokens": timing["total_tokens"],
         })
         if arm == "with_skill" and timing["status"] == "ok" and not any(
-            s.split(":")[-1] == skill_id for s in timing["skills_called"]
+            s == "skillet:" + skill_id for s in timing["skills_called"]
         ):
             print(f"[warn] {skill_id}/{slug}/with_skill: the skill was never invoked, "
                   "so this arm measured the baseline", flush=True)
@@ -522,6 +538,9 @@ live_run() {
     echo "[fail] headless CLI not found: $RUNNER (set --runner or EVAL_RUNNER)" >&2
     return 2
   }
+  if [ -n "${ANTHROPIC_API_KEY:-}" ]; then
+    echo "[warn] ANTHROPIC_API_KEY is set: these runs may bill the API instead of the subscription. Unset it to use subscription quota." >&2
+  fi
   echo "[note] --live makes real model calls and spends quota (model: $LIVE_MODEL, runner: $RUNNER)" >&2
   if [ -n "$SKILL_FILTER" ]; then
     [ -f "$SKILLS_DIR/$SKILL_FILTER/evals/evals.json" ] || {

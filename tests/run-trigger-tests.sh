@@ -8,8 +8,8 @@
 # For each row of tests/trigger-prompts.tsv it runs ONE flat headless pass
 # (`claude --print --output-format stream-json --verbose`) with this repo's
 # skillet/ directory loaded as a plugin and Task/Agent disallowed, parses the
-# stream, and asserts that the expected Skill tool call happens before the
-# first Edit, Write, MultiEdit, NotebookEdit or Bash tool use. Read-only tools
+# stream, and asserts that the expected skillet:<name> Skill tool call happens
+# before the first Edit, Write, MultiEdit, NotebookEdit or Bash tool use. Read-only tools
 # (Read, Grep, Glob) before the Skill call are allowed. The run stops as soon
 # as the verdict is known, so most passes end after the first few tool calls.
 #
@@ -66,6 +66,9 @@ esac
 if [ "$DRY_RUN" -eq 0 ]; then
   command -v python3 >/dev/null 2>&1 || { echo "[fail] python3 is required" >&2; exit 2; }
   command -v "$CLAUDE_BIN" >/dev/null 2>&1 || { echo "[fail] headless CLI not found: $CLAUDE_BIN (set --claude or TRIGGER_CLAUDE)" >&2; exit 2; }
+  if [ -n "${ANTHROPIC_API_KEY:-}" ]; then
+    echo "[warn] ANTHROPIC_API_KEY is set: these runs may bill the API instead of the subscription. Unset it to use subscription quota." >&2
+  fi
   echo "[note] this run makes one real model call per prompt and spends quota (model: $MODEL)" >&2
 fi
 
@@ -124,15 +127,21 @@ cmd = sys.argv[6:]
 ACTION_TOOLS = {"Edit", "Write", "MultiEdit", "NotebookEdit", "Bash"}
 state = {"skills": [], "verdict": None, "detail": ""}
 
-def short(name):
-    return name.split(":", 1)[-1]
-
 def on_event(event):
+    if event.get("type") == "system" and event.get("subtype") == "init":
+        # Built-in harness skills carry no namespace. A namespaced skill that is
+        # not skillet:* comes from another installed plugin and would skew the
+        # measurement, so the row fails instead of reporting a misleading hit.
+        foreign = [s for s in event.get("skills") or [] if ":" in s and not s.startswith("skillet:")]
+        if foreign:
+            state["verdict"] = "FAIL"
+            state["detail"] = "init lists skills from outside the plugin: " + ", ".join(foreign[:3])
+            return True
     for name, tool_input in tool_uses(event):
         if name == "Skill":
             skill = str(tool_input.get("skill") or tool_input.get("name") or "")
             state["skills"].append(skill)
-            if short(skill) in expected:
+            if skill in {"skillet:" + e for e in expected}:
                 state["verdict"] = "PASS"
                 state["detail"] = "skill " + skill + " fired before any action"
                 return True
@@ -160,12 +169,16 @@ sys.exit(0 if state["verdict"] == "PASS" else 1)
 '
 
 build_command
-mkdir -p "$OUT_DIR"
-SCRATCH="$(mktemp -d)"
-trap 'rm -rf "$SCRATCH"' EXIT
-WORKDIR="$SCRATCH/work"
-mkdir -p "$WORKDIR"
-printf '# demo\n' >"$WORKDIR/README.md"
+WORKDIR=""
+if [ "$DRY_RUN" -eq 0 ]; then
+  # A dry run creates nothing on disk.
+  mkdir -p "$OUT_DIR"
+  SCRATCH="$(mktemp -d)"
+  trap 'rm -rf "$SCRATCH"' EXIT
+  WORKDIR="$SCRATCH/work"
+  mkdir -p "$WORKDIR"
+  printf '# demo\n' >"$WORKDIR/README.md"
+fi
 
 printf '%-16s %-18s %-6s %s\n' "PROMPT" "EXPECTED" "RESULT" "DETAIL"
 FAILED=0

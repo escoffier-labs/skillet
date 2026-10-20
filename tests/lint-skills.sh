@@ -600,14 +600,16 @@ PY
 }
 
 # Body and description rules, each taken from a real upstream incident:
-#   FAIL  skill-argument placeholders ($1-$9, ${N}, $ARGUMENTS) in prose: Claude
-#         Code substitutes skill arguments into the body, so an innocent shell
-#         example gets rewritten before the model reads it.
+#   FAIL  skill-argument placeholders ($0-$9, ${N}, $ARGUMENTS) anywhere in the
+#         body, code fences included: Claude Code substitutes skill arguments
+#         everywhere, so an innocent shell example gets rewritten before the
+#         model reads it. Escape a literal one as \$1.
 #   FAIL  the extended-thinking trigger keyword: it silently raises the thinking
 #         budget for every session that loads the skill.
-#   FAIL  a scripts/<name> reference with no interpreter in front of it: the
-#         executable bit is not preserved by every install route, so a bare
-#         path fails on some of them. Write `bash scripts/x.sh`.
+#   WARN  a scripts/<name> path (also ${CLAUDE_SKILL_DIR}/scripts/<name>) that is
+#         the first token of an inline code span or fenced command with no
+#         interpreter or runner in front of it: the executable bit is not
+#         preserved by every install route. Write `bash scripts/x.sh`.
 #   WARN  description over 500 characters, or one that reads as a process
 #         summary ("then" chains, "hands off to", "dispatch a/by dispatching"):
 #         agents follow a summarizing description and skip the body.
@@ -635,9 +637,13 @@ if end is None:
 failures = []
 warnings = []
 
-ARG_PATTERN = re.compile(r"\$(?:[1-9]|\{[0-9]+\}|ARGUMENTS\b)")
-SCRIPT_PATTERN = re.compile(r"(?<![\w/.-])(?:\./)?scripts/[\w][\w.-]*")
-INTERPRETERS = {"bash", "sh", "zsh", "python", "python3", "node"}
+# Claude Code substitutes $ARGUMENTS and $0-$9 (and braced digits) in the body,
+# fences included; a backslash escapes a literal one.
+ARG_PATTERN = re.compile(r"(?<!\\)\$(?:[0-9]|\{[0-9]+\}|ARGUMENTS\b)")
+SCRIPT_START = re.compile(r"^(?:\$\{CLAUDE_SKILL_DIR\}/|\./)?scripts/\w[\w.-]*")
+INTERPRETERS = {"bash", "sh", "zsh", "python", "python3", "node", "deno"}
+CODE_SPAN = re.compile(r"`([^`\n]+)`")
+SEGMENT_SPLIT = re.compile(r"&&|\|\||[;|]")
 SECRET_ECHO = re.compile(
     r"\b(?:echo|printf|print|console\.log|cat)\b[^\n]*"
     r"\$\{?[A-Za-z0-9_]*(?:TOKEN|SECRET|PASSWORD|PASSWD|API_?KEY|PRIVATE_KEY|CREDENTIAL)"
@@ -655,27 +661,45 @@ for number, line in enumerate(lines[end + 1:], start=end + 2):
         continue
     in_fence = fence is not None
 
-    if not in_fence and ARG_PATTERN.search(line):
+    if ARG_PATTERN.search(line):
         failures.append(
-            f"line {number}: skill-argument placeholder outside a code fence "
-            "(Claude Code substitutes $1-$9, ${N} and $ARGUMENTS)"
+            f"line {number}: skill-argument placeholder (Claude Code substitutes "
+            "$0-$9, ${N} and $ARGUMENTS everywhere, fences included; escape a literal one as \\$1)"
         )
-    for match in SCRIPT_PATTERN.finditer(line):
-        before = line[: match.start()].rstrip().rstrip("`").rstrip()
-        words = before.split()
-        while words and words[-1].lstrip("`").startswith("-"):
-            words.pop()  # skip interpreter flags such as `bash -x`
-        previous = words[-1].strip("`") if words else ""
-        if previous not in INTERPRETERS:
-            failures.append(
-                f"line {number}: {match.group(0)} is not run through an interpreter "
-                "(write `bash scripts/<name>`)"
-            )
+
+    def script_first_token(command):
+        for segment in SEGMENT_SPLIT.split(command):
+            segment = segment.strip().lstrip("$ ").lstrip("\"'").strip()
+            found = SCRIPT_START.match(segment)
+            if found:
+                return found.group(0)
+        return None
+
+    flagged = []
+    if in_fence:
+        found = script_first_token(line)
+        if found:
+            flagged.append(found)
+    else:
+        for span in CODE_SPAN.finditer(line):
+            found = script_first_token(span.group(1))
+            if not found:
+                continue
+            before = line[: span.start()].rstrip().split()
+            previous = before[-1].strip("`") if before else ""
+            runner = previous in INTERPRETERS or (len(before) >= 2 and before[-2] == "uv" and previous == "run")
+            if not runner:
+                flagged.append(found)
+    for found in flagged:
+        warnings.append(
+            f"line {number}: {found} has no interpreter or runner in front of it "
+            "(write `bash scripts/<name>`)"
+        )
     if SECRET_ECHO.search(line):
         warnings.append(f"line {number}: example echoes a secret-looking variable")
 
 body_and_description = "\n".join(lines)
-if re.search(r"ultrathink", body_and_description, re.IGNORECASE):
+if re.search(r"\bultrathink\b", body_and_description, re.IGNORECASE):
     failures.append("contains the extended-thinking trigger keyword")
 
 if len(description) > 500:
@@ -1292,8 +1316,18 @@ PY
   fixture="$tmp/body-argument-fenced"
   cp -a "$ROOT"/. "$fixture"
   printf '\n```bash\necho "$1 $ARGUMENTS"\n```\n' >>"$fixture/skillet/skills/line-check/SKILL.md"
+  assert_fixture_rejected "skill-argument placeholder inside a code fence" "$fixture" line-check "skill-argument placeholder"
+
+  fixture="$tmp/body-argument-zero"
+  cp -a "$ROOT"/. "$fixture"
+  printf '\nPass $0 along.\n' >>"$fixture/skillet/skills/line-check/SKILL.md"
+  assert_fixture_rejected "skill-argument placeholder \$0" "$fixture" line-check "skill-argument placeholder"
+
+  fixture="$tmp/body-argument-escaped"
+  cp -a "$ROOT"/. "$fixture"
+  printf '\n```bash\nawk '"'"'{print \\$1}'"'"' file  # escaped, literal\n```\n' >>"$fixture/skillet/skills/line-check/SKILL.md"
   if ! LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$self_test_path" bash "$fixture/tests/lint-skills.sh" line-check >/dev/null 2>&1; then
-    echo "[fail] self-test: placeholder inside a code fence was rejected"
+    echo "[fail] self-test: an escaped placeholder was rejected"
     regression_failures=1
   fi
 
@@ -1305,7 +1339,23 @@ PY
   fixture="$tmp/body-bare-script"
   cp -a "$ROOT"/. "$fixture"
   sed -i 's/`bash scripts\/grill-scan.sh/`scripts\/grill-scan.sh/' "$fixture/skillet/skills/grill/SKILL.md"
-  assert_fixture_rejected "script reference without an interpreter" "$fixture" grill "not run through an interpreter"
+  printf '\n```bash\n"${CLAUDE_SKILL_DIR}/scripts/other.sh" --flag\n```\n' >>"$fixture/skillet/skills/grill/SKILL.md"
+  if ! warn_output="$(LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$self_test_path" bash "$fixture/tests/lint-skills.sh" grill 2>&1)"; then
+    echo "[fail] self-test: bare script references must warn, not fail"
+    regression_failures=1
+  elif [ "$(printf '%s\n' "$warn_output" | grep -c 'has no interpreter or runner in front of it')" -ne 2 ]; then
+    echo "[fail] self-test: expected a warning for the inline and the fenced bare script reference"
+    regression_failures=1
+  fi
+
+  fixture="$tmp/body-script-references-ok"
+  cp -a "$ROOT"/. "$fixture"
+  printf '%s\n' '' 'Run `uv run scripts/a.py`, then `chmod +x scripts/b.sh`, `git add scripts/c.sh`, see [the helper](scripts/d.sh) and use sh `scripts/e.sh`.' '```bash' 'node scripts/f.js && deno run scripts/g.ts' '```' >>"$fixture/skillet/skills/grill/SKILL.md"
+  if ! warn_output="$(LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$self_test_path" bash "$fixture/tests/lint-skills.sh" grill 2>&1)" ||
+    printf '%s\n' "$warn_output" | grep -q 'has no interpreter or runner'; then
+    echo "[fail] self-test: interpreter, chmod, git add, link and runner references must not warn"
+    regression_failures=1
+  fi
 
   fixture="$tmp/body-warnings-only"
   cp -a "$ROOT"/. "$fixture"
@@ -1334,7 +1384,12 @@ old = 'if [ ! -r "$skill_md" ]; then\n  exit 1\nfi'
 assert old in text, "fail-closed guard not found"
 path.write_text(text.replace(old, 'if [ ! -r "$skill_md" ]; then\n  echo "Error reading using-skillet skill"\n  exit 1\nfi'), encoding="utf-8")
 PY
-  assert_fixture_rejected "hook that emits an error string on failure" "$fixture" "" "session-start.sh failed"
+  # Run the hook test directly against the mutated fixture instead of the
+  # whole linter.
+  if PATH="$self_test_path" bash "$fixture/tests/hooks/test-session-start.sh" >/dev/null 2>&1; then
+    echo "[fail] self-test: hook that emits an error string on failure was accepted"
+    regression_failures=1
+  fi
 
   fixture="$tmp/version-missing"
   cp -a "$ROOT"/. "$fixture"

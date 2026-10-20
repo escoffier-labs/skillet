@@ -2,6 +2,8 @@
 # SessionStart hook for the skillet plugin.
 # Injects the using-skillet bootstrap so skills auto-trigger at the right moments.
 #
+# Hardening adapted from obra/superpowers (MIT).
+#
 # Hardening notes:
 # - Works with an empty or broken PATH: only bash builtins are used (no dirname,
 #   no cat on the required path). A SessionStart hook can be spawned before any
@@ -45,13 +47,19 @@ escape_for_json() {
 using_skillet_escaped=$(escape_for_json "$using_skillet_content")
 session_context="<EXTREMELY_IMPORTANT>\nYou have skillet.\n\n**Below is the full content of your 'skillet:using-skillet' skill - your introduction to using skills. For all other skills, use the 'Skill' tool:**\n\n${using_skillet_escaped}\n</EXTREMELY_IMPORTANT>"
 
-# printf (not heredoc) avoids the bash 5.3+ heredoc hang. When cat exists the
-# output goes through it, which absorbs EPIPE if the harness closes stdout
-# early (Git Bash on Windows reports that as a printf write error). When PATH
-# is broken and cat is missing, printf alone still delivers the context.
+# printf (not heredoc) avoids the bash 5.3+ heredoc hang. When cat is safe to
+# call the output goes through it, which absorbs EPIPE if the harness closes
+# stdout early (Git Bash on Windows reports that as a printf write error). cat
+# counts as safe only when PATH is non-empty and every entry is absolute: with
+# an empty PATH, or an empty or "." entry, bash would search the current
+# directory and run a planted ./cat. Otherwise printf alone delivers the context.
+case ":${PATH:-}:" in
+  *:[!/]*) CAT_SAFE=0 ;;
+  *) CAT_SAFE=1 ;;
+esac
 emit_json() {
   # shellcheck disable=SC2059 # every caller passes a literal format string
-  if command -v cat >/dev/null 2>&1; then
+  if [ "$CAT_SAFE" -eq 1 ] && command -v cat >/dev/null 2>&1; then
     printf "$@" | cat
   else
     printf "$@"

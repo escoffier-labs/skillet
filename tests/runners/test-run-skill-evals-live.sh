@@ -42,9 +42,14 @@ mode="plain"
 for arg in "$@"; do [ "$arg" = "--plugin-dir" ] && mode="skill"; done
 prompt="$(cat)"
 printf '%s|%s\n' "$mode" "$*" >>"$FAKE_CALL_LOG"
-echo '{"type":"system","subtype":"init"}'
+printf '%s\n' "${CLAUDE_CODE_DISABLE_CLAUDE_MDS:-unset}" >>"$FAKE_ENV_LOG"
+if [ "${FAKE_FOREIGN:-0}" = 1 ]; then
+  echo '{"type":"system","subtype":"init","skills":["debug","other-plugin:thing"]}'
+else
+  echo '{"type":"system","subtype":"init","skills":["debug"]}'
+fi
 if [ "$mode" = "skill" ]; then
-  echo '{"type":"assistant","message":{"content":[{"type":"tool_use","name":"Skill","input":{"skill":"skillet-eval:demo"}}]}}'
+  echo '{"type":"assistant","message":{"content":[{"type":"tool_use","name":"Skill","input":{"skill":"skillet:demo"}}]}}'
 fi
 case "$prompt" in
   *"grading one agent response"*)
@@ -56,7 +61,7 @@ case "$prompt" in
 esac
 FAKE_EOF
 chmod +x "$FAKE"
-export FAKE_CALL_LOG="$TMP/calls.log"
+export FAKE_CALL_LOG="$TMP/calls.log" FAKE_ENV_LOG="$TMP/env.log"
 
 out="$(bash "$FIX/tests/run-skill-evals.sh" --live 2>&1)"; rc=$?
 [ "$rc" -eq 2 ] && pass "--live without a skill-id is refused" || fail "--live without id rc=$rc"
@@ -71,6 +76,8 @@ IT="$FIX/.skill-eval-workspace/demo/iteration-1"
 [ "$(wc -l <"$FAKE_CALL_LOG")" -eq 2 ] && pass "two passes per case (with and without)" || fail "expected 2 runner calls, got $(wc -l <"$FAKE_CALL_LOG")"
 grep -q '^skill|' "$FAKE_CALL_LOG" && grep -q '^plain|' "$FAKE_CALL_LOG" && pass "only the with-skill arm gets --plugin-dir" || fail "arms are not differentiated"
 grep -q -- '--disallowedTools Task,Agent' "$FAKE_CALL_LOG" && pass "Task and Agent are disallowed" || fail "Task/Agent not disallowed"
+grep -q -- '--setting-sources project' "$FAKE_CALL_LOG" && grep -q -- '--strict-mcp-config' "$FAKE_CALL_LOG" && pass "project-only settings and no MCP servers" || fail "isolation flags missing"
+[ "$(sort -u "$FAKE_ENV_LOG")" = "1" ] && pass "CLAUDE_CODE_DISABLE_CLAUDE_MDS=1 is set for every pass" || fail "CLAUDE_CODE_DISABLE_CLAUDE_MDS not set"
 grep -q -- '--model testmodel' "$FAKE_CALL_LOG" && pass "model is configurable" || fail "model flag missing"
 [ -f "$IT/eval-case-one/with_skill/plugin/skills/demo/SKILL.md" ] && pass "with-skill arm loads the skill" || fail "skill not copied into the arm"
 [ ! -e "$IT/eval-case-one/with_skill/plugin/skills/demo/evals" ] && [ ! -e "$IT/eval-case-one/with_skill/plugin/skills/demo/tests" ] && pass "assertions and tests are withheld from the arm" || fail "evals/ or tests/ leaked into the arm"
@@ -81,18 +88,24 @@ from pathlib import Path
 it = Path(sys.argv[1])
 timing = json.loads((it / "eval-case-one/with_skill/timing.json").read_text())
 assert timing["status"] == "ok" and timing["total_tokens"] == 120, timing
-assert timing["skills_called"] == ["skillet-eval:demo"], timing
+assert timing["skills_called"] == ["skillet:demo"], timing
 bench = json.loads((it / "benchmark.json").read_text())
 assert bench["run_summary"]["delta"]["pass_rate"] is None
 grading = json.loads((it / "eval-case-one/with_skill/grading.json").read_text())
 assert grading["summary"]["status"] == "not_graded"
 PY
 
+out="$(ANTHROPIC_API_KEY=dummy bash "$FIX/tests/run-skill-evals.sh" --live demo --runner "$FAKE" 2>&1)"
+printf '%s' "$out" | grep -q 'ANTHROPIC_API_KEY is set' && pass "warns when ANTHROPIC_API_KEY is set" || fail "no API key warning"
+
+out="$(FAKE_FOREIGN=1 bash "$FIX/tests/run-skill-evals.sh" --live demo --runner "$FAKE" 2>&1)"; rc=$?
+[ "$rc" -eq 1 ] && printf '%s' "$out" | grep -q 'outside the arm: other-plugin:thing' && pass "a foreign plugin skill in init fails the arm" || fail "foreign init rc=$rc: $out"
+
 rm -f "$FAKE_CALL_LOG"
 out="$(bash "$FIX/tests/run-skill-evals.sh" --live demo --runner "$FAKE" --grade 2>&1)"; rc=$?
 [ "$rc" -eq 0 ] && pass "--live --grade exits 0" || fail "--grade rc=$rc: $out"
 [ "$(wc -l <"$FAKE_CALL_LOG")" -eq 4 ] && pass "--grade adds one judge pass per arm" || fail "expected 4 runner calls with --grade, got $(wc -l <"$FAKE_CALL_LOG")"
-python3 -I - "$FIX/.skill-eval-workspace/demo/iteration-2" <<'PY' && pass "a pass without evidence is downgraded to a fail" || fail "grading result is wrong"
+python3 -I - "$FIX/.skill-eval-workspace/demo/iteration-4" <<'PY' && pass "a pass without evidence is downgraded to a fail" || fail "grading result is wrong"
 import json, sys
 from pathlib import Path
 grading = json.loads((Path(sys.argv[1]) / "eval-case-one/with_skill/grading.json").read_text())

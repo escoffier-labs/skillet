@@ -9,6 +9,9 @@ REM "session-start.sh") so Claude Code's Windows auto-detection -- which
 REM prepends "bash" to any command containing .sh -- doesn't interfere.
 REM
 REM Usage: run-hook.cmd <script-name> [args...]
+REM
+REM Hardening (per-user Git lookup, WSL launcher skip, no cwd lookups, exit code
+REM pass-through) adapted from obra/superpowers (MIT).
 
 if "%~1"=="" (
     echo run-hook.cmd: missing script name >&2
@@ -47,7 +50,8 @@ CMDBLOCK
 
 # Unix: run the named script directly.
 # Split $0 on its last / or \ instead of calling dirname, and start the script
-# with $BASH (bash's own absolute path) instead of a PATH lookup, so this keeps
+# with $BASH (bash's own absolute path, used only when its basename is bash)
+# instead of a PATH lookup, so this keeps
 # working when the harness spawns the hook with an empty or broken PATH.
 case "$0" in
   */*|*\\*) SCRIPT_DIR="$(cd "${0%[/\\]*}" && pwd)" ;;
@@ -55,4 +59,8 @@ case "$0" in
 esac
 SCRIPT_NAME="$1"
 shift
-exec "${BASH:-bash}" "${SCRIPT_DIR}/${SCRIPT_NAME}" "$@"
+case "${BASH:-}" in
+  */bash|*/bash.exe) BASH_RUNNER="$BASH" ;;
+  *) BASH_RUNNER=bash ;;
+esac
+exec "$BASH_RUNNER" "${SCRIPT_DIR}/${SCRIPT_NAME}" "$@"

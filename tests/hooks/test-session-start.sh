@@ -108,6 +108,31 @@ check_json "no platform variables emit top-level additionalContext" flat "$TMP/b
 
 if [ -s "$TMP/claude.err" ]; then fail "claude mode wrote to stderr"; else pass "claude mode wrote nothing to stderr"; fi
 
+# 1b. A normal absolute PATH works and produces the same JSON.
+run_clean "$TMP/normal.json" "$TMP/normal.err" PATH=/usr/bin:/bin CLAUDE_PLUGIN_ROOT=/x "$BASH_BIN" "$HOOK"
+rc=$?
+[ "$rc" -eq 0 ] && pass "normal PATH exits 0" || fail "normal PATH exit $rc"
+check_json "normal PATH emits claude-mode JSON" nested "$TMP/normal.json"
+
+# 1c. A planted ./cat must never run, with an empty PATH or a "." or empty
+# PATH entry (bash searches the working directory for those).
+mkdir -p "$TMP/planted"
+printf '#!/bin/sh\n# shell builtin only: PATH is empty here\n: >"%s/planted-cat-ran"\nwhile IFS= read -r l; do printf "%%s\\n" "$l"; done\n\n' "$TMP" >"$TMP/planted/cat"
+chmod +x "$TMP/planted/cat"
+for planted_path in "" "." ":/nonexistent" "/nonexistent:" "relative/bin"; do
+  rm -f "$TMP/planted-cat-ran"
+  (cd "$TMP/planted" && env -i PATH="$planted_path" CLAUDE_PLUGIN_ROOT=/x "$BASH_BIN" "$HOOK" >"$TMP/planted.json" 2>/dev/null)
+  rc=$?
+  if [ -e "$TMP/planted-cat-ran" ]; then
+    fail "planted ./cat ran with PATH='$planted_path'"
+  elif [ "$rc" -ne 0 ]; then
+    fail "hook exited $rc with PATH='$planted_path'"
+  else
+    pass "planted ./cat ignored with PATH='$planted_path'"
+    check_json "JSON still valid with PATH='$planted_path'" nested "$TMP/planted.json"
+  fi
+done
+
 # 2. Through the wrapper with an empty PATH.
 run_clean "$TMP/wrap.json" "$TMP/wrap.err" PATH= CLAUDE_PLUGIN_ROOT=/x "$BASH_BIN" "$WRAPPER" session-start
 rc=$?
