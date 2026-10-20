@@ -160,13 +160,17 @@ A skill earns its context cost when pass-rate delta is clearly positive relative
 |---|---|---|---|
 | **validate** (default) | `tests/lint-evals.sh` or `tests/run-skill-evals.sh --validate` | no | yes |
 | **dry-run** | `tests/run-skill-evals.sh --dry-run [skill-id]` | no | yes (optional self-check) |
-| **live** | `tests/run-skill-evals.sh --live [skill-id]` | yes | no (manual / nightly later) |
+| **live** | `tests/run-skill-evals.sh --live <skill-id>` | yes (spends quota) | no (manual / nightly later) |
 
 **validate:** JSON parse, schema fields, `skill_name` match, file path existence, non-empty prompts/assertions, unique ids.
 
 **dry-run:** validate, then emit the structural A/B plan (which prompts would run, output dirs, assertion list) and a template `grading.json` / `benchmark.json` shape with empty or placeholder results. Exit 0 if manifests are valid. This proves the harness wiring without keys.
 
-**live:** reserved for environments with agent/model access. The pilot implementation may stub `--live` with a clear error that documents the manual subagent procedure from the Agent Skills docs (spawn clean with-skill and without-skill runs, write timing/grading artifacts). A later PR can plug in a real runner; do not block the manifest format on that.
+**live:** implemented by `tests/run-skill-evals.sh --live <skill-id>` (or `--all`). For every case it runs two flat headless passes in fresh temp directories with project-level settings only, no MCP servers, and `Task`/`Agent` disallowed: `with_skill` loads a copy of the one skill (without its `evals/` and `tests/` directories, so the assertions are never visible to the arm) as a plugin, `without_skill` loads nothing. It writes `outputs/response.md`, the raw `outputs/stream.jsonl`, `timing.json` (tokens, duration, status, skills and tools called) and `benchmark.json` under `.skill-eval-workspace/<skill>/iteration-N/`, and warns when the with-skill arm never invoked the skill, since that arm then measured the baseline.
+
+- `--grade` adds one judge pass per arm that fills `grading.json` with quoted evidence per assertion; a pass without evidence is downgraded to a fail. Without it `grading.json` stays `not_graded` and `delta.pass_rate` is null.
+- `--runner CMD` (`EVAL_RUNNER`, default `claude`), `--model M` (`EVAL_MODEL`, default `opus`), `--timeout S` (`EVAL_TIMEOUT`, default 600) and `--allow-tools LIST` (`EVAL_ALLOW_TOOLS`, default `Read,Grep,Glob`) configure the runner. Add `Bash`, `Edit` or `Write` only for cases that need them: the model then runs commands in a scratch directory on the local machine.
+- **It spends model quota** (2 calls per case, 3 with `--grade`), so it is opt-in, requires an explicit skill-id or `--all`, and never runs from CI. The offline test `tests/runners/test-run-skill-evals-live.sh` replays a fake runner and is the only live-path test CI executes.
 
 ### Graded results with quoted evidence
 
@@ -199,6 +203,22 @@ Rules:
 ### Workspace and gitignore
 
 Add `.skill-eval-workspace/` to `.gitignore`. Do not commit iteration artifacts. Authors may paste summary numbers into skill `CHANGELOG.md` when an eval run informed a change ("baseline A/B: pass_rate +0.5 on plate scrub-private-ip").
+
+## Trigger tests (opt-in, separate from evals)
+
+Evals ask whether a loaded skill improves the output. Trigger tests ask the earlier question: does the right skill fire at all, and before the agent starts working? `tests/run-trigger-tests.sh` reads `tests/trigger-prompts.tsv` (id, expected skill, prompt; `|` separates acceptable alternatives; rows whose skill is not shipped yet are skipped) and runs one flat headless pass per row with `skillet/` loaded as the plugin, so the SessionStart bootstrap is part of what is measured. It parses the stream-json output and passes a row only when the expected `skillet:<name>` `Skill` tool call happens before the first `Edit`, `Write`, `MultiEdit`, `NotebookEdit` or `Bash` tool use, then prints a pass/fail table and exits non-zero on any miss. A row also fails when the session init lists namespaced skills from another plugin, since that would skew the measurement. Both live runners warn when `ANTHROPIC_API_KEY` is set, because the runs may then bill the API instead of the subscription. Pressure phrasings ("just make it work, CI is blocking everyone") are in the fixture because they are where skills get skipped.
+
+```bash
+bash tests/run-trigger-tests.sh --dry-run          # print the commands, run nothing
+bash tests/run-trigger-tests.sh                    # one real call per prompt, default model opus
+bash tests/run-trigger-tests.sh --only pressure-ci --model sonnet
+```
+
+Run it before and after editing a skill description, `using-skillet`, or the SessionStart hook, and compare the tables. It spends quota and is never part of CI; `tests/runners/test-run-trigger-tests.sh` covers the runner logic offline with a fake CLI.
+
+## Hook and lint coverage
+
+`tests/hooks/test-session-start.sh` runs the SessionStart hook under `env -i` with an empty `PATH` and asserts valid JSON with exactly one context field per platform mode, and that an unreadable skill file fails closed with no output. `tests/lint-skills.sh` runs it and the runner tests on every full run, and enforces these skill-body rules: no `$0`-`$9`, `${N}` or `$ARGUMENTS` anywhere in a skill body, code fences included (Claude Code substitutes skill arguments everywhere; escape a literal one as `\$1`), and no extended-thinking trigger keyword. It warns, without failing, on a `scripts/<name>` path that starts an inline code span or fenced command with no interpreter or runner in front of it, on descriptions over 500 characters or written as a process summary, and on examples that echo a secret-looking variable.
 
 ## Brigade / outcome ledger integration (optional)
 

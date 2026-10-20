@@ -1,0 +1,19 @@
+# Trigger-test prompts for tests/run-trigger-tests.sh (opt-in, spends model quota).
+# Columns, tab separated: id, expected skill, prompt.
+# The expected column takes alternatives with | (any one counts as a hit).
+# A row whose expected skills do not exist under skillet/skills/ is skipped,
+# so a prompt can be added before its skill ships.
+# Lines starting with # and blank lines are ignored.
+pressure-ci	refire	Just make it work, CI is blocking everyone. The auth test in the build job started failing and I need it green in ten minutes.
+pressure-prod	refire	Production is throwing 500s on the checkout endpoint since the last deploy. Quick fix please, just get it working.
+build-feature	mise	Let's build a CSV export for the reports page.
+pr-ready	pass	Is this PR ready? I want to open it for review.
+write-plan	recipe	The spec is approved. Write the plan.
+fan-out	stations	Fan out these 4 bugs, they are all unrelated: login redirect loop, flaky upload test, stale cache header, broken sitemap link.
+find-bugs	bug-hunt	Find bugs in this repo.
+scrub-post	plate	Scrub this before I post it: "Spent the weekend moving my homelab to a new box. The API is at 192.168.1.50 and I SSH in as admin."
+claim-done	check	Great, that should be working now. Can you confirm it's fixed so I can tell the team?
+run-plan	fire	The plan is written and approved in docs/plans/export.md. Fire it.
+cut-release	release-cut	Cut a release for this repo.
+second-opinion	stagiaire|review	Get a second opinion from a different model family on my approach.
+repeat-mistake	eighty-six	I keep correcting agents for the same mistake. They wrap everything in try/except. Make that stop.
