@@ -29,14 +29,13 @@ Lens guidance:
 
 A scan whose output lands in the transcript has already leaked what it found. `git log --all -p | grep`, `grep -o`, and grep context flags (`-A`, `-B`, `-C`) all print the matched value. Collect locations only: rule, file, line, commit.
 
-With gitleaks installed, write the report outside the repo and read it only through a field projection:
+With gitleaks installed, write the report outside the repo and read it only through a field projection. Run the block as one command so the trap removes the report even if a scan fails or is interrupted:
 
 ```bash
-out=$(mktemp -d)
+out=$(mktemp -d); trap 'rm -rf -- "$out"' EXIT HUP INT TERM
 gitleaks git --redact --no-banner -f json -r "$out/history.json" .   # every commit
 gitleaks dir --redact --no-banner -f json -r "$out/tree.json" .      # uncommitted files too
 jq -r '.[] | "\(.RuleID)\t\(.File):\(.StartLine)\t\(.Commit[0:12])"' "$out/history.json" "$out/tree.json"
-rm -rf "$out"
 ```
 
 Never print the report file whole. `--redact` masks `Secret`, `Match`, and `Line`, but the `Message` field carries the commit message unredacted, and gitleaks does not scan commit messages for secrets at all.
@@ -44,12 +43,12 @@ Never print the report file whole. `--redact` masks `Secret`, `Match`, and `Line
 Without gitleaks, and always for commit messages, print commit ids and paths only:
 
 ```bash
-git grep -nE '<pattern>' | cut -d: -f1,2                                  # tree: file:line
+git grep --untracked -nE '<pattern>' | cut -d: -f1,2                      # tree incl. untracked: file:line
 git log --all -G '<pattern>' --format='%h %ad' --date=short --name-only   # history: commit, files
 git log --all -E --grep='<pattern>' --format='%h'                         # commit messages: ids only
 ```
 
-If you must look at a candidate to rule out a false positive, mask it before it prints: `sed -E 's/(.{4}).*/\1****/'` on the single line, never the raw match.
+If you must look at a candidate to rule out a false positive, replace the match itself before the line prints: `sed -n '<line>p' <file> | sed -E 's/<pattern>/<REDACTED>/g'`. The variable name and surrounding code stay readable and no character of the value prints.
 
 ## Verification
 
