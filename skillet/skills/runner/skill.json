@@ -1,0 +1,9 @@
+{
+  "id": "runner",
+  "version": "0.1.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh runner",
+    "bash ../../../tests/lint-evals.sh runner"
+  ],
+  "trust_level": "workspace"
+}

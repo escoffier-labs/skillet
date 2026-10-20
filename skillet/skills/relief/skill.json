@@ -1,0 +1,8 @@
+{
+  "id": "relief",
+  "version": "0.1.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh relief"
+  ],
+  "trust_level": "workspace"
+}
