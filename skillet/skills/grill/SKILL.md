@@ -1,6 +1,6 @@
 ---
 name: grill
-version: 0.1.2
+version: 0.1.3
 license: MIT
 description: Use when a technical writeup, blog post, war story, or "Show HN" is about to go to Hacker News, Lobsters, or any skeptical technical audience, or when the user says "grill this", "make it HN-ready", "harden this post", "is this ready to post", "will this survive the comments". Hardens facts, sourcing, voice, and comment-readiness. Not for identity/infra leak scrubbing (use plate) or repo publication (use publish-readiness).
 ---
@@ -15,7 +15,7 @@ On Hacker News and Lobsters the top comment is usually someone who has done the 
 
 1. **Voice: kill the underdog.** Strip the effort-proving "I did X, I did Y, I opened the chassis, I ran the cabling" cadence. The byline already says you did the work; arguing it reads as insecure. Tell the story and let the specifics carry it. Cut sentences that exist only for rhythm or motivation ("That is the job.", "future pain with confidence.").
 
-2. **Slop: strip the AI tells and empty hedges.** Run `scripts/grill-scan.sh <file>` for the mechanical hits (slop vocabulary, hedge phrases, em dashes, the rhythmic "That is X." tic), then read by eye for the rest. The scan is a floor, not the check.
+2. **Slop: strip the AI tells and empty hedges.** Run `bash scripts/grill-scan.sh <file>` for the mechanical hits (slop vocabulary, hedge phrases, em dashes, the rhythmic "That is X." tic), then read by eye for the rest. The scan is a floor, not the check.
 
 3. **Facts: source every number, price, date, version, and third-party claim, or flag it.** For anything you cannot verify against a primary source, leave a literal `[CONFIRM: what's needed]` marker in the draft. Do not invent a plausible config value, log line, or figure to fill the gap. Look facts up yourself before asking the human; only escalate the ones that survive a real search.
 

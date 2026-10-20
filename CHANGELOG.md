@@ -8,6 +8,10 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Opt-in trigger test `tests/run-trigger-tests.sh` with a prompt fixture (`tests/trigger-prompts.tsv`, including pressure phrasings): one flat headless pass per prompt with the plugin loaded and `Task`/`Agent` disallowed, asserting the expected `Skill` call happens before any Edit, Write or Bash use. Prints a pass/fail table, supports `--dry-run`, never runs in CI. Technique adapted from obra/superpowers (MIT).
+- `tests/run-skill-evals.sh --live` now runs the with-skill and without-skill arms for real (configurable runner, model, timeout and tool allowlist, optional `--grade` judge pass, `benchmark.json` deltas). Opt-in, spends model quota, never CI. `--validate` and `--dry-run` are unchanged.
+- `tests/hooks/test-session-start.sh` runs the SessionStart hook under an empty environment and PATH and asserts valid JSON with one context field per platform and a silent fail-closed path; offline fake-CLI tests cover both new runners. `tests/lint-skills.sh` runs them on every full run.
+- Lint rules adapted from obra/superpowers (MIT) incidents: fail on `$1`-`$9`, `${N}` or `$ARGUMENTS` outside code fences, on the extended-thinking trigger keyword, and on a `scripts/<name>` reference with no interpreter; warn (exit code unchanged) on descriptions over 500 characters or written as a process summary, and on examples that echo a secret-looking variable.
 - `skills.sh.json` groups the skills.sh repo page into eight sections that match the `using-skillet` stations, so visitors see the roster by job instead of one flat list sorted by installs.
 - **trim** - test value bar with three modes: an authoring gate for every new test, a read-only-first audit of junk patterns with per-candidate evidence, and a subsystem campaign procedure (lanes, ledger, keepers, preservation review with mutations). Adapted from OpenClaw's MIT-licensed `test-audit` skill. **taste** now runs the trim authoring gate before writing each test.
 - **brief** - decision-ready output with a recommendation/report split, estimative-language reference, and eval coverage for recommendation shape, report-shape facts without confidence, invented-alternative refusal, and a single-fact non-trigger.
@@ -23,6 +27,8 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- The SessionStart hook no longer depends on `dirname` or `cat` being on PATH (plugin root comes from `$0`, the skill file is read with `$(<file)`), declares `"shell": "bash"`, and fails closed: an unreadable or empty `using-skillet` skill now emits nothing and exits non-zero instead of injecting an error string as skill content. `run-hook.cmd` adds a per-user Git for Windows lookup, skips WSL launcher stubs, ignores `bash` planted in the working directory, and passes the hook exit code through. Adapted from obra/superpowers (MIT).
+- **grill** 0.1.3 - the scan script is now referenced as `bash scripts/grill-scan.sh`, so the step works on install routes that drop the executable bit. **stagiaire** 0.1.1 - description trimmed from 568 to under 500 characters and reduced to triggers.
 - The Brigade work loop (brief -> work -> verify with capture -> handoff) is now defined once in `docs/brigade-process-model.md` as a process model with named gates. `using-skillet`, `check`, and `memory-handoff` reference it instead of restating their own versions of the loop.
 - The README catalog now names **plate** in the Ship workflow and includes **pi** in **stagiaire**'s supported dispatch targets.
 - **t3-code** - added the complete controller-to-remote setup loop, saved environment pairing, per-host transport choice, and an SSH local-forward fallback when the T3 Tailnet port is blocked.

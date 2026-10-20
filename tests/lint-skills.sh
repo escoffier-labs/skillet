@@ -54,8 +54,9 @@ check_skill() {
   if [ "$(head -1 "$md")" != "---" ]; then
     echo "[fail] $id: SKILL.md does not start with YAML frontmatter"; return 1
   fi
-  local frontmatter_result frontmatter_version
+  local frontmatter_result frontmatter_version frontmatter_description
   if ! frontmatter_result="$(python3 - "$md" "$id" 2>&1 <<'PY'
+import json
 import re
 import sys
 
@@ -317,11 +318,13 @@ if metadata["license"] != "MIT":
 if not re.fullmatch(r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)", metadata["version"]):
     fail("frontmatter version must use x.y.z semver")
 print(metadata["version"])
+print(json.dumps(metadata["description"]))
 PY
 )"; then
     echo "[fail] $frontmatter_result"; return 1
   fi
-  frontmatter_version="$frontmatter_result"
+  frontmatter_version="${frontmatter_result%%$'\n'*}"
+  frontmatter_description="${frontmatter_result#*$'\n'}"
   if [ ! -f "$sj" ]; then
     echo "[fail] $id: skill.json missing"; return 1
   fi
@@ -589,10 +592,119 @@ PY
       return 1
     fi
   fi
+  check_body_rules "$id" "$md" "$frontmatter_description" || return 1
   if [ -f "$dir/evals/evals.json" ]; then
     bash "$ROOT/tests/lint-evals.sh" "$id" || return 1
   fi
   echo "[ok] $id"
+}
+
+# Body and description rules, each taken from a real upstream incident:
+#   FAIL  skill-argument placeholders ($1-$9, ${N}, $ARGUMENTS) in prose: Claude
+#         Code substitutes skill arguments into the body, so an innocent shell
+#         example gets rewritten before the model reads it.
+#   FAIL  the extended-thinking trigger keyword: it silently raises the thinking
+#         budget for every session that loads the skill.
+#   FAIL  a scripts/<name> reference with no interpreter in front of it: the
+#         executable bit is not preserved by every install route, so a bare
+#         path fails on some of them. Write `bash scripts/x.sh`.
+#   WARN  description over 500 characters, or one that reads as a process
+#         summary ("then" chains, "hands off to", "dispatch a/by dispatching"):
+#         agents follow a summarizing description and skip the body.
+#   WARN  an example that echoes a secret-looking variable.
+# Warnings never change the exit code.
+check_body_rules() {
+  local id="$1" md="$2" description_json="$3" rule_output rc
+  rule_output="$(python3 - "$md" "$id" "$description_json" 2>&1 <<'PY'
+import json
+import re
+import sys
+
+path, skill_id, description_json = sys.argv[1:]
+description = json.loads(description_json)
+lines = open(path, encoding="utf-8").read().split("\n")
+
+end = None
+for index in range(1, len(lines)):
+    if lines[index] == "---":
+        end = index
+        break
+if end is None:
+    raise SystemExit(0)  # frontmatter errors are reported elsewhere
+
+failures = []
+warnings = []
+
+ARG_PATTERN = re.compile(r"\$(?:[1-9]|\{[0-9]+\}|ARGUMENTS\b)")
+SCRIPT_PATTERN = re.compile(r"(?<![\w/.-])(?:\./)?scripts/[\w][\w.-]*")
+INTERPRETERS = {"bash", "sh", "zsh", "python", "python3", "node"}
+SECRET_ECHO = re.compile(
+    r"\b(?:echo|printf|print|console\.log|cat)\b[^\n]*"
+    r"\$\{?[A-Za-z0-9_]*(?:TOKEN|SECRET|PASSWORD|PASSWD|API_?KEY|PRIVATE_KEY|CREDENTIAL)"
+)
+
+fence = None
+for number, line in enumerate(lines[end + 1:], start=end + 2):
+    marker = re.match(r"\s*(`{3,}|~{3,})", line)
+    if marker:
+        char = marker.group(1)[0]
+        if fence is None:
+            fence = char
+        elif fence == char:
+            fence = None
+        continue
+    in_fence = fence is not None
+
+    if not in_fence and ARG_PATTERN.search(line):
+        failures.append(
+            f"line {number}: skill-argument placeholder outside a code fence "
+            "(Claude Code substitutes $1-$9, ${N} and $ARGUMENTS)"
+        )
+    for match in SCRIPT_PATTERN.finditer(line):
+        before = line[: match.start()].rstrip().rstrip("`").rstrip()
+        words = before.split()
+        while words and words[-1].lstrip("`").startswith("-"):
+            words.pop()  # skip interpreter flags such as `bash -x`
+        previous = words[-1].strip("`") if words else ""
+        if previous not in INTERPRETERS:
+            failures.append(
+                f"line {number}: {match.group(0)} is not run through an interpreter "
+                "(write `bash scripts/<name>`)"
+            )
+    if SECRET_ECHO.search(line):
+        warnings.append(f"line {number}: example echoes a secret-looking variable")
+
+body_and_description = "\n".join(lines)
+if re.search(r"ultrathink", body_and_description, re.IGNORECASE):
+    failures.append("contains the extended-thinking trigger keyword")
+
+if len(description) > 500:
+    warnings.append(f"description is {len(description)} characters (aim for under 500, triggers only)")
+if (
+    re.search(r"\bthen\b", description, re.IGNORECASE)
+    or re.search(r"\bhands? off to\b", description, re.IGNORECASE)
+    or re.search(r"\bdispatch(?:es|ing)? (?:a|an|the|that)\b", description, re.IGNORECASE)
+):
+    warnings.append("description reads as a process summary (state triggers, not procedure)")
+
+for message in warnings:
+    print(f"warn:{message}")
+for message in failures:
+    print(f"fail:{message}")
+raise SystemExit(1 if failures else 0)
+PY
+  )"
+  rc=$?
+  local line
+  while IFS= read -r line; do
+    case "$line" in
+      warn:*) echo "[warn] $id: ${line#warn:}" ;;
+      fail:*) echo "[fail] $id: ${line#fail:}" ;;
+      '') ;;
+      *) echo "[fail] $id: body rules crashed: $line" ;;
+    esac
+  done <<<"$rule_output"
+  return "$rc"
 }
 
 check_catalog() {
@@ -948,8 +1060,29 @@ PY
   echo "[ok] Brigade verify command forms"
 }
 
+# Hook and runner tests live under tests/hooks/ and tests/runners/ (not under a
+# skill), so run them here. All are deterministic and offline: the runner tests
+# replay a fake headless CLI, so no model is ever called.
+check_hooks() {
+  local script_test script_output found=0
+  for script_test in "$ROOT"/tests/hooks/test-*.sh "$ROOT"/tests/runners/test-*.sh; do
+    [ -f "$script_test" ] || continue
+    found=1
+    if ! script_output="$(bash "$script_test" 2>&1)"; then
+      echo "[fail] hooks: ${script_test##*/} failed"
+      printf '%s\n' "$script_output" | sed 's/^/    /'
+      return 1
+    fi
+  done
+  if [ "$found" -eq 0 ]; then
+    echo "[fail] hooks: no tests/hooks/test-*.sh found"
+    return 1
+  fi
+  echo "[ok] hook and runner tests"
+}
+
 check_linter_regressions() {
-  local tmp valid invalid fixture description_1024 description_1025 python3_base self_test_path brigade_failure_output regression_failures=0
+  local tmp valid invalid fixture warn_output long_description description_1024 description_1025 python3_base self_test_path brigade_failure_output regression_failures=0
   python3_base="$(python3 -c 'import sys; print(sys.base_prefix)')"
   if command -v cygpath >/dev/null 2>&1; then
     python3_base="$(cygpath -u "$python3_base")"
@@ -1151,6 +1284,58 @@ PY
   sed -i 's/recipe, taste, stocktake, thermometer, reduce/recipe, taste, stocktake, thermometer, reduce, ghost-workflow-skill/' "$fixture/README.md"
   assert_fixture_rejected "unresolved workflow skill ID" "$fixture"
 
+  fixture="$tmp/body-argument-placeholder"
+  cp -a "$ROOT"/. "$fixture"
+  printf '\nRun the audit against $1 first.\n' >>"$fixture/skillet/skills/line-check/SKILL.md"
+  assert_fixture_rejected "skill-argument placeholder in prose" "$fixture" line-check "skill-argument placeholder"
+
+  fixture="$tmp/body-argument-fenced"
+  cp -a "$ROOT"/. "$fixture"
+  printf '\n```bash\necho "$1 $ARGUMENTS"\n```\n' >>"$fixture/skillet/skills/line-check/SKILL.md"
+  if ! LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$self_test_path" bash "$fixture/tests/lint-skills.sh" line-check >/dev/null 2>&1; then
+    echo "[fail] self-test: placeholder inside a code fence was rejected"
+    regression_failures=1
+  fi
+
+  fixture="$tmp/body-thinking-keyword"
+  cp -a "$ROOT"/. "$fixture"
+  printf '\nUse ultrathink for this step.\n' >>"$fixture/skillet/skills/line-check/SKILL.md"
+  assert_fixture_rejected "extended-thinking trigger keyword" "$fixture" line-check "extended-thinking trigger keyword"
+
+  fixture="$tmp/body-bare-script"
+  cp -a "$ROOT"/. "$fixture"
+  sed -i 's/`bash scripts\/grill-scan.sh/`scripts\/grill-scan.sh/' "$fixture/skillet/skills/grill/SKILL.md"
+  assert_fixture_rejected "script reference without an interpreter" "$fixture" grill "not run through an interpreter"
+
+  fixture="$tmp/body-warnings-only"
+  cp -a "$ROOT"/. "$fixture"
+  long_description="Use when the line check needs to run and then the report is written, which hands off to expedite. $(python3 -c 'print("padding " * 80, end="")')"
+  sed -i "s/^description:.*/description: $long_description/" "$fixture/skillet/skills/line-check/SKILL.md"
+  printf '\n```bash\necho "$API_TOKEN"\n```\n' >>"$fixture/skillet/skills/line-check/SKILL.md"
+  if ! warn_output="$(LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$self_test_path" bash "$fixture/tests/lint-skills.sh" line-check 2>&1)"; then
+    echo "[fail] self-test: warning-only description or example failed the lint"
+    regression_failures=1
+  elif ! printf '%s\n' "$warn_output" | grep -Fq 'characters (aim for under 500' ||
+    ! printf '%s\n' "$warn_output" | grep -Fq 'reads as a process summary' ||
+    ! printf '%s\n' "$warn_output" | grep -Fq 'echoes a secret-looking variable'; then
+    echo "[fail] self-test: expected description and secret-echo warnings were not printed"
+    regression_failures=1
+  fi
+
+  fixture="$tmp/hook-error-string"
+  cp -a "$ROOT"/. "$fixture"
+  python3 - "$fixture/skillet/hooks/session-start" <<'PY'
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+text = path.read_text(encoding="utf-8")
+old = 'if [ ! -r "$skill_md" ]; then\n  exit 1\nfi'
+assert old in text, "fail-closed guard not found"
+path.write_text(text.replace(old, 'if [ ! -r "$skill_md" ]; then\n  echo "Error reading using-skillet skill"\n  exit 1\nfi'), encoding="utf-8")
+PY
+  assert_fixture_rejected "hook that emits an error string on failure" "$fixture" "" "session-start.sh failed"
+
   fixture="$tmp/version-missing"
   cp -a "$ROOT"/. "$fixture"
   sed -i '/^version:/d' "$fixture/skillet/skills/line-check/SKILL.md"
@@ -1237,6 +1422,7 @@ else
   check_skill_boundaries || FAIL=1
   check_untrusted_content_contract || FAIL=1
   check_brigade_verify_commands || FAIL=1
+  check_hooks || FAIL=1
   LINT_EVALS_SKIP_SELF_TESTS="${LINT_SKILLS_SKIP_SELF_TESTS:-0}" \
     bash "$ROOT/tests/lint-evals.sh" || FAIL=1
 fi
