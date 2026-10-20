@@ -21,15 +21,16 @@ query($owner:String!,$repo:String!,$n:Int!){
   repository(owner:$owner,name:$repo){
     pullRequest(number:$n){
       reviewThreads(first:100){
+        pageInfo{ hasNextPage endCursor }
         nodes{ id isResolved isOutdated path line
           comments(first:20){ nodes{ databaseId author{login} body commit{oid} } } }
       }
     }
   }
-}' -F owner=<owner> -F repo=<repo> -F n=<n>
+}' -f owner=<owner> -f repo=<repo> -F n=<n>
 ```
 
-Page when `hasNextPage` is true; report partial data if you cannot.
+When `hasNextPage` is true, repeat with `reviewThreads(first:100, after:$cursor)` and the `endCursor`; report partial data if you cannot finish. The comment `databaseId` and `commit.oid` are what you need to reply and to see which head a comment was made on.
 
 ## Classify CI
 
@@ -45,11 +46,14 @@ If the failing test or file is not in the diff and the base is stale, rebase you
 
 ## Reply from a file
 
-Write the reply text to a file with your editor tool, then build the JSON with `jq` so the text stays data:
+Keep reply files outside the worktree so they cannot be committed. Write the reply text there with your editor tool, then build the JSON with `jq` so the text stays data:
 
 ```bash
-jq -n --rawfile body reply.md '{body: $body}' > payload.json
-gh api --method POST "repos/<owner>/<repo>/pulls/<n>/comments/<comment-id>/replies" --input payload.json
+D="$(mktemp -d)"                       # scratch dir outside the checkout
+# write the reply text to "$D/reply.md" with the editor tool, then:
+jq -n --rawfile body "$D/reply.md" '{body: $body}' > "$D/payload.json"
+gh api --method POST "repos/<owner>/<repo>/pulls/<n>/comments/<comment-id>/replies" --input "$D/payload.json"
+rm -rf "$D"
 ```
 
 `<comment-id>` is the thread's first comment `databaseId`. Replying inside the inline thread keeps the fix next to the finding. Resolve only a thread you have addressed:

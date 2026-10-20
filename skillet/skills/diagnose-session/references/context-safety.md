@@ -1,23 +1,28 @@
-# Context safety for session transcripts
+# Reading huge transcripts without losing your context
 
-One transcript record can exceed a megabyte or embed a whole history. Printing one record can overflow the context of the session doing the diagnosis. Apply these to every file, for every reader, every time.
+A single session record can hold a whole conversation history, and one careless print can fill the window of the session doing the diagnosis. These habits are mandatory for the main reader and for any helper.
 
-1. **Measure before reading.**
+## Size first
 
-   ```bash
-   wc -lc "$F"
-   awk '{ if (length($0) > 100000) print NR, length($0) }' "$F"   # long lines
-   ```
+Before opening a file, learn how big it is and where the monsters are:
 
-2. **Never `cat`, `head` without a width cap, or `grep` for content.** Get line numbers and counts first, then small fields from specific lines:
+```bash
+wc -lc "$F"                                              # lines and bytes
+awk 'length($0) > 100000 { print NR": "length($0) }' "$F"  # line number: length of oversized records
+```
 
-   ```bash
-   grep -n 'pattern' "$F" | cut -d: -f1 | head
-   jq -r '.type' "$F" | sort | uniq -c | sort -rn
-   sed -n '412p' "$F" | jq -c '{type, timestamp}'
-   sed -n '412p' "$F" | cut -c1-500
-   ```
+## Look at shape, then at a sliver
 
-3. **Narrow anything over 500 characters.** If a command returns more than that for one record, tighten the field or the slice.
-4. **Extract with a script, not by eye.** For counts, groupings, and totals, write a short `jq` or Python script that prints only aggregates and line numbers, then open the few lines it points to.
-5. **Read-only.** Never modify, move, or delete a session file. Write extractions to a scratch directory.
+- Ask for counts and line numbers, not text: `jq -r '.type' "$F" | sort | uniq -c`, or `grep -n 'needle' "$F" | cut -d: -f1`.
+- Pull a named field from one numbered line: `sed -n '412p' "$F" | jq -c '{type, timestamp}'`.
+- When you must see raw text, cap it: `sed -n '412p' "$F" | cut -c1-500`.
+- If any command prints more than about 500 characters for one record, narrow the field or the slice and run it again.
+- Do not `cat` a transcript. Do not `grep` it for content without `-c`, `-l`, or a `cut` on the output.
+
+## Let a script do the arithmetic
+
+For totals, groupings, and repeat counts, write a small `jq` or Python script that prints only aggregates and line numbers. Open the handful of lines it points to afterward. Keep scripts and outputs in a scratch directory.
+
+## Never mutate
+
+Session files are evidence. Do not edit, move, or delete them, and do not redact in place.

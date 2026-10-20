@@ -44,9 +44,9 @@ brigade add skills
 | | Job | What you get |
 |---|---|---|
 | **Audit** | See what matters first | line-check, bug-hunt, security-sweep, latent-premises, retry-safety with priority-sorted backlogs |
-| **Ship** | Gate what goes public | publish-readiness, garnish, release-cut, plate |
-| **Execute** | Plan, build, upgrade, and measure | recipe, taste, stocktake, thermometer, reduce, trim, fleet-conductor, runner |
-| **Remember** | File what you learned | memory-handoff compatible with Brigade, relief |
+| **Ship** | Gate what goes public and get PRs merge-ready | publish-readiness, garnish, release-cut, plate, runner |
+| **Execute** | Plan, build, upgrade, and measure | recipe, taste, stocktake, thermometer, reduce, trim, fleet-conductor |
+| **Remember** | File what you learned | memory-handoff compatible with Brigade; relief for in-flight task state |
 
 
 ## Try it in 60 seconds

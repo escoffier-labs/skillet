@@ -2,7 +2,7 @@
 name: test-kitchen
 version: 0.1.0
 license: MIT
-description: Use only when the user asks to create, audit, or refresh a project-local verify skill that drives the real app - "make a verify skill for this repo", "script how to prove this app works", "audit the verify skill", "the feature map is stale". Expensive; runs only on request. Not for a one-off check (use check).
+description: Use only when the user asks to create, audit, or refresh a project-local verify skill that drives the real app - "make a verify skill for this repo", "script how to prove this app works", "audit the verify skill", "the feature map is stale". Runs only when the user asks. Not for a one-off check (use check).
 ---
 
 # test-kitchen
@@ -17,7 +17,7 @@ Two modes. Say which you are in. Never edit product code in either.
 
 You write for an agent that reads this cold, mid-task, having never seen the app.
 
-1. **Interview the repo, not the user.** Answer from the codebase and ask only what you cannot observe: the surface a user touches (web UI, CLI or TUI, desktop, API, library), how it starts locally (the repo's documented dev command, ports, env, seed data, auth), how an agent can drive it (existing harnesses first, then browser/CDP, a PTY or tmux session, or plain HTTP), what evidence can be captured, and whether two instances can run side by side. If the checkout does not build or start, fix or report that first.
+1. **Interview the repo, not the user.** Answer from the codebase and ask only what you cannot observe: the surface a user touches (web UI, CLI or TUI, desktop, API, library), how it starts locally (the repo's documented dev command, ports, env, seed data, auth), how an agent can drive it (existing harnesses first, then browser/CDP, a PTY or tmux session, or plain HTTP), what evidence can be captured, and whether two instances can run side by side. If the checkout does not build or start, report that and stop; do not edit product code to make it run.
 2. **Write the verify skill** in the repository's project-local skills directory (for example `.claude/skills/verify-<app>/` or `.agents/skills/verify-<app>/`, whichever the harness and repo already use) with frontmatter that names the app, surface, and when to reach for it. Follow [references/verify-skill-template.md](references/verify-skill-template.md). Sections: **Launch** (exact command, readiness signal that means usable, teardown), **Doctor** (one read-only check that the instance is worth driving), **Drive** (recipes with real, stable handles: ARIA labels, data attributes, prompt strings, route paths; not coordinates), **Evidence** (what to capture, where, and the proof standards), **Cleanup** (kill only what this run started, never by process name; keep the evidence), **Helpers** (executable and invoked in the body).
 3. **Seed the feature map** next to it: an index plus one file per user-facing feature (start with the top three to five from routes, commands, or menus). Each states what the feature is, how a user reaches it, how to drive it, and what observable end state proves it works.
 4. **Prove it once.** Run its own instructions end to end: launch, doctor, drive one mapped feature, capture evidence, clean up. Confirm the evidence still exists after cleanup. Fix failures and run cleanup after every failed attempt so nothing is stranded. If you proved it in a stand-in (a container for a VM), list the setup steps the real target will not have.

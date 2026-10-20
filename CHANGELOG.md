@@ -31,7 +31,9 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- **sendback** adds `references/bot-triage.md` (fix / dismiss / ask rubric, ask-by-default list, learned-pattern format) and replies inside the inline review thread; **using-skillet** routes the eight new skills, adds a Chains table, verbatim-checklist and skip rules, a proportionality line, and `mise` before any plan mode. Untrusted-content roster extended to the new skills that ingest external text.
+- **sendback** adds `references/bot-triage.md`: a fix / dismiss / ask rubric for bot reviewers, a never-dismiss-without-the-owner list for security, auth, data, migration, and concurrency findings, and a learned-pattern format that starts empty. Replies now go inside the inline review thread.
+- **using-skillet** routes the eight new skills and adds a Chains table, verbatim-checklist and "Skipped: <step>, <reason>" rules, a proportionality line, and `mise` before any plan mode.
+- The untrusted-content roster now includes runner, ticket-rail, lineage, diagnose-session, eighty-six, relief, and test-kitchen.
 - The Brigade work loop (brief -> work -> verify with capture -> handoff) is now defined once in `docs/brigade-process-model.md` as a process model with named gates. `using-skillet`, `check`, and `memory-handoff` reference it instead of restating their own versions of the loop.
 - The README catalog now names **plate** in the Ship workflow and includes **pi** in **stagiaire**'s supported dispatch targets.
 - **t3-code** - added the complete controller-to-remote setup loop, saved environment pairing, per-host transport choice, and an SSH local-forward fallback when the T3 Tailnet port is blocked.

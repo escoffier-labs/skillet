@@ -25,7 +25,7 @@ description: Use when you must prove a change works in the running <app> (<surfa
 
 ## Launch
 Command: `<exact command>`   Ready when: `<log line or prompt that means usable>`
-Starts from an empty data dir, runs migrations and seed data, and records the process ids it starts in `<scratch path>`.
+Creates a fresh scratch data dir for this run (never wipe or reuse an existing one), runs migrations and seed data against it, uses local or sandbox backends only, and records the process ids it starts in `<scratch path>`.
 
 ## Doctor
 `<one read-only command>` - prints process up, expected version or build, port owned by this run, auth valid. Run first and after any surprising result.
@@ -66,5 +66,6 @@ End state that proves it works: <observable result>.
 
 - Prefer stable handles over coordinates and tab order.
 - Short-lived CLIs have no server to keep alive: launch means build or install once, then start each drive in its own isolated PTY or tmux session.
+- A journey with external effects (sends a message or email, takes a payment, publishes, calls a production service) needs the operator's approval before the recipe runs, and runs against a sandbox where one exists.
 - Two instances cannot share a data dir or port: say so, and refuse to drive an instance the run did not start.
 - Any helper script is executable and its exact invocation is shown in the body. A helper the reader must reverse-engineer is not a helper.

@@ -1,35 +1,35 @@
-# Starting dimensions
+# Analysis dimensions
 
-Each finding: what happened, `path:line` citations (first and last when it spans lines), and the number with its source. Report only what the transcript shows.
+Every finding needs a `path:line` citation (first and last line when it spans several), plus the figure and where it came from. Report what the transcript shows and stop there.
 
-## Plan adherence
+## 1. Did the work follow the plan?
 
-Recover the plan the session agreed to: a design agreed in chat (assistant text before a human "yes" or "go ahead"), a spec or plan file written during the session, a todo list, or a numbered checklist in assistant text. Quote each step with its line.
+Find the plan that was agreed. Candidates are an outline accepted in chat (assistant text just before the user agreed), a spec or plan file written during the run, a todo list, or a numbered list in assistant text. Quote every step with its line.
 
-Mark structural events between plan and execution: compactions, resumes, aborted turns, associated-session dispatches. Then for each step find the work that executed it, and report steps skipped, executed out of order, silently changed (quote both versions), invented (work no step covers), and drift right after a structural event (cite the event and the first divergent action). If no plan is recoverable, say so as the only finding and list the lines you checked.
+Note the moments that can break continuity: compactions, resumes, aborted turns, and dispatches to other sessions. Then walk the steps and sort the outcome into skipped, reordered, changed without announcement (quote the plan and the action side by side), invented (work that no step covers), and drift that begins right after a continuity break. With no recoverable plan, report that single fact and the places you looked.
 
-## Repeated work
+## 2. Was anything done twice?
 
-Extract each tool call as (line, turn, tool, key) where the key is the file path for reads and edits, the command text for shell calls, the description plus the first 80 characters of the prompt for dispatches, and the query for searches. Group by tool and key and report groups at or over these thresholds:
+Build a list of tool calls: line, turn, tool, and a key (file path for reads and edits; full command for shell calls; description plus the first 80 characters of the prompt for dispatches; query text for searches). Group on tool plus key.
 
-| Category | Threshold | Exempt |
+| Kind | Report at | Ignore |
 |---|---|---|
-| reads, searches | 3 | |
-| edits | 2 | |
-| shell commands | 2 | status checks and test runs |
-| subagent dispatches | 2 with the same description | |
+| reads and searches | 3 or more | |
+| edits | 2 or more | |
+| shell commands | 2 or more | status checks and test runs |
+| subagent dispatches | 2 or more with the same description | |
 
-For each group, check what changed between repetitions (an edit, a compaction, a human correction). A re-read after an edit is not a finding; a re-read after a compaction is a finding attributed to the compaction; a re-read with nothing between is a finding on its own. Also look for re-derived decisions: a conclusion stated earlier, reached again. Quote both places.
+For each group ask what happened in between. A read after your own edit is expected. A read after a compaction belongs to the compaction. A read with no event in between is a finding by itself. Also quote cases where a conclusion reached earlier is derived again later.
 
-## Cost and time
+## 3. Where did the tokens and time go?
 
-- **Tokens.** Use only the usage records and counter meanings established at discovery. Say whether each counter is incremental or cumulative before totalling, dedupe records that repeat per content block, and never turn a missing observation into zero. Report the five turns with the largest supported totals and the totals per associated session.
-- **Wall-clock.** Use the evidenced timestamps. Report the five longest turns and any gap over ten minutes between consecutive events; say idle, waiting on a helper, or waiting on the user only when the records show it.
-- **Largest tool results.** The ten largest, with tool and turn. Measure before extracting bounded content.
-- **Compactions.** Count and locate them, with before/after counters if present and what the session was doing.
-- **Associated sessions.** Count, usage, duration, and dispatching turn for each.
-- Name the turns, helpers, tools, or repeats that dominate the totals, with numbers. Do not speculate about why a turn was expensive beyond what the transcript shows.
+- **Tokens.** Use the usage fields and counter semantics you established during discovery. State whether each counter is per message or running, remove duplicates where one message is split across several records, and never read a missing value as zero. Give the five largest supported turns and the per-session totals.
+- **Time.** Use the recorded timestamps. Give the five longest turns and every gap over ten minutes; call a gap idle, waiting on a helper, or waiting on the user only when records say so.
+- **Largest tool outputs.** List the ten biggest with tool and turn, measuring before extracting any text.
+- **Compactions.** Count and locate them, give before and after figures where recorded, and say what the session was doing.
+- **Helper sessions.** For each, usage, duration, and the turn that launched it.
+- Name what dominates the totals with figures. Do not explain why a turn was costly beyond what the records show.
 
-## Later dimensions, on demand
+## Add on demand
 
-Stumbles (errors, retries, dead ends), skill timeline (which skills fired, when, and whether the body was followed), request conflicts (instructions that contradict each other), and output quality evidence.
+Stumbles (errors, retries, dead ends), skill timeline (which skills loaded, when, and whether their body was followed), conflicting instructions, and output quality evidence.

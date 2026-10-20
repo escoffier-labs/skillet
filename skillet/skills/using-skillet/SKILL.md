@@ -26,7 +26,7 @@ user message or task
   -> about to design/build something new? -> mise (then recipe) BEFORE anything else
   -> might any other skill apply? (yes, even 1%) -> invoke it
      -> announce: "Using skillet's <skill> to <purpose>"
-     -> follow it exactly; copy its checklist steps into the todo verbatim, keep skipped ones as "skip: <reason>"
+     -> follow it exactly; copy its checklist steps into the todo verbatim, mark skipped ones "Skipped: <step>, <reason>"
   -> definitely nothing applies -> respond
 ```
 
@@ -133,7 +133,7 @@ When more than one could apply, run **process skills first** (they set how you a
 | Why is this here | `lineage` |
 | Pause or resume work | `relief` |
 
-**Proportionality.** Cheap gates (`check`, `refire`) always apply. Heavy multi-agent skills (`stations`, `fleet-conductor`, `review`) are not for small, obvious edits.
+**Proportionality.** Rigid skills (taste, refire, check, pass) always apply. Heavy multi-agent skills (`stations`, `fleet-conductor`, `review`) are not for small, obvious edits.
 
 ## Skill types
 

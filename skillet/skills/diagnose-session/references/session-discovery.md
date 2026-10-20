@@ -6,7 +6,7 @@ Resolve the session the user named using what this environment exposes, then ver
 
 1. **Brigade.** `brigade evidence search "<query>"` and any run receipts for the work. A hit can answer the question without opening a transcript. Cite ids.
 2. **The harness's own session tools or `--help`,** if it exposes list, show, or export commands.
-3. **Transcript files on disk.** Common homes are per-harness directories under the user's home (for example a `projects/<project-slug>/` tree of `.jsonl` files for Claude Code, or a dated `sessions/` tree for Codex). The slug is usually the project path with separators replaced. Confirm by listing the directory; do not trust the pattern blindly. Search **only the current project's** directory.
+3. **Transcript files on disk.** Common homes are per-harness directories under the user's home (for example a `projects/<project-slug>/` tree of `.jsonl` files for Claude Code, or a dated `sessions/` tree for Codex). The slug is usually the project path with separators replaced. Confirm by listing the directory; do not trust the pattern blindly. Search **only the current project's** directory. If the store mixes projects (a dated tree, say), read each candidate's recorded working directory with a bounded field extraction and keep only files for this project before reading any content.
 4. **Archives, indexes, or exports** the environment points at.
 
 A path the user supplied and that opens needs no further search.

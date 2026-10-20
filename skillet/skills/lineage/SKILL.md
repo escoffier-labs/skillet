@@ -2,7 +2,7 @@
 name: lineage
 version: 0.1.0
 license: MIT
-description: Use when asked why code exists or why it works the way it does - "why is this here", "why did we pick Y", "who added this and for what", "is it safe to remove", a regression's origin, a magic threshold, or a workaround with no comment - and before editing code whose reason you cannot see.
+description: Use when asked why code exists or why it works the way it does - "why is this here", "why did we pick Y", "who added this and for what", "is it safe to remove", a regression's origin, a magic threshold, or a workaround with no comment - and before deleting or reshaping code whose reason you cannot see.
 ---
 
 # lineage
@@ -19,7 +19,7 @@ Every dish on the menu has a history: who put it there, what the dining room wan
    - `git blame -L <start>,<end> -- <file>` for the last-touch commits; follow past reformat commits with `--ignore-rev` or `-w -C`.
    - `git log --follow -p -- <file>` and `git log --oneline -20 -- <file>` through renames.
    - Pickaxe for when a line or symbol appeared or vanished: `git log -S'<string>'` (count changes) and `git log -G'<regex>'` (diff matches).
-   - PR numbers from merge and squash subjects (`(#1234)`), then the PR body, review threads, and linked issues: `gh pr view <n> --json title,body,author,mergedAt,closingIssuesReferences,comments,reviews`.
+   - PR numbers from merge and squash subjects (`(#1234)`), then the PR body, review comments, and linked issues: `gh pr view <n> --json title,body,author,mergedAt,closingIssuesReferences,comments,reviews`. Inline review threads need the GraphQL query in [runner's commands](../runner/references/commands.md).
    - Nearby evidence: ADRs and design docs, the tests that pin the behavior, `TODO`/`FIXME`/`HACK` comments, the changelog, and the repository's issue tracker.
 4. **Classify each claim into a confidence tier** (definitions and phrasing in [references/confidence-tiers.md](references/confidence-tiers.md)):
 

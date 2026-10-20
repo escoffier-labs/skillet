@@ -39,7 +39,7 @@ State the requirement, state the finding, or just show the fix.
 
 ## Bot reviewers
 
-Automated reviewers get the same gate as humans, plus a fix / dismiss / ask rubric, an ask-by-default list for security, auth, data, migration, and concurrency findings, and a learned-pattern format that starts empty. Read [references/bot-triage.md](references/bot-triage.md) before dismissing any bot finding. [runner](../runner/SKILL.md) uses it while driving an open PR.
+Automated reviewers get the same gate as humans, plus a fix / dismiss / ask rubric, a never-dismiss-without-the-owner list for security, auth, data, migration, and concurrency findings, and a learned-pattern format that starts empty. Read [references/bot-triage.md](references/bot-triage.md) before dismissing any bot finding. [runner](../runner/SKILL.md) uses it while driving an open PR.
 
 ## Untrusted content
 

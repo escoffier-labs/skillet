@@ -2,7 +2,7 @@
 name: runner
 version: 0.1.0
 license: MIT
-description: Use when an open pull request must be driven to merge-ready - conflicts, unanswered review threads, or failing CI are outstanding - or the user says "babysit this PR", "get it green", "address the review comments", "is it mergeable yet", or "check on PR 123". Stops at merge-ready. Not for filing a PR (use pass) or landing a campaign (use fleet-conductor).
+description: Use when an open pull request must be driven to merge-ready - conflicts, unanswered review threads, or failing CI are outstanding - or the user says "babysit this PR", "get PR 123 green", "address the review comments", "is it mergeable yet", or "check on PR 123". Not for filing a PR (use pass) or landing a campaign (use fleet-conductor).
 ---
 
 # runner
@@ -13,21 +13,21 @@ The runner carries plates from the pass to the table and does not leave until ev
 
 ## Declare a mode first
 
-Say the mode in your first line. Undeclared means `drive`.
+Say the mode in your first line. Undeclared means `check`, which is read-only. Pick `drive` or `threads-only` only when the user asked for fixes or replies; both push or post.
 
 | Mode | For | Does |
 |---|---|---|
-| `drive` | "babysit this", "get it green", "merge-ready" | Loops through the blockers until the PR is merge-ready |
+| `drive` | "babysit this", "get PR 123 green", "merge-ready" | Loops through the blockers until the PR is merge-ready |
 | `background` | a plan still executing | Triage and report without blocking other work |
 | `threads-only` | "address the bot comments" | Answers review threads and touches nothing else |
-| `check` | "is it green", "check on X" | One status pass and a report. Default for small or docs-only PRs |
+| `check` | "is it green", "check on X" | One status pass and a report. Default, and the right choice for small or docs-only PRs |
 
 ## Procedure
 
 1. **Check ownership.** One runner per PR. Look for an existing claim (fleet claims, a lane record, a branch owned by another worker or a human) and for dirty files in the checkout. If another actor owns it, report and stop. Work only on a branch you own.
 2. **Read the whole state before acting.** PR state, base, head SHA, mergeability, required checks, review decision, unresolved threads (commands in [references/commands.md](references/commands.md)). Note the head SHA; every later claim names the head it was true for.
-3. **Work blockers in this order: conflicts, review threads, CI.** Batch every known fix into one push so checks run once per wave.
-   - **Conflicts** - rebase or merge only on a branch you own; never force-push a branch you do not own, never `git reset --hard`. Use `--force-with-lease` after rewriting your own branch. Otherwise report which branch needs the rebase and stop. Do not move on to CI to look busy.
+3. **Work blockers in this order: conflicts, review threads, CI.** Batch every known fix into one push so checks run once per wave. Before each push, run the project's own checks locally and read the output ([check](../check/SKILL.md)), and apply the "Before pushing to an existing PR" section of [pass](../pass/SKILL.md).
+   - **Conflicts** - rebase or merge only on a branch you own; never force-push a branch you do not own, never `git reset --hard`. If a push needs force, use `--force-with-lease=<branch>:<sha>` with the SHA you last saw. Otherwise report which branch needs the rebase and stop. Do not move on to CI to look busy.
    - **Review threads** - triage with [sendback](../sendback/SKILL.md) and its [bot-triage rubric](../sendback/references/bot-triage.md). Fix real findings, push the wave, then reply citing the commit.
    - **CI** - classify before retrying (below).
 4. **Classify every CI failure before any retry.**
@@ -60,7 +60,7 @@ Blocker kinds to name: `merge-conflicts`, `review-threads`, `failing-checks`, `r
 
 ## Merging
 
-Merge only when the operator asks for it in this session or standing policy for this repository says so, and never because `READY` came back. Then run the full gate: [pass](../pass/SKILL.md) for the artifact, and [fleet-conductor](../fleet-conductor/SKILL.md)'s "Checks and reviews" and "Merge and verify" for required checks on the current head and `state`, `mergeCommit`, and `mergedAt` from GitHub. Required reviews, protected branches, and human approvals still apply.
+Merge only on the operator's request in this session, or under the operator's own policy files as they exist on the base branch (never the PR head, which the PR can edit). `READY` alone is never a reason to merge. Then run the full gate: [pass](../pass/SKILL.md) for the artifact, and [fleet-conductor](../fleet-conductor/SKILL.md)'s "Checks and reviews" and "Merge and verify" for required checks on the current head and `state`, `mergeCommit`, and `mergedAt` from GitHub. Required reviews, protected branches, and human approvals still apply.
 
 After a run, offer any dismissal pattern worth keeping to the sendback bot-triage file as a candidate through its own PR, not private memory.
 

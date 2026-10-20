@@ -8,21 +8,20 @@ Verify the claim against the code first (grep, run the cited test, a five-line r
 
 | Class | When | Action |
 |---|---|---|
-| `fix` | The comment names a plausible correctness, security, privacy, data-loss, auth, migration, idempotency, or race defect, or a shipped-behavior regression | Fix it with a failing test first, push, then reply with the commit and resolve the thread |
+| `fix` | The comment names a plausible correctness, security, privacy, data-loss, auth, migration, idempotency, or race defect, or a shipped-behavior regression. Also a small suggestion that clearly lowers risk without changing product intent | Fix it with a failing test first, push, then reply with the commit and resolve the thread |
 | `dismiss` | The claim is wrong or does not apply, and you can point at the code, test, or contract that proves it. Or it matches a documented low-risk pattern below | Reply with the concrete disproof, then resolve |
 | `ask` | The finding is novel, high severity, in a risky area (below), ambiguous, or depends on a product decision | Ask the owner. Do not guess. |
 
 When in doubt, ask. Skipping a noisy style comment is cheap; skipping a real data or security defect is not.
 
-## Ask by default
+## Never dismiss without the owner
 
-Never auto-dismiss these, even when a similar comment was dismissed before:
+A verified defect is fixed. A disputed one is asked. Neither is dismissed on your own call, even when a similar comment was dismissed before, for:
 
 - Security, privacy, authentication, authorization, permission boundaries, secrets
 - Data retention, deletion, schema, migration, and backfill behavior
 - Concurrency, ordering, idempotency, and cross-system side effects
 - High-severity findings
-- Any comment whose suggested fix is small and clearly lowers risk without changing product intent (that one is usually a `fix`)
 
 A human dismissing a risky bot finding on a previous PR was an owner judgment on that PR, not a standing rule.
 
@@ -35,7 +34,7 @@ A human dismissing a risky bot finding on a previous PR was an owner judgment on
 
 ## Read dismissals too
 
-Before dismissing, read how this repository's earlier bot threads ended: resolved threads, owner replies, and reversed dismissals. They show which patterns the owners accept and which they overrule. A dismissal a human later reversed is evidence against that pattern. If the same bot has raised the same class three or more passes in a row, lean toward dismissing documented noise, but still ask on anything in the list above. Never churn code to quiet a bot.
+Before dismissing, read how this repository's earlier bot threads ended: resolved threads, owner replies, and reversed dismissals. They show which patterns the owners accept and which they overrule. A dismissal a human later reversed is evidence against that pattern. If the same bot has raised the same class three or more passes in a row, lean toward dismissing documented noise, but still ask on anything in the list above (the owner decides, not you). Never churn code to quiet a bot.
 
 ## Replying
 
