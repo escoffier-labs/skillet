@@ -19,7 +19,7 @@ The split in one line: pressure-test closes the decisions, mise shapes them into
 
 ## Size the work first
 
-Before the full flow, decide how big this is, say it in plain words, and let the user override. State the size you chose.
+Before the full flow, decide how big this is, state the size in plain words, and let the user override.
 
 | Size | What it looks like | What you do |
 |---|---|---|
@@ -27,17 +27,19 @@ Before the full flow, decide how big this is, say it in plain words, and let the
 | Medium change | A few decisions, one area of the code, one session | Agree the approach in chat: what you will build, what you will leave alone, the one or two calls that could go either way. Build after a yes. |
 | Project | Several parts, new surface area, or work someone else will execute | The full flow below, ending in a written spec. |
 
+When unsure between two sizes, take the larger. Anything touching a public interface, stored data, security, or an irreversible operation is at least medium. "Too simple to design" is where unexamined assumptions cost the most.
+
 If a change grows mid-task, stop, say so, and step up a size. If a project is really several independent subsystems, say so, agree an order, and run the first piece through the full flow; each piece earns its own spec.
 
 ## Steps (project size)
 
 1. **Read the context first.** Files, docs, recent commits, the surrounding code. Never spend a question on something the repo already answers.
-2. **Open with intent.** Your first message does two things: one line saying that if they would rather skip the questions and have you start, they can say so (if they do, state any significant how-it-gets-made choice in one plain line and proceed at the size that fits), then one open question about their real situation. Ask about a moment or a concrete picture: "What's the moment you find yourself wishing this existed?" Open questions first, because their own words carry intent your options cannot. Offer a short menu only when they are stuck, and when they say "just guess", propose something concrete.
+2. **Open with intent.** Your first message does two things: one line saying that if they would rather skip the questions and have you start, they can say so (skipping the questions skips the interview, not the approval: state any significant how-it-gets-made choice in one plain line, draft from your marked guesses or run pressure-test in sous mode, and still get a yes before building at medium or project size), then one open question about their real situation. Ask about a moment or a concrete picture: "What's the moment you find yourself wishing this existed?" Open questions first, because their own words carry intent your options cannot. Offer a short menu only when they are stuck, and when they say "just guess", propose something concrete.
 3. **Cover the ground.** Territory, not a script, and never read it out as questions: why now and what success looks like, goals and non-goals, prior art they loved or hated, the current state and what they have tried, the details they care about. One question per message, in plain language, anchored in specifics ("Walk me through the last time this bit you"). A guess they can correct often beats a question.
 4. **Probe how it gets made.** Every project rests on choices of platform, language, libraries, or medium. Find out early which the user wants to own, which they hand to you, and what they already have. Where an existing codebase decides it, build on what it uses. State any default you pick aloud and record it in the spec as your call, never as something they agreed to. A default they never heard is one they could not reject.
 5. **Play it back in short chunks.** As soon as you understand one part well enough to describe it, describe it back in a few short paragraphs, then return to questions about the next part. Mark every guess as a guess; only what they said goes in as theirs. End each chunk by asking what is wrong or missing.
 6. **Write caller usage first (anything with an API).** Before types, modules, or file layout, write a short usage snippet and two real call sites showing how callers will use it. Derive the signatures from that usage. If the usage reads awkwardly, the shape is wrong.
-7. **Propose 2-3 structurally distinct approaches.** Whole-shape alternatives, not point variations inside one shape (a different owner of state, a different seam, a different data model). Each with its trade-offs; lead with your recommendation and why. If you can only think of one, you have not looked hard enough. When a fork depends on feel or an observable fact (how it behaves, how fast it is, how it looks), build a throwaway prototype and observe it instead of arguing on paper. Label it throwaway; keeping what it produced is a new request that comes back through the approval gate.
+7. **Propose 2-3 structurally distinct approaches.** Whole-shape alternatives, not point variations inside one shape (a different owner of state, a different seam, a different data model). Each with its trade-offs; lead with your recommendation and why. If you can only think of one, you have not looked hard enough. When a fork depends on feel or an observable fact (how it behaves, how fast it is, how it looks), build a throwaway prototype and observe it instead of arguing on paper. Build it in a scratch directory outside the source tree, label it throwaway, and never commit it.
 8. **Screen the chosen design** against [references/design-red-flags.md](references/design-red-flags.md). Revise the shape for each flag it trips, or record why the flag is acceptable here.
 9. **Present the design, scaled to its complexity.** A few sentences when straightforward, more when subtle. Cover architecture, the pieces and their boundaries, data flow, failure handling, and how it gets tested. Design for isolation: small units, one clear purpose each, testable alone. Confirm each section before the next.
 10. **Write the spec** to `docs/specs/YYYY-MM-DD-<topic>.md` and commit it. Intent and why, goals and non-goals, constraints, the decisions as the user made them, the defaults you chose (marked as yours), and what is left to the builder.
@@ -47,8 +49,8 @@ If a change grows mid-task, stop, say so, and step up a size. If a project is re
 
 ## Rules
 
-- No code before an approved design for a project. The approval is the user's yes to the described design, in the spec for a project and in chat for a medium change. "Sounds good" to the idea does not cover a description you have not written.
-- One question at a time, ending each message with a single question. Open first; multiple choice only when they are stuck or the choice is visual.
+- No code before an approved design at medium or project size. The approval is the user's yes to the described design, in the spec for a project and in chat for a medium change. The one exception is a throwaway prototype for a fork (step 7): it lives in a scratch directory outside the source tree, is never committed, and keeping anything it produced is a new request back through this gate. "Sounds good" to the idea does not cover a description you have not written.
+- One question at a time, ending each message with a single question. The builder-check round (step 11) is the one exception: bring the user's pile in one message. Open first; multiple choice only when they are stuck or the choice is visual.
 - Inspect before you ask. The repo and the conversation often already hold the answer.
 - Always 2-3 structurally distinct approaches with a recommendation for a project or a medium change that has a real fork. One option is not a choice.
 - Say your size, say your defaults. Silent choices are the ones nobody could reject.

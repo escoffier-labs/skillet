@@ -41,6 +41,7 @@ EXTERNAL_CONTENT_SKILLS=(
   reel-check
   stocktake
   trim
+  skillify
 )
 
 check_skill() {

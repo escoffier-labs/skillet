@@ -11,6 +11,7 @@ Earlier history lives in the repo-level CHANGELOG.md.
 - Self-review replaced by a one-pass builder check: a fresh subagent on a cheaper model returns only the questions it would still need answered.
 - Description rewritten to triggers only.
 - Adapted from obra/superpowers brainstorming v7.0.0 (MIT) and pstack architect by Lauren Tan (MIT).
+- Review fixes: larger-size tie-breaker, skipping questions still needs approval at medium and project size, prototype exception to the no-code rule with a scratch directory outside the source tree, builder-check round named as the one exception to one-question-per-message. README row updated.
 
 ## 0.1.0 - 2026-07-08
 

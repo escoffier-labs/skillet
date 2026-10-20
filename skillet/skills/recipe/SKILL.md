@@ -9,7 +9,7 @@ description: Use when an approved spec or design needs to become an implementati
 
 A recipe card is written so a cook who has never seen the dish can plate it exactly: exact pan, exact minutes, steps in order. "Season to taste" is how the same dish comes out different every night. This skill turns an approved spec into that card: an implementation plan a fresh agent session can execute with you unavailable for questions.
 
-**A plan records decisions. It is not a transcript of the code.** Assume the implementer is a capable engineer who writes idiomatic code in the project's language once they know the exact interface and the exact test. What they cannot know is what you decided: which files, which names and signatures, which values from the spec, which tests prove each task. The plan carries those. DRY, YAGNI, test-first, frequent commits.
+**The plan holds the decisions, and the code stays out of it.** Write for a capable engineer who can produce idiomatic code in the project's language once they are told the interface and the test. What they cannot recover alone is your decisions: which files, which names and signatures, which values the spec fixes, which tests prove each task. Those are the plan's content. DRY, YAGNI, test-first, frequent commits.
 
 ## Preconditions
 
@@ -21,7 +21,7 @@ A recipe card is written so a cook who has never seen the dish can plate it exac
 1. **Read the code you are planning against.** The files the spec touches, one neighboring module that shows the house pattern, the test layout. A plan written from memory or a description of the codebase hedges ("if main returns the code, leave it; otherwise wrap it"), and every hedge is a decision forwarded to the implementer.
 2. **Map the file structure.** Before any tasks: every file the plan creates or modifies, and the one responsibility each holds. Prefer small focused files with clear boundaries; in an existing codebase, follow its patterns instead of restructuring. This map locks the decomposition. A file whose purpose needs "and" probably wants splitting.
 3. **Write the header** (see Plan header). The spec travels with the plan.
-4. **Decompose into tasks, each task into steps.** A task is the smallest unit that carries its own test cycle and is worth a reviewer's gate: fold setup, scaffolding, config, and docs into the task whose deliverable needs them, and split only where a reviewer could reject one task while approving its neighbor. A step is one action with a checkable result, written as a checkbox (`- [ ]`): write the failing test, run it and watch it fail, implement, run to green, commit. Every task names its exact file paths up front.
+4. **Decide the execution mode, then decompose into tasks, each task into steps.** Settle the mode you will recommend (see Handoff) first, because it determines which tasks can be `transcribe`. A task is the smallest unit that carries its own test cycle and is worth a reviewer's gate: fold setup, scaffolding, config, and docs into the task whose deliverable needs them, and split only where a reviewer could reject one task while approving its neighbor. A step is one action with a checkable result, written as a checkbox (`- [ ]`): write the failing test, run it and watch it fail, implement, run to green, commit. Every task names its exact file paths up front.
 5. **Pin every decision.** Exit-code orderings, edge-case behavior, naming, where a helper lives: decided in the plan, with the reason when it is not obvious. A plan that says "your call", "adapt to taste", or ends with an open-questions section has pushed design onto the person with the least context. A decision that genuinely cannot be made yet goes back to [pressure-test](../pressure-test/SKILL.md) or the spec's author now, not into the plan.
 6. **Self-review**, then fix inline (see Self-review).
 7. **Save to `docs/plans/YYYY-MM-DD-<topic>.md`, commit, and hand off** (see Handoff). The plan, not memory of this conversation, is the source of truth.
@@ -33,9 +33,9 @@ Every plan opens with:
 - **Goal:** one sentence.
 - **Architecture:** two or three sentences.
 - **Tech:** the key libraries and tools.
-- **Spec:** the path to the spec this plan implements. Executors read both.
+- **Spec:** the path to the spec this plan implements. Executors read both. Whoever dispatches a single task passes this header (Spec path, Global Constraints, Review Focus) along with the task text.
 - **Global Constraints:** the spec's project-wide requirements (version floors, dependency limits, naming and copy rules, platform), one line each, with exact values copied from the spec. Every task implicitly includes them.
-- **Review Focus:** up to five inputs or edge cases the spec implies but no task's tests exercise yet, most likely to bite a user first. One line each: the input or condition, and the behavior a reasonable person would expect. The spec says what the software must do, not everything it will meet, and its silence on an input is not permission for that input to break. Then add the test that pins each line to the task that owns the code. An empty list means you checked, not that you skipped.
+- **Review Focus:** up to five inputs or edge cases that no task's tests touch yet, ordered by how likely a real user is to hit them first (empty input, a duplicate, a missing file, a very large value). One line each: the input, and what a sensible user would expect to happen. A spec describes the intended behavior and cannot list every input; when it says nothing about one, that input still needs an answer. Write the list once while the spec is open, then give each line a pinning test in the task that owns that code. Write "none found" only after actually looking.
 - An instruction to workers to execute task by task, tracking the checkboxes.
 
 ## Task format
@@ -47,6 +47,8 @@ Every plan opens with:
 - Create: `exact/path/to/file.py`
 - Modify: `exact/path/to/existing.py:123-145`
 - Test: `tests/exact/path/test_file.py`
+
+**Follow:** `exact/path/to/neighbor.py` (the nearby file that shows the house pattern for any code step here)
 
 **Interfaces:**
 - Consumes: <what this task uses from earlier tasks, exact signatures>
@@ -61,18 +63,18 @@ Every plan opens with:
 - [ ] Commit: `git add -A && git commit -m "feat: <effect>"`
 ````
 
-The Interfaces block matters because an implementer may see only their own task. It is how they learn the names and types the neighboring tasks use. Omit **You see** for internal tasks; keep it for anything a user can observe.
+An implementer may be shown only their own task, so the Interfaces block is where they find the names and types of the tasks around it. **Follow** is required for any task with a code step, so the implementer matches the surrounding style instead of inventing one. Omit **You see** for internal tasks; keep it for anything a user can observe.
 
 ## What a step contains
 
-A step is done when the implementer can write exactly one reasonable thing from it. The requirement is unambiguous, not complete. Each kind of step carries what makes it unambiguous and nothing more:
+Test a step by asking what two different capable engineers would write from it. If the answers differ in behavior, the step is missing a decision. If they differ only in style, it is finished. Each kind of step carries the decisions it needs and nothing beyond them:
 
 - **Test step:** the test's name and its assertions, as code, with the spec's literal values in them.
 - **Code step:** the exact signature (name, parameters, return type), the file, and the values the spec pins. The implementer writes the body. A body appears only where the signature and tests do not determine the algorithm, or for exact copy the spec fixes.
 - **Verification step:** the exact command and the output that means it passed.
 - **Reference to another task:** point at that task's Interfaces block; do not repeat its code.
 
-**Transcribe switch.** When a cheap worker will execute a task, mark it `transcribe` and give the full code body. Cheap workers copy; they do not decide. Everything else stays decision-level. Say in the plan which tasks are marked and why.
+**Transcribe switch.** Mark a task `transcribe` by its nature: the code is mechanical and low-risk, and the signature plus tests cannot pin it (a table of constants, a fixed template, a rename across files). Give the full body for those tasks, because a cheap worker copies and does not decide. Everything else stays decision-level. Decide the recommended execution mode (see Handoff) before writing tasks, and keep the two consistent: a plan whose tasks are marked `transcribe` for cheap workers should not recommend a mode that hands them design work. Say in the plan which tasks are marked and why.
 
 ## No placeholders
 
@@ -90,16 +92,16 @@ The opposite failure to a transcript is a line that decides nothing. Each of the
 With fresh eyes, check the plan against the spec, then fix inline:
 
 - **Spec coverage:** every requirement in the spec points to a task that implements it.
-- **Step scan:** each step lets the implementer write exactly one reasonable thing, and carries no more. A line that decides nothing is a gap; a body that signature plus tests already determine (outside a `transcribe` task) is a transcript. Fix both.
+- **Step scan:** apply the two-engineers test to each step. A line that decides nothing is a gap. A code body that the signature and tests already determine, outside a `transcribe` task, is a transcript and gets cut down.
 - **Consistency:** names, signatures, and types in later tasks match where earlier tasks defined them, and each Consumes line has a matching Produces.
 - **Review Focus:** each input class the spec implies is either covered by a task's tests or listed in the header with its test added.
-- **Proportion:** compare the plan's length to the spec's. A plan several times longer is a transcript of the program. If code blocks are most of the document, strip bodies down to signatures, test names, and assertions, then recheck that every step is still unambiguous.
+- **Proportion:** put the plan's length next to the spec's. If the plan runs to several times the spec, it has probably become the program written out. When code fills most of the page, cut bodies back to signatures, test names, and assertions, then rerun the two-engineers test on each step.
 
 ## Handoff
 
 Save and commit the plan, then give the user the path and ask them to read it before anything executes. Wait for that read.
 
-Recommend an execution mode with a one-sentence reason drawn from the plan, and let the user override: **solo** (one session runs every task, then a fresh whole-branch review; cheapest, suits few or tightly coupled tasks) or **subagent** (a fresh worker and reviewer per task; more thorough, suits many tasks with clean interfaces or costly mistakes). If the user already named a mode, keep it and ask only whether the plan captures what they want. Then hand off to [fire](../fire/SKILL.md).
+Recommend an execution mode in fire with a one-sentence reason drawn from the plan: **solo** (one session runs every task inline; cheapest, suits few or tightly coupled tasks) or **brigade** (a fresh implementer per task; suits many tasks with clean interfaces). Fire's final whole-branch review applies in either mode. Add per-task reviewers to the recommendation only if the plan asks for them. The user's choice of mode wins over your recommendation; if they already named one, keep it and ask only whether the plan captures what they want. Then hand off to [fire](../fire/SKILL.md).
 
 ## Rules
 

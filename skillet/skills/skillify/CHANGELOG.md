@@ -10,6 +10,7 @@ Earlier history lives in the repo-level CHANGELOG.md.
 - New mode: revise an existing skill from session evidence behind user-approved accept filters, with a tune-the-description route; points to the eighty-six skill when a mechanism can enforce the lesson.
 - New references: `references/blind-eval.md` (blind A/B eval procedure) and `references/skill-testing.md` (testing method). Added the shared Untrusted content section.
 - Adapted from obra/superpowers writing-skills (MIT) and pstack reflect and eval playbooks by Lauren Tan (MIT).
+- Review fixes: trigger misses exempt from the actually-used filter, clean baseline is reported and asked about instead of refused, baseline step scoped to behavior and discipline skills, generic lint wording, eighty-six referenced as an enforcing check where installed. Added to the untrusted-content lint roster.
 
 ## 0.1.0 - 2026-07-08
 

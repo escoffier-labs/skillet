@@ -11,17 +11,17 @@ Extract a procedure you keep repeating into a SKILL.md an agent can discover and
 
 ## Is it worth a skill?
 
-Make a skill when the technique was not obvious the first time, will recur across projects, and involves judgment. Do not make a skill for one-off fixes, project-specific conventions (those belong in the project's CLAUDE.md or AGENTS.md), or anything a mechanism can enforce. If a script, type, or lint can enforce the lesson, use the eighty-six skill to build that check instead of writing prose; prose is the weakest enforcer.
+Make a skill when the technique was not obvious the first time, will recur across projects, and involves judgment. Do not make a skill for one-off fixes, project-specific conventions (those belong in the project's CLAUDE.md or AGENTS.md), or anything a mechanism can enforce. If a script, type, or lint can enforce the lesson, build an enforcing check (the eighty-six skill, where installed) instead of writing prose; prose is the weakest enforcer.
 
 ## Baseline first
 
-An untested skill teaches what you assume the agent gets wrong. Watch it get wrong first.
+For behavior and discipline skills, an untested skill teaches what you assume the agent gets wrong. Watch it get wrong first. (Extracting a private runbook or script into a skill has no behavior to baseline; skip to Extraction.)
 
 1. Write a realistic task that should need the skill, with the pressures real work brings (a deadline, a half-done attempt, an authority saying "just ship it").
 2. Run it on a fresh agent without the skill. Record the behavior and every excuse verbatim.
 3. Build the skill from that record. The rationalization table and red-flag list come from the excuses you captured, not from the ones you can imagine.
 
-If the fresh agent already does the right thing, there is nothing to fix. Stop; do not author the skill.
+If the fresh agent already does the right thing, report that to the user and ask whether to author the skill anyway before writing anything.
 
 ## Match the form to the failure
 
@@ -85,7 +85,7 @@ To compare a skill against a changed version of itself, run the blind A/B in [re
 ## Validate before calling it done
 
 1. Every link in the skill resolves, and every file it references exists.
-2. The repo's skill lint passes (here: `bash tests/lint-skills.sh <skill-id>`, through your verification route).
+2. The repo's skill lint, if it has one, passes (through your verification route).
 3. Hand the skill to a fresh agent with a realistic task that should trigger it. If the agent misapplies a step or asks a question the skill should have answered, the skill has a gap; fix it and re-test.
 4. A broken skill found mid-task gets its own fix, separate from the task that exposed it.
 
@@ -100,10 +100,10 @@ Use when a session shows a skill misled the agent, or a skill should have fired 
 |---|---|
 | Durable | Still true in six months, after paths, versions, and code shapes change |
 | Specific | Broad enough to apply across tasks, precise enough that a future agent recognizes when to use it |
-| Existing-skill-first | An existing skill is not a real home; a new skill needs a recurring pattern and its own topic |
+| Existing-skill-first | Prefer the existing skill; propose a new skill only for a recurring pattern with its own topic |
 | Decision-changing | A future agent does something different because of the edit, not just reads more |
-| Mechanism beats prose | No lint, script, or check could enforce it cheaply; if one could, route to eighty-six |
-| Actually used | The skill was invoked in the session; read its current text first, and if clear guidance already exists the problem was execution, so reframe a buried rule as a placement or wording fix |
+| Mechanism beats prose | No lint, script, or check could enforce it cheaply; if one could, route to an enforcing check (the eighty-six skill, where installed) |
+| Actually used | For body edits, the skill was invoked in the session (trigger misses are exempt: a skill that should have fired and did not goes to the description route below); read its current text first, and if clear guidance already exists the problem was execution, so reframe a buried rule as a placement or wording fix |
 
 3. **Tune the description** when a skill should have fired and did not. The fix is trigger words and symptoms in the description (what the user said, what the situation looked like), never process detail.
 4. Present the accepted list as rows (problem, proposed edit, target section) and the rejected list with the filter each failed. Edits are applied only after the user approves them, row by row. Anything that files an issue, opens a PR, or posts outside the repo needs its own explicit request.

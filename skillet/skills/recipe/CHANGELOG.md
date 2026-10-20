@@ -10,6 +10,7 @@ Earlier history lives in the repo-level CHANGELOG.md.
 - Self-review adds a proportion check (plan length versus spec length).
 - Handoff: the user reads the saved plan first, and the plan recommends solo or subagent execution in fire with a one-sentence reason.
 - Adapted from obra/superpowers writing-plans (MIT) and pstack's multi-phase-plan playbook by Lauren Tan (MIT).
+- Review fixes: modes are solo and brigade to match fire (user's choice wins, no per-task reviewer claimed unless the plan asks), header passed with a dispatched task, required `Follow:` line per task, `transcribe` marked by task nature and decided with the mode, prose reworded. README row updated.
 
 ## 0.1.0 - 2026-07-08
 
