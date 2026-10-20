@@ -83,7 +83,7 @@ Pick the cheapest lever first. Work down this list and stop at the first rung th
 5. **Do it concurrently.** Overlap independent waits or work.
 6. **Do it cheaper.** A better algorithm, structure, or library for the same work.
 
-Rungs 1 to 4 usually win by orders of magnitude and cost little; rung 6 is where effort goes to die.
+Earlier rungs are usually cheaper and often win bigger, but the profile decides; if only a cheaper implementation fits, say why the earlier rungs do not apply.
 
 Make one minimal change. Do not bundle cleanup, a new architecture, three caches, and a concurrency rewrite into one result that cannot be explained.
 

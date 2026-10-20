@@ -15,7 +15,7 @@ For a target that takes many iterations, such as "get this under 200 ms" or "hal
 1. One hypothesis, stated with its mechanism and expected effect (section 5 of the main procedure). Cheapest lever first.
 2. One change.
 3. Run the frozen harness with the standard sample count, and the regression gate.
-4. **Keep** only if the gain exceeds run-to-run noise and the regression gate is green. Otherwise **revert in full**, with no partial keeps and no "it might help later".
+4. **Keep** only if the gain exceeds run-to-run noise and the regression gate is green. Otherwise **revert in full** with `git restore -- <files this iteration touched>` (never `git reset --hard` or `git checkout .`, which also discard unrelated work), with no partial keeps and no "it might help later".
 5. Stage named files only (`git add <path>`, never `git add -A`) and commit a kept change on its own.
 6. Add a row to the decision log: iteration, hypothesis, median before and after, error and work-done counts, kept or reverted.
 
@@ -29,4 +29,4 @@ iter 4 | hypothesis: parse is 38% of time because it re-reads the schema per row
 
 ## Stopping
 
-Stop at the target, at the stop predicate, or when two consecutive hypotheses fail for the same reason (the profile has moved or the model of the system is wrong; profile again before iteration five). Report the log, the kept changes, and the remaining headroom with its limiter.
+Stop at the target, at the stop predicate, or when two consecutive hypotheses fail for the same reason (the profile has moved or the model of the system is wrong; profile again before the next iteration). Report the log, the kept changes, and the remaining headroom with its limiter.

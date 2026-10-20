@@ -21,34 +21,39 @@ Added to the bounded lane record:
 
 ```text
 TIMEBOX: <wall time or step budget; no new side effect inside it means stalled>
-FORBIDDEN: <named actions, e.g. push to shared branches, open or ready a PR, comment on issues, merge, edit CI config>
-REPORT: status word (DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT), actual diff, commands run with output, branch and PR URL, blockers
+FORBIDDEN: <named actions, e.g. push anywhere but the lane branch, open or ready a PR, comment on issues, merge, edit CI config>
+REPORT: status word (DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT), actual diff, commands run with output, lane branch and head SHA, blockers
 ```
 
-Name FORBIDDEN actions concretely. "Read-only" is interpreted loosely; "do not run `git push`, `gh pr create`, `gh pr ready`, `gh pr merge`, or `gh issue comment`" is not.
+A worker pushes only its own lane branch and reports the branch and head SHA; the single publisher opens and readies the draft PR. Name FORBIDDEN actions concretely. "Read-only" is interpreted loosely; "do not run `git push`, `gh pr create`, `gh pr ready`, `gh pr merge`, or `gh issue comment`" is not.
 
 ## Verdict ledger
 
-One row per PR and head SHA. A new head voids the row.
+One row per PR and head SHA. A new head voids the row. Verify-mode results (does the existing fix work?) and review verdicts (is the diff acceptable?) are different claims; keep them in separate fields.
 
 ```text
 pr: <owner/repo>#<n>
 head_sha:
-verdict: confirmed | insufficient | inconclusive | changes-requested | approved
+base_sha: <base the diff was computed against>
+verify_result: confirmed | insufficient | inconclusive | n/a
+review_verdict: approved | changes-requested | n/a
 reviewer + model:
-patch_id: <git patch-id --stable of the reviewed diff>
+patch_id: <git patch-id --verbatim of the reviewed diff>
 checked_at:
 voided_by: <new head SHA, or empty>
+carried_over: <old head SHA, or empty>
 ```
 
-After a rebase or a push to the PR:
+After a rebase or a push to the PR, compute each id against its own recorded base:
 
 ```bash
-git diff <base>...<old_head> | git patch-id --stable
-git diff <base>...<new_head> | git patch-id --stable
+git diff <old_base>...<old_head> | git patch-id --verbatim
+git diff <new_base>...<new_head> | git patch-id --verbatim
 ```
 
-Identical ids: the content did not change, so the old verdict may be marked carried-over with the new head SHA and the reason. Different ids, or an unresolved conflict that was touched during the rebase: re-review. When in doubt, re-review.
+Use `--verbatim`, and do not combine it with `--stable` (some git versions reject the pair). `--stable` ignores whitespace, so a re-indent that changes meaning in a whitespace-sensitive language keeps the same id.
+
+Carry a verdict over only when the ids match **and** the required checks pass on the new head. A carried verdict never saw the new base: record that, and re-review when the base moved in files the change touches. Any difference, a failing check, or doubt means re-review. A forge approval that the push dismissed still needs a fresh approval from the required reviewer; carrying over the ledger row does not restore it.
 
 ## Liveness by side effects
 

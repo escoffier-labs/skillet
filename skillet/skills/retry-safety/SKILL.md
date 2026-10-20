@@ -39,7 +39,7 @@ Evidence that holds at any stop point: a lock that records an owner and a lease 
 
 A finding here names the leftover, the stop point where the evidence breaks, and what the next run does wrong (blocks forever, or runs twice).
 
-Related fix shape for outputs that must never be seen half-done: build the result under a temp name in the same directory, flush it, then rename it into place. A reader sees the old complete file or the new complete file. A crash leaves a temp file the stale test above must also be able to recognize and clean.
+Related fix shape for outputs that must never be seen half-done: build the result under a temp name in the same directory, fsync the temp file, then rename it into place (and fsync the directory when the rename itself must survive power loss). A reader sees the old complete file or the new complete file. A crash leaves a temp file the stale test above must also be able to recognize and clean.
 
 ## Migrations carry a second hazard
 

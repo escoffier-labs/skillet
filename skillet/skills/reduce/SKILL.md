@@ -60,14 +60,16 @@ This is the discipline that separates a reduction from a scorched pan.
 
 Then the 30-second question, asked of a name a reader would care about: where does X come from, and what can change X? If a competent stranger cannot answer both from the code in about 30 seconds, the code is not yet reduced. A one-caller wrapper adds a layer for no state saved; inline it. A flag threaded through four functions adds state; collapse it.
 
-**Revert a refactor whose reader load did not drop.** Fewer lines, different names, or a tidier shape that scores the same on both axes is churn. Back it out.
+**Revert a structural refactor whose reader load did not drop.** A tidier shape that scores the same on both axes is churn; back it out. Naming improvements and dead-code removal are exempt: they earn their place without moving either axis.
 
 ## Comments are symptoms
 
-- **A comment that justifies a workaround** ("needed because X returns null on Tuesdays") points at a defect somewhere else. Fix it at the root if the scope allows, or route it to the owner; leave the comment only until then. Do not polish the apology.
-- **A "do not change this" comment** is a constraint nobody encoded. Move it into the thing that enforces it: a test that fails when it is violated, a type that makes the bad state unrepresentable, or a lint rule. Then the comment can go.
+Reduce stays behavior-preserving, so it reports what a comment reveals and does not fix it here.
+
+- **A comment that justifies a workaround** ("needed because X returns null on Tuesdays") points at a defect somewhere else. Report the root cause and route it ([refire](../refire/SKILL.md) or [bug-hunt](../bug-hunt/SKILL.md)). The comment stays until the root is fixed.
+- **A "do not change this" comment** is a constraint nobody encoded. Report that it belongs in a test, a type, or a lint rule, and route the type or lint work (to eighty-six where installed, otherwise [expedite](../expedite/SKILL.md)). In apply mode you may add a characterization test that pins the constraint; the comment stays unless the constraint is now encoded, and then it may go.
 - **A comment that restates the code** goes. A comment that records intent, a non-obvious reason, or a link to the spec stays.
-- Suppression comments (lint or type ignores) survive only when the underlying rule would be wrong here; otherwise fix the code.
+- Suppression comments (lint or type ignores) survive only when the underlying rule would be wrong here; otherwise report the code as the thing to fix.
 
 ## Renames and moves
 
@@ -131,5 +133,5 @@ In report mode, findings may also be written in the [audit report format](../../
 | Fewer lines reported as simpler | Cognitive load is the metric, not line count. Dense is not simple. Score layers and state before and after. |
 | Renamed a symbol, tests pass | Strings, docs, comments, and config still say the old name. Grep. |
 | Kept a refactor that reads the same but looks neater | If layers to trace and state to hold did not drop, revert it. |
-| Left "workaround for X" comment in place | The comment is the bug report. Fix the root or route it. |
+| Ignoring a "workaround for X" comment | The comment is the bug report. Report it and route the root fix. |
 | "Behavior unchanged" with nothing run | A claim, not evidence. Lock, run, then claim. |

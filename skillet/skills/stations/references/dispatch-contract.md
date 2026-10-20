@@ -34,4 +34,6 @@ Implementers and reviewers never dispatch helpers. One worker is one flat pass. 
 
 ## Fix rounds
 
-Resume the same worker for fix rounds one through three: it has the context. After three, a fresh and stronger worker takes over with the full history in a file. Five rounds is the cap; after that the task goes back to a human or its plan's author, because the plan or the split is probably wrong.
+This rule is for stations fan-outs. [fire](../../fire/SKILL.md) and [fleet-conductor](../../fleet-conductor/SKILL.md) set their own caps (fire's blocked-task and failed-verification stops, fleet-conductor's two attempts per lane), and theirs take precedence.
+
+In a stations fan-out, resume the same worker for fix rounds one through three: it has the context. After three, a fresh and stronger worker takes over with the full history in a file. Five rounds is the cap; after that the task goes back to a human or its plan's author, because the plan or the split is probably wrong.

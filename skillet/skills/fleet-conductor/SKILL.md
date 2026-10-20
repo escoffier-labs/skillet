@@ -90,7 +90,7 @@ Serialize or isolate ordinary write-set collisions. Hold semantic collisions unt
 
 ## Dispatch and monitor
 
-Dispatch only lanes whose write sets and contracts are independent. Each worker ticket includes the bounded lane record, issue links, exact base, repository instructions, verification command, two-attempt limit, and required output: actual diff, command output, receipts, PR URL, and blockers.
+Dispatch only lanes whose write sets and contracts are independent. Each worker ticket includes the bounded lane record, issue links, exact base, repository instructions, verification command, two-attempt limit, and required output: actual diff, command output, receipts, branch and head SHA, and blockers. Workers push only their own lane branch; the publisher opens the draft PR.
 
 On each completion report:
 
@@ -105,8 +105,8 @@ On each completion report:
 Detail and templates live in [worker control](references/worker-control.md). The rules:
 
 - **Standing orders on every spawn.** Paste the same standing orders verbatim into every worker prompt, including a resume. Add three ticket fields to the lane record: `TIMEBOX` (wall time or step budget), `FORBIDDEN` (named actions the worker may not take), and `REPORT` (the exact return format).
-- **One publisher.** The conductor, or one named publisher lane, is the only actor that pushes to shared branches, opens or readies PRs, comments, or merges. Worker prompts name the forbidden write actions explicitly; "read-only" alone is not enough.
-- **Verdicts are keyed by PR plus head SHA.** A review verdict applies to one head. A new head voids it. After a rebase, compare `git patch-id --stable` over the old and new diffs: identical ids mean the content is unchanged and the verdict may carry over with a note; any difference means re-review.
+- **One publisher.** The conductor, or one named publisher lane, is the only actor that opens or readies PRs, comments, merges, or pushes anything other than a worker's own lane branch. A worker pushes its lane branch and reports the branch and head SHA; it never opens the PR. Worker prompts name the forbidden write actions explicitly; "read-only" alone is not enough.
+- **Verdicts are keyed by PR plus head SHA.** A review verdict applies to one head. A new head voids it. After a rebase, compare `git patch-id --verbatim` over the old and new diffs, each computed against its own recorded base: identical ids and required checks passing on the new head let the verdict carry over, with a note that it never saw the new base. Any difference, or a failing check, means re-review. A forge approval dismissed by the push still needs a fresh approval; the ledger cannot restore it.
 - **Liveness is judged by side effects,** never by resuming a worker to ask whether it is alive. Look at the pushed branch, the PR state, the ledger, the receipts. No new side effect inside the timebox means the lane is stalled.
 - **Retry by failure mode.** Name the failure first: missing context, wrong scope, flaky check, bad plan, tool error. Change what the mode points at before redispatching. The same mode twice means abandon the lane and record it; a lane never takes a third identical attempt.
 - **Fresh worker, consolidated scope.** After a stall or a pile of review feedback, start a new worker with one consolidated brief rather than chaining resumes onto a long, polluted context.
@@ -115,7 +115,7 @@ Detail and templates live in [worker control](references/worker-control.md). The
 
 ## Draft pull request gate
 
-Open worker pull requests as drafts. Keep a pull request draft until every item below is truthful and complete:
+The publisher opens worker pull requests as drafts. Keep a pull request draft until every item below is truthful and complete:
 
 - **Issue linkage:** the PR links the correct issue and uses the repository's closing syntax when it should close the issue.
 - **Body:** the body states what changed, why, how to verify it, and any risk or remaining limit.
