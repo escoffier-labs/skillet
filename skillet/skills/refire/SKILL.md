@@ -24,7 +24,7 @@ Before any fix, in order:
 7. **Ask whether the triggering state is legitimate.** If the system can reach that state through normal use, the code that broke on it is the fault. If the state should never exist, a guard only hides the bug; the producer of the state is the target. Fails only after a restart, or on one machine? Suspect persisted state first: config, cache, lockfile, serialized data, leftover files.
 8. **Say what you do not understand.** Write it plainly: "I do not understand why X happens when Y." An honest gap sends you back to step 5; a fluent explanation over a gap becomes the hypothesis you then "confirm".
 
-Traced-origin techniques live in [references/root-cause-tracing.md](references/root-cause-tracing.md). Flaky timing: [references/condition-based-waiting.md](references/condition-based-waiting.md). A test that passes alone and fails in the suite: `bash scripts/find-polluter.sh` (see its header).
+Traced-origin techniques live in [references/root-cause-tracing.md](references/root-cause-tracing.md). Flaky timing: [references/condition-based-waiting.md](references/condition-based-waiting.md). A test that passes alone and fails in the suite: this skill's `scripts/find-polluter.sh` (run it by its path from the project root, `bash <path-to-skill>/scripts/find-polluter.sh`; its header has the usage). It runs each file in a fresh process, so it only sees state that outlives the process (files, database rows, sockets). Before trusting it, create the dirty state by hand once and confirm your check command reports it (exit 0) and reports clean when it is gone (exit 1). In-process leaks (globals, unrestored mocks) need the in-process suite bisected by halving the file list instead.
 
 ## Then fix it, once
 

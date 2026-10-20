@@ -1,6 +1,6 @@
 ---
 name: check
-version: 0.1.3
+version: 0.2.0
 license: MIT
 description: Use when about to claim anything works, is fixed, is complete, or passes - before committing, replying to the user, or moving to the next task. Also use when relaying a subagent's or tool's success report, and especially at the end of a long session when the pull to say "done" is strongest.
 ---
@@ -63,7 +63,7 @@ The proving command failed? Then the status is "not working", and that is what g
 
 ## Suspect a check that passes too easily
 
-When verification passes on the first try, immediately after a change that should have taken effort, or on something you expected to fail, doubt the observation method before believing the result. Ask: could this command pass if the claim were false? Break the thing on purpose (revert the fix, corrupt the input, point it at a known-bad case) and confirm the check turns red. A check that cannot fail has verified nothing.
+When verification passes on the first try, immediately after a change that should have taken effort, or on something you expected to fail, doubt the observation method before believing the result. Ask: could this command pass if the claim were false? Break the thing on purpose with a reversible edit (revert the fix, corrupt a copy of the input, point it at a known-bad case), confirm the check turns red, then restore the edit and rerun to green. A check that cannot fail has verified nothing.
 
 ## Subagent reports are claims, not evidence
 

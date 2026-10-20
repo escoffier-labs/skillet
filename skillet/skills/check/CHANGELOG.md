@@ -2,10 +2,10 @@
 
 Earlier history lives in the repo-level CHANGELOG.md.
 
-## 0.1.3 - 2026-10-20
+## 0.2.0 - 2026-10-20
 
 - Claims table: an inconclusive or wrong-surface check is reported as not verified, never as a pass.
-- New "Suspect a check that passes too easily" section: break the thing on purpose and confirm the check turns red. Adapted from pstack by Lauren Tan (MIT).
+- New "Suspect a check that passes too easily" section: break the thing on purpose and confirm the check turns red, using a reversible edit that is restored before rerunning to green. Adapted from pstack by Lauren Tan (MIT).
 
 ## 0.1.2 - 2026-08-08
 

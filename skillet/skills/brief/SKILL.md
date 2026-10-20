@@ -2,7 +2,7 @@
 name: brief
 version: 0.2.0
 license: MIT
-description: Use when answering at a decision point - recommending an approach, reporting a verification result, finishing a task, proposing a fix, or assessing whether something is ready - so the judgment leads and the reader can evaluate it instead of only accepting it. Triggers on "brief mode", "bluf this", "give me the bottom line", "brief it", "stop burying the answer".
+description: Use when answering at a decision point - recommending an approach, reporting a verification result, finishing a task, proposing a fix, or assessing whether something is ready - so the judgment leads and the reader can evaluate it instead of only accepting it. Triggers on "brief mode", "bluf this", "bottom line", "brief it", "stop burying the answer", "what did I miss", "catch me up".
 ---
 
 # brief
@@ -71,7 +71,7 @@ Fires, report shape:
 4. Reporting a verification, test, build, or benchmark result.
 5. Finishing a plan step or task.
 6. Hitting an error or blocker and proposing a fix.
-7. Handing back after autonomous or AFK work.
+7. Handing back after autonomous or AFK work (use the Catch-up gear).
 
 Does not fire:
 
@@ -84,8 +84,8 @@ Does not fire:
 
 - **Default.** The shapes above.
 - **Deep.** "teach me", "walk me through", "explain". Full reasoning under skimmable headers. The BLUF still leads, with no preamble, recap, or closing pleasantry.
-- **Collapse.** "brief it", "compress that". Re-shape the response just delivered, for a reader returning to a session and finding a wall of text.
-- **Catch-up.** Returning to a session, "what did I miss", or an AFK handback. See below.
+- **Collapse.** "brief it", "compress that". Re-shape the last reply only, for a reader who found a wall of text.
+- **Catch-up.** "What did I miss", "catch me up", or an AFK handback. Covers everything since the user's last message, not one reply. See below.
 
 ### Catch-up gear
 

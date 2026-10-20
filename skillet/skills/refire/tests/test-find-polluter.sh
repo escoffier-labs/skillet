@@ -77,6 +77,16 @@ run "$TEST_CMD" "$CHECK_CMD" a.test
 expect "pre-existing pollution refuses to blame a file" 2 "already present"
 rm -f "$MARK"
 
+run "$TEST_CMD" "no_such_command_find_polluter_xyz" a.test
+expect "broken check command (127) is an error, not a clean pass" 2 "check command errored"
+
+run "$TEST_CMD" "exit 5" a.test
+expect "check exiting 5 is an error, not a clean pass" 2 "check command errored"
+
+rm -f "$MARK"
+run "$TEST_CMD" "$CHECK_CMD" "it's bad.test"
+expect "rerun hint is shell-quoted" 1 "it\\'s\\ bad.test"
+
 run "$TEST_CMD" "$CHECK_CMD"
 expect "no test files is a usage error" 2 "usage:"
 

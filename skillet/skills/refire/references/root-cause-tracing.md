@@ -21,7 +21,7 @@ If the trace does not show who called, or the failure happens in a callee you do
 
 ## Many tests, one polluter
 
-When a test passes alone and fails in the suite, something earlier left state behind. Bisect by file: `bash scripts/find-polluter.sh '<test command using "$1">' '<check command that succeeds when the state is dirty>' <test files...>` runs each file alone and names the first one that dirties the state.
+When a test passes alone and fails in the suite, something earlier left state behind. This skill's `scripts/find-polluter.sh` is a linear scan, not a bisection: `bash <path-to-skill>/scripts/find-polluter.sh '<test command using "$1">' '<check command: exit 0 when dirty, 1 when clean>' <test files...>` runs each file alone in a fresh process and names the first one that dirties the state. Limit: it only sees state that outlives the process (files, database rows, sockets). Leaks inside one process (globals, unrestored mocks) need the suite bisected in-process by halving the file list until the smallest failing set remains. Prove your check first: create the dirty state by hand and confirm it reports 0, remove it and confirm 1.
 
 ## Stop signs
 

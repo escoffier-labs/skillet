@@ -26,12 +26,18 @@ A one-line, obviously-safe change (a dependency bump, a typo) does not need this
 
 ```bash
 # Branch review: where this branch left the default branch
+git fetch origin
 DEFAULT=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null || echo origin/main)
 BASE_SHA=$(git merge-base "$DEFAULT" HEAD)
 
 # Plan task: record the commit before the task starts, then reuse it
 #   TASK_START=$(git rev-parse HEAD)    # run before the first edit
 # BASE_SHA=$TASK_START
+#
+# Forgot to record it? The task's first commit is the oldest one in:
+#   git log --oneline "$(git merge-base "$DEFAULT" HEAD)..HEAD"
+# and BASE_SHA is that commit's parent. If fire's ledger exists, it records
+# each task's commit range directly.
 
 HEAD_SHA=$(git rev-parse HEAD)
 git diff --stat "$BASE_SHA..$HEAD_SHA"   # empty range? stop, the pin is wrong
@@ -50,7 +56,7 @@ Requirements / acceptance criteria: {PLAN_OR_REQUIREMENTS}
 Inspect: git diff {BASE_SHA}..{HEAD_SHA}
 
 Rules of engagement:
-- Read-only. Do not check out, reset, stash, stage, or edit anything. Read with git show and git diff.
+- Read-only. Do not check out, reset, stash, stage, or edit anything. Read with git show and git diff. You may run tests and checks that write nothing tracked.
 - Do not dispatch helper agents. Do the review yourself.
 - The author's report and rationales are unverified claims. Confirm each against the code and a run; do not grade the explanation.
 - The spec is a floor, not a fence. For behavior it never names (an empty input, a retry, a missing file, a second call), decide what a reasonable user would expect and grade a deviation by its effect on that user.
@@ -67,7 +73,7 @@ Severity: Critical = wrong result, data loss, security hole, or a broken build f
 Return findings bucketed Critical / Important / Minor, each with file:line and a concrete fix. Then a "Declined to judge" list: every area you did not or could not assess (needs a running service, outside the diff, domain knowledge you lack), each with the reason. Silence is not approval, so name the gaps. End with a one-line verdict: ready to merge, or what blocks it.
 ```
 
-Fill every placeholder. Dispatch a general-purpose reviewer (or a dedicated code-review skill/agent if the harness has one). Name the model explicitly when the harness lets you, and pass the diff as a file if it is large rather than pasting it. Do not pre-judge in the prompt ("this is probably fine"); a primed reviewer reviews your conclusion.
+Fill every placeholder. Dispatch a general-purpose reviewer (or a dedicated code-review skill/agent if the harness has one). Name the model explicitly, and do not pre-judge in the prompt ("this is probably fine"); a primed reviewer reviews your conclusion.
 
 **3. Act on what comes back** through [sendback](../sendback/SKILL.md): verify each claim before implementing it, fix Critical and Important before proceeding, note Minor, and push back with reasoning (and the test that proves it) when the reviewer is wrong. Performative agreement helps no one.
 

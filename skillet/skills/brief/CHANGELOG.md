@@ -4,6 +4,7 @@
 
 - Added the Catch-up gear for returning to a session or an AFK handback: one opening line naming what waits on the user, plain bullets of what changed, then every pending decision as its own item (what it is, what it changes for the user, evidence, risk, pick), grouped when one call settles several, riskiest first, none dropped to stay short. Check's evidence line is kept for anything reported done. Adapted from pstack by Lauren Tan (MIT).
 - Added an eval case for the catch-up gear.
+- Description gains "what did I miss" and "catch me up"; trigger 7 points at the Catch-up gear; Collapse reshapes the last reply while Catch-up covers everything since the user's last message.
 
 ## 0.1.0 - 2026-08-24
 

@@ -5,12 +5,15 @@
 #
 #   <test-command>   run with bash -c; the test file path arrives as "$1".
 #                    Its exit status is ignored (failing tests still pollute).
-#   <check-command>  run with bash -c after each test file; exits 0 when the
-#                    pollution is PRESENT (for example: test -e .state/lock).
+#   <check-command>  run with bash -c after each test file. Exit 0 = pollution
+#                    PRESENT, exit 1 = ABSENT, anything else = the check itself
+#                    is broken (typo, missing tool) and the run stops. Example:
+#                    test -e .state/lock
 #   <test-file>...   candidates, run one at a time, in the order given.
 #
 # Exit codes: 0 no polluter found, 1 polluter found (first one wins),
-#             2 usage error or pollution already present before the first run.
+#             2 usage error, check command errored, or pollution already
+#             present before the first run.
 #
 # Each file runs alone, so this finds files that pollute by themselves. A
 # polluter that only misbehaves after another test ran first needs a pair
@@ -27,7 +30,20 @@ TEST_CMD="$1"
 CHECK_CMD="$2"
 shift 2
 
-polluted() { bash -c "$CHECK_CMD" >/dev/null 2>&1; }
+# Returns 0 when pollution is present, 1 when absent. Any other exit status
+# from the check command stops the run: a broken check must not read as clean.
+polluted() {
+  bash -c "$CHECK_CMD" >/dev/null 2>&1
+  local rc=$?
+  case "$rc" in
+    0) return 0 ;;
+    1) return 1 ;;
+    *)
+      echo "check command errored (exit $rc); it must exit 0 (present) or 1 (absent). Fix it before trusting this script" >&2
+      exit 2
+      ;;
+  esac
+}
 
 if polluted; then
   echo "pollution already present before any test ran; clean it first so a file can be blamed" >&2
@@ -46,7 +62,7 @@ for FILE in "$@"; do
   fi
   if polluted; then
     echo "POLLUTER: $FILE"
-    echo "rerun alone: bash -c '<test-command>' find-polluter '$FILE'"
+    printf 'rerun alone: bash -c <test-command> find-polluter %q\n' "$FILE"
     exit 1
   fi
 done
