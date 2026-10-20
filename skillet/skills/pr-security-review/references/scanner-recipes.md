@@ -32,6 +32,7 @@ Raw gitleaks reports contain the matched secret and the commit message. Even wit
 gitleaks git --log-opts="$BASE..$TIP" --redact --no-banner \
   --report-format json --report-path "$WORK/gitleaks.json" . > /dev/null 2>&1
 jq -c '.[] | {RuleID, File, StartLine, Commit: .Commit[0:8]}' "$WORK/gitleaks.json"
+rm -f "$WORK/gitleaks.json"                 # holds unredacted commit messages, delete right after the projection
 ```
 
 Exit code 1 means leaks were found. For staged changes use `gitleaks git --staged` with the same report options.

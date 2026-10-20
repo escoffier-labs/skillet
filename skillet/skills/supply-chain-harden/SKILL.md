@@ -39,9 +39,14 @@ Read-only. Save the before state so the report can show a real before and after.
 zizmor --format json .                       # add --offline if no GitHub token; record the skipped online audits
 actionlint
 osv-scanner scan source --recursive .        # only where lockfiles exist
-REPORT="$(mktemp -d)/gitleaks.json"          # outside the repo
-gitleaks git --no-banner --redact -f json -r "$REPORT" .
-jq -r '.[] | [.RuleID, .File, .StartLine, .Commit[0:12]] | @tsv' "$REPORT"
+```
+
+Run the gitleaks block as one command. The trap removes the report, which holds unredacted commit messages, even if the scan fails or is interrupted:
+
+```bash
+out=$(mktemp -d); trap 'rm -rf -- "$out"' EXIT HUP INT TERM   # outside the repo
+gitleaks git --no-banner --redact -f json -r "$out/gitleaks.json" .
+jq -r '.[] | [.RuleID, .File, .StartLine, .Commit[0:12]] | @tsv' "$out/gitleaks.json"
 ```
 
 Secrets are location-only. Read the gitleaks report through the `jq` projection above and nothing else. `--redact` masks `Match` and `Secret` but the `Message` field keeps the commit message text and `Author` and `Email` stay populated, so never print the raw report. A finding means stop that control, tell the operator the rule, file, line, and short commit, and recommend rotation first. History rewrite is out of scope here (see publish-readiness).
