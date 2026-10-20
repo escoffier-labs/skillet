@@ -25,7 +25,7 @@ FORBIDDEN: <named actions, e.g. push anywhere but the lane branch, open or ready
 REPORT: status word (DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT), actual diff, commands run with output, lane branch and head SHA, blockers
 ```
 
-A worker pushes only its own lane branch and reports the branch and head SHA; the single publisher opens and readies the draft PR. Name FORBIDDEN actions concretely. "Read-only" is interpreted loosely; "do not run `git push`, `gh pr create`, `gh pr ready`, `gh pr merge`, or `gh issue comment`" is not.
+A worker pushes only its own lane branch and reports the branch and head SHA; the single publisher opens and readies the draft PR. Name FORBIDDEN actions concretely. "Read-only" is interpreted loosely; "do not push to any ref except `<lane-branch>`; do not run `gh pr create`, `gh pr ready`, `gh pr merge`, or `gh issue comment`" is not.
 
 ## Verdict ledger
 
@@ -51,7 +51,7 @@ git diff <old_base>...<old_head> | git patch-id --verbatim
 git diff <new_base>...<new_head> | git patch-id --verbatim
 ```
 
-Use `--verbatim`, and do not combine it with `--stable` (some git versions reject the pair). `--stable` ignores whitespace, so a re-indent that changes meaning in a whitespace-sensitive language keeps the same id.
+Use `--verbatim`, and do not combine it with `--stable` (some git versions reject the pair). Without `--verbatim`, patch-id strips whitespace, so a re-indent that changes meaning in a whitespace-sensitive language keeps the same id.
 
 Carry a verdict over only when the ids match **and** the required checks pass on the new head. A carried verdict never saw the new base: record that, and re-review when the base moved in files the change touches. Any difference, a failing check, or doubt means re-review. A forge approval that the push dismissed still needs a fresh approval from the required reviewer; carrying over the ledger row does not restore it.
 
