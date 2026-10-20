@@ -1,6 +1,6 @@
 ---
 name: reduce
-version: 0.1.0
+version: 0.2.0
 license: MIT
 description: Use when asked to simplify, clean up, tidy, or refactor code for clarity without changing what it does, or when the user says "simplify this", "clean this up", "make it readable", "reduce the complexity", or "tidy this". Behavior-preserving only; not a bug or security audit (use bug-hunt or security-sweep for those).
 ---
@@ -33,7 +33,7 @@ Before you change a single line, establish the lock. This is the whole safety st
 Highest value first. These are local, mechanical, structure-preserving moves.
 
 - **Flatten control flow.** Guard clauses and early returns over deep nesting; collapse arrow code.
-- **Reveal intent through naming.** A clear name retires a comment that only restated the code.
+- **Reveal intent through naming.** A clear name retires a comment that only restated the code. Grep for the old name afterward (see Renames and moves).
 - **Remove dead weight.** Unused locals, parameters, imports, and unreachable branches, once usage analysis confirms nothing references them.
 - **Consolidate genuine duplication.** Same logic with the same reason to change, in three or more real places. Extract the shared intent, not merely the matching text.
 - **Replace clever with boring.** Dense one-liners and trick expressions become plain, local, readable code.
@@ -50,6 +50,28 @@ This is the discipline that separates a reduction from a scorched pan.
 - **No vague generic utilities.** A `utils.process()` that hides three unrelated jobs is worse than the code it replaced.
 - **Never strip load-bearing redundancy.** Validation, defensive null checks, logging, retries, error fallbacks, compatibility shims, and intentional comments look redundant and are not. Looks redundant does not mean is redundant; when unsure, leave it and note it.
 - **No style churn outside the scope.** Reformatting a wide area is how a semantic change hides in a diff nobody can read.
+
+## Measuring reader load
+
+"Cognitive load is the metric" needs a test, or it becomes taste. Score the code before and after on two axes:
+
+- **Layers to trace:** how many hops (wrappers, indirections, files) between a question and its answer.
+- **State to hold:** how many variables, flags, and mutable things a reader keeps in their head to follow one path.
+
+Then the 30-second question, asked of a name a reader would care about: where does X come from, and what can change X? If a competent stranger cannot answer both from the code in about 30 seconds, the code is not yet reduced. A one-caller wrapper adds a layer for no state saved; inline it. A flag threaded through four functions adds state; collapse it.
+
+**Revert a refactor whose reader load did not drop.** Fewer lines, different names, or a tidier shape that scores the same on both axes is churn. Back it out.
+
+## Comments are symptoms
+
+- **A comment that justifies a workaround** ("needed because X returns null on Tuesdays") points at a defect somewhere else. Fix it at the root if the scope allows, or route it to the owner; leave the comment only until then. Do not polish the apology.
+- **A "do not change this" comment** is a constraint nobody encoded. Move it into the thing that enforces it: a test that fails when it is violated, a type that makes the bad state unrepresentable, or a lint rule. Then the comment can go.
+- **A comment that restates the code** goes. A comment that records intent, a non-obvious reason, or a link to the spec stays.
+- Suppression comments (lint or type ignores) survive only when the underlying rule would be wrong here; otherwise fix the code.
+
+## Renames and moves
+
+A rename that passes the compiler can still leave the old name in strings, log messages, docs, comments, config keys, test names, and back-references. After any rename or move, grep for the old name across the whole repo (code, prose, config) and for its common variants (casing, plural, abbreviation). Update or consciously keep each hit. When a rename changes a public name, that is not a reduction; route it to report mode.
 
 ## Tidy, do not redesign
 
@@ -88,6 +110,7 @@ Mode: apply | report
 - [category] what changed (<commit>)
 
 ### Verification evidence
+Reader load: layers <a> -> <b>, state held <c> -> <d>   (must drop, or revert)
 Baseline: <command> -> <result>
 After:    <command> -> <result>   (must match)
 
@@ -105,5 +128,8 @@ In report mode, findings may also be written in the [audit report format](../../
 | Abstracting from two superficially similar snippets | Looks-alike is not duplication. Wait for three real call sites and a shared reason to change. |
 | Deleting a defensive check that "can never fail" | That is the load-bearing redundancy. It fails the day you remove it. |
 | Reformatting the whole file "while I was in there" | A semantic change now hides in the noise. One category per commit, scope held. |
-| Fewer lines reported as simpler | Cognitive load is the metric, not line count. Dense is not simple. |
+| Fewer lines reported as simpler | Cognitive load is the metric, not line count. Dense is not simple. Score layers and state before and after. |
+| Renamed a symbol, tests pass | Strings, docs, comments, and config still say the old name. Grep. |
+| Kept a refactor that reads the same but looks neater | If layers to trace and state to hold did not drop, revert it. |
+| Left "workaround for X" comment in place | The comment is the bug report. Fix the root or route it. |
 | "Behavior unchanged" with nothing run | A claim, not evidence. Lock, run, then claim. |

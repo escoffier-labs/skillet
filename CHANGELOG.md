@@ -23,6 +23,12 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **fire** - rulings instead of stalls, a per-plan resume ledger, a final whole-branch review, safer finish (no Discard menu item, no forced worktree removal, base-branch confirmation, detached-HEAD menu), and a pattern tell for plans that are wrong. Adapted from obra/superpowers (MIT) and pstack by Lauren Tan (MIT).
+- **stations** - shared dispatch contract (model and effort named, status words, no nested dispatch, fix-round limits), a race shape, codemod-before-fan-out, per-worker result files, and drop-on-missing-evidence. Adapted from obra/superpowers (MIT) and pstack by Lauren Tan (MIT).
+- **fleet-conductor** - verdict ledger keyed by PR and head SHA with `git patch-id`, liveness by side effects, retry by failure mode, gate-loosening countersign, standing orders, single publisher, verify mode for existing fixes. Adapted from pstack by Lauren Tan (MIT).
+- **retry-safety** - stale-leftover test and write-temp-then-rename. Adapted from pstack by Lauren Tan (MIT).
+- **reduce** - two-axis reader-load test, revert-if-no-drop rule, comments-as-symptoms, and rename grep. Adapted from pstack by Lauren Tan (MIT).
+- **thermometer** - Climb mode, "distrust the number" checklist, diagnose-only mode, and cheapest-lever-first ordering. Adapted from pstack by Lauren Tan (MIT).
 - The Brigade work loop (brief -> work -> verify with capture -> handoff) is now defined once in `docs/brigade-process-model.md` as a process model with named gates. `using-skillet`, `check`, and `memory-handoff` reference it instead of restating their own versions of the loop.
 - The README catalog now names **plate** in the Ship workflow and includes **pi** in **stagiaire**'s supported dispatch targets.
 - **t3-code** - added the complete controller-to-remote setup loop, saved environment pairing, per-host transport choice, and an SSH local-forward fallback when the T3 Tailnet port is blocked.

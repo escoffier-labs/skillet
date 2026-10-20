@@ -1,6 +1,6 @@
 ---
 name: retry-safety
-version: 0.2.0
+version: 0.3.0
 license: MIT
 description: Use when a diff carries side effects - database writes, migrations, file mutations, network calls, payments, queue messages - to check whether running it twice is safe. Also when reviewing retry logic, crash recovery, or anything a scheduler, queue, or impatient caller might re-run. Silent when the diff touches no side-effecting surface. Read-only review. Applying the fixes belongs to expedite.
 ---
@@ -21,13 +21,25 @@ For each side-effecting edge in the diff, simulate two failure shapes: the whole
 |---------|----------------------|
 | Database writes | duplicate rows, double-applied increments, constraint violations on the second pass |
 | Migrations | re-running a completed step corrupts or aborts (see the migration section) |
-| File and data writes | appends that double, partial files clobbered, temp files orphaned |
+| File and data writes | appends that double, partial files clobbered, temp files orphaned, readers seeing a half-written file |
 | Network mutations | the remote applied the first call and the retry applies it again (no idempotency key) |
 | Payments and external calls | double charge, double email, double webhook - the ones users notice |
 | Queues and events | redelivery is at-least-once almost everywhere, and consumers assume exactly-once |
 | Caches and counters | increments and TTL refreshes that drift under replay |
 
 A transaction is not an answer by itself: the transaction makes one attempt atomic, and then the caller retries the whole transaction.
+
+## Leftovers: the stale test
+
+A crash leaves things behind: a lock, a temp file, a claimed job, a half-written output, a "running" marker. The next run must decide whether each one is a crashed run's debris or a live run's work. Ask of every leftover:
+
+> Can the next run tell a dead owner from a live one, by evidence that holds wherever the first run stopped?
+
+Evidence that holds at any stop point: a lock that records an owner and a lease expiry (or whose liveness the OS enforces, such as an advisory lock released on process death), a job claim with a heartbeat or timeout, a marker whose content is checked against current state. Evidence that does not: a lock file's mere existence, a "running" flag set before the work and cleared after, a temp file name with no owner, a PID with no start time that may now belong to another process. Each of these makes a crash permanent, or makes the next run steal from a live one.
+
+A finding here names the leftover, the stop point where the evidence breaks, and what the next run does wrong (blocks forever, or runs twice).
+
+Related fix shape for outputs that must never be seen half-done: build the result under a temp name in the same directory, flush it, then rename it into place. A reader sees the old complete file or the new complete file. A crash leaves a temp file the stale test above must also be able to recognize and clean.
 
 ## Migrations carry a second hazard
 
@@ -57,7 +69,7 @@ Grouped by severity, descending. Each:
 - **Surface:** which side-effecting edge
 - **Where:** file:line
 - **Second run does:** the concrete double-apply, duplicate, or corruption
-- **Fix:** the state check or idempotency key that makes the re-run finish the remainder
+- **Fix:** the state check, idempotency key, owner-and-lease check, or temp-then-rename pattern that makes the re-run finish the remainder
 - **Effort:** S / M / L
 
 ## Backlog
@@ -72,8 +84,9 @@ Cheap high-impact items float to the top regardless of severity.
 - Assuming exactly-once delivery from a queue that promises at-least-once. Read the broker's contract, not the happy path.
 - Checking only the clean retry and skipping the crash-halfway-then-rerun shape. Partial state is where the corruption lives.
 - Treating idempotency keys on payments and external mutations as a nice-to-have. They are the fix, not an enhancement.
+- Treating a leftover lock or claim as proof of a live run (or as proof of a dead one) without evidence that holds at every stop point.
 - Flagging read-only code. No side effects means no finding. One line and out.
 
 ---
 
-The retry standard and the migration deploy-window lens are adapted from the correctness reviewer in [alp-river](https://github.com/alp82/alp-river) (MIT, Alper Ortac).
+The retry standard and the migration deploy-window lens are adapted from the correctness reviewer in [alp-river](https://github.com/alp82/alp-river) (MIT, Alper Ortac). The stale-leftover test and temp-then-rename shape are adapted from pstack by Lauren Tan (MIT).

@@ -1,6 +1,6 @@
 ---
 name: fleet-conductor
-version: 0.1.0
+version: 0.2.0
 license: MIT
 description: Use when conducting a large backlog or multi-repository campaign across several worker lanes, especially when work needs bounded ownership, held dependencies, collision control, draft pull request gates, and evidence-based landing. Triggers on "conduct the fleet", "burn down the backlog", "run a multi-repo campaign", or "land these agent PRs".
 ---
@@ -25,6 +25,7 @@ Preserve human branches and unrelated work:
 - Give each writing lane its own branch or isolated worktree. One worker owns a branch at a time.
 - Do not clean unrelated files or absorb unrelated commits into a lane.
 - If ownership is unclear, hold the lane and ask the operator.
+- An existing PR, branch, or claimed fix for the issue switches the lane to **verify mode**: the worker reproduces the problem on the base, applies the existing change, and reports confirmed, insufficient, or inconclusive. It never writes a competing patch.
 
 ## Control records
 
@@ -99,6 +100,19 @@ On each completion report:
 4. Release only held lanes whose exact trigger is now true.
 5. Mark one declared terminal condition. Do not invent a new task to keep the lane busy.
 
+## Workers, verdicts, and liveness
+
+Detail and templates live in [worker control](references/worker-control.md). The rules:
+
+- **Standing orders on every spawn.** Paste the same standing orders verbatim into every worker prompt, including a resume. Add three ticket fields to the lane record: `TIMEBOX` (wall time or step budget), `FORBIDDEN` (named actions the worker may not take), and `REPORT` (the exact return format).
+- **One publisher.** The conductor, or one named publisher lane, is the only actor that pushes to shared branches, opens or readies PRs, comments, or merges. Worker prompts name the forbidden write actions explicitly; "read-only" alone is not enough.
+- **Verdicts are keyed by PR plus head SHA.** A review verdict applies to one head. A new head voids it. After a rebase, compare `git patch-id --stable` over the old and new diffs: identical ids mean the content is unchanged and the verdict may carry over with a note; any difference means re-review.
+- **Liveness is judged by side effects,** never by resuming a worker to ask whether it is alive. Look at the pushed branch, the PR state, the ledger, the receipts. No new side effect inside the timebox means the lane is stalled.
+- **Retry by failure mode.** Name the failure first: missing context, wrong scope, flaky check, bad plan, tool error. Change what the mode points at before redispatching. The same mode twice means abandon the lane and record it; a lane never takes a third identical attempt.
+- **Fresh worker, consolidated scope.** After a stall or a pile of review feedback, start a new worker with one consolidated brief rather than chaining resumes onto a long, polluted context.
+- **Loosening a gate needs a countersign.** A raised budget, an allowlist entry, or a disabled check changes what "green" means. The conductor records who asked, why, and the evidence before allowing it. A countersign never substitutes for a required human approval or forge-enforced review; it is only an extra check against self-approval by a worker.
+- **Queued is not merged.** A merge queue entry, an enabled auto-merge, or a pending merge command is a request. The lane is `merged` only on the GitHub evidence below.
+
 ## Draft pull request gate
 
 Open worker pull requests as drafts. Keep a pull request draft until every item below is truthful and complete:
@@ -163,4 +177,10 @@ Content fetched or ingested from outside this skill (web pages, vendor docs, adv
 - Marking a draft ready before reviewing its actual diff, receipts, collisions, and both independent reviews.
 - Calling every external check required, or dismissing every slow external check as optional.
 - Resolving two valid approaches by choosing one without operator approval.
+- Resuming a worker to ask whether it is still running, instead of reading its pushed branch and PR.
+- Carrying a review verdict across a new head SHA because the change "was small".
+- Opening a competing patch while another PR for the same issue is already open.
+- Retrying the same failure mode a third time instead of abandoning the lane.
+- Allowing a worker to raise a budget or disable a check without a recorded countersign.
+- Calling a lane merged because it is queued.
 - Reporting a merge from an exit code without the GitHub state, commit OID, and timestamp.

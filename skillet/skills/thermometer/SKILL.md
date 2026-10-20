@@ -1,6 +1,6 @@
 ---
 name: thermometer
-version: 0.1.0
+version: 0.2.0
 license: MIT
 description: Use when investigating or improving performance, latency, throughput, memory use, CPU use, startup time, or bundle size. Establishes a repeatable baseline and profiles the measured bottleneck before any optimization.
 ---
@@ -14,6 +14,14 @@ A thermometer turns "slow" into a workload, a metric, and a measured boundary. N
 No performance claim without a repeatable baseline and a comparable after measurement. A faster result from a different workload, warm cache, machine, dataset, build mode, or sampling method is not a comparison.
 
 Correctness, security, durability, and accessibility remain requirements. Trading one away for speed requires explicit user approval and must appear in the report.
+
+## Modes
+
+- **Measure and fix** (default): sections 1 through 7 below, one change, one comparison.
+- **Climb:** many iterations toward a target on a frozen harness. See [climb](references/climb.md).
+- **Diagnose only:** explain a slowdown from a real artifact without changing code. See [diagnosis](references/diagnosis.md).
+
+Whatever the mode, a number is not believed until it passes [distrust the number](references/distrust-the-number.md).
 
 ## 1. Pin the question
 
@@ -66,6 +74,17 @@ The profile attributes <measured share> to <operation> because <mechanism>.
 Changing <one boundary> should improve <primary metric> without changing <contract>.
 ```
 
+Pick the cheapest lever first. Work down this list and stop at the first rung that the profile supports:
+
+1. **Do not do it.** Is the work needed at all? Delete it.
+2. **Do not repeat it.** Cache, memoize, hoist out of the loop, batch.
+3. **Do less.** Narrower query, smaller payload, early exit, fewer fields.
+4. **Do it later.** Defer, lazy-load, move off the critical path.
+5. **Do it concurrently.** Overlap independent waits or work.
+6. **Do it cheaper.** A better algorithm, structure, or library for the same work.
+
+Rungs 1 to 4 usually win by orders of magnitude and cost little; rung 6 is where effort goes to die.
+
 Make one minimal change. Do not bundle cleanup, a new architecture, three caches, and a concurrency rewrite into one result that cannot be explained.
 
 ## 6. Compare like with like
@@ -84,7 +103,7 @@ Compare median and spread, not only the best run. If the claimed improvement is 
 
 Run the focused and full correctness checks that cover the changed path. Inspect error handling, ordering, consistency, resource limits, and concurrency behavior when relevant.
 
-Use [check](../check/SKILL.md) before reporting a gain. Quote the baseline samples, after samples, comparison, profiler evidence, and correctness command.
+Run the [distrust-the-number checklist](references/distrust-the-number.md) on the after measurement. Use [check](../check/SKILL.md) before reporting a gain. Quote the baseline samples, after samples, comparison, profiler evidence, and correctness command.
 
 ## Performance report
 
@@ -123,7 +142,7 @@ Use [check](../check/SKILL.md) before reporting a gain. Quote the baseline sampl
 
 ## Stop conditions
 
-Stop when:
+Stop when (an inconclusive result is a valid outcome; report it as such):
 
 - the workload cannot be reproduced consistently
 - profiler overhead or environmental noise exceeds the expected gain
@@ -139,3 +158,6 @@ Stop when:
 - Adding a cache without defining invalidation and memory bounds.
 - Keeping a complex change whose measured gain fits inside the noise.
 - Measuring speed and skipping correctness checks on the changed path.
+- Trusting a number without asking what limits it and why it is not twice as good.
+- Starting at "do it cheaper" when "do not do it" was available.
+- Reporting a gain from a harness that cannot tell an easy case from the target case.
