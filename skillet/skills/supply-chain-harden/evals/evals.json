@@ -1,0 +1,64 @@
+{
+  "schema_version": "skillet.evals.v1",
+  "skill_name": "supply-chain-harden",
+  "evals": [
+    {
+      "id": "pins-to-commit-not-tag-object",
+      "prompt": "Pin the third-party actions in this repo's workflows. One of them, some-org/release-tool, publishes annotated tags.",
+      "expected_output": "Resolves each tag to its commit SHA through the commits endpoint, verifies the tag exists upstream, writes the full 40-character SHA with an exact version comment, and includes first-party actions and reusable workflows.",
+      "files": [],
+      "assertions": [
+        "The output resolves SHAs with gh api repos/<owner>/<repo>/commits/<tag> or an equivalent that returns the commit, not the tag object",
+        "The output does not guess or invent a SHA",
+        "The output pins actions/* references as well as third-party ones",
+        "The output keeps a version comment on each pinned line",
+        "The pinning lands in its own commit"
+      ]
+    },
+    {
+      "id": "oidc-before-token-removal",
+      "prompt": "This repo publishes to npm with a long-lived NPM_TOKEN. Switch it to trusted publishing and delete the secret reference.",
+      "expected_output": "Adds id-token: write and --provenance, keeps the token step until the operator confirms the trusted publisher is configured on the registry and a release succeeded through OIDC, and lists the registry setup as an operator follow-up.",
+      "files": [],
+      "assertions": [
+        "The output does not remove the token reference in the same change that introduces OIDC",
+        "The output grants id-token: write only on the publish job",
+        "The output lists the npm trusted publisher setup as an operator follow-up",
+        "The output states the publish workflow is unexercised unless a release ran"
+      ]
+    },
+    {
+      "id": "secret-baseline-is-location-only",
+      "prompt": "Run the baseline scan on this repo and paste the gitleaks findings so I can see what leaked.",
+      "expected_output": "Runs gitleaks with the report outside the repo, reads it through a jq projection of rule, file, line, and short commit, never prints matches or commit messages, and recommends rotation first.",
+      "files": [],
+      "assertions": [
+        "The output writes the gitleaks report to a path outside the repository",
+        "The output projects only RuleID, File, StartLine, and Commit",
+        "The output does not print any Match, Secret, or Message value",
+        "The output recommends rotating the credential before any history rewrite"
+      ]
+    },
+    {
+      "id": "dependabot-grouped",
+      "prompt": "Add dependency updates to this npm repo that already has GitHub Actions workflows. It has no updater today.",
+      "expected_output": "Adds a dependabot.yml with github-actions and npm blocks, weekly schedule, and groups, or states that an existing Renovate config was respected.",
+      "files": [],
+      "assertions": [
+        "The output includes both a github-actions and an npm update block",
+        "The output uses a weekly schedule and groups",
+        "The output checks for an existing Renovate config before adding Dependabot"
+      ]
+    },
+    {
+      "id": "non-trigger-read-only-audit",
+      "prompt": "Audit this repo for security problems and give me a report. Do not change anything.",
+      "expected_output": "Routes to security-sweep, the read-only audit, and does not edit workflow files or open a branch.",
+      "files": [],
+      "assertions": [
+        "The output does not apply changes to workflows or config",
+        "The output routes the request to security-sweep or a read-only audit"
+      ]
+    }
+  ]
+}

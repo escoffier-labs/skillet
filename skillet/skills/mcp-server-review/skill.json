@@ -1,0 +1,9 @@
+{
+  "id": "mcp-server-review",
+  "version": "0.1.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh mcp-server-review",
+    "bash ../../../tests/lint-evals.sh mcp-server-review"
+  ],
+  "trust_level": "workspace"
+}

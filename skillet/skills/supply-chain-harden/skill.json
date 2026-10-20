@@ -1,0 +1,9 @@
+{
+  "id": "supply-chain-harden",
+  "version": "0.1.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh supply-chain-harden",
+    "bash ../../../tests/lint-evals.sh supply-chain-harden"
+  ],
+  "trust_level": "workspace"
+}
