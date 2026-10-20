@@ -17,10 +17,10 @@ Unresolved review threads:
 
 ```bash
 gh api graphql -f query='
-query($owner:String!,$repo:String!,$n:Int!){
+query($owner:String!,$repo:String!,$n:Int!,$cursor:String){
   repository(owner:$owner,name:$repo){
     pullRequest(number:$n){
-      reviewThreads(first:100){
+      reviewThreads(first:100, after:$cursor){
         pageInfo{ hasNextPage endCursor }
         nodes{ id isResolved isOutdated path line
           comments(first:20){ nodes{ databaseId author{login} body commit{oid} } } }
@@ -30,7 +30,7 @@ query($owner:String!,$repo:String!,$n:Int!){
 }' -f owner=<owner> -f repo=<repo> -F n=<n>
 ```
 
-When `hasNextPage` is true, repeat with `reviewThreads(first:100, after:$cursor)` and the `endCursor`; report partial data if you cannot finish. The comment `databaseId` and `commit.oid` are what you need to reply and to see which head a comment was made on.
+When `hasNextPage` is true, repeat with `-f cursor=<endCursor>` added; report partial data if you cannot finish. The comment `databaseId` and `commit.oid` are what you need to reply and to see which head a comment was made on.
 
 ## Classify CI
 
