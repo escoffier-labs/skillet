@@ -23,6 +23,12 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **fire** - rulings instead of stalls, a per-plan resume ledger, a final whole-branch review, safer finish (no Discard menu item, no forced worktree removal, base-branch confirmation, detached-HEAD menu), and a pattern tell for plans that are wrong. Adapted from obra/superpowers (MIT) and pstack by Lauren Tan (MIT).
+- **stations** - shared dispatch contract (model and effort named, status words, no nested dispatch, fix-round limits), a race shape, codemod-before-fan-out, per-worker result files, and drop-on-missing-evidence. Adapted from obra/superpowers (MIT) and pstack by Lauren Tan (MIT).
+- **fleet-conductor** - verdict ledger keyed by PR and head SHA with `git patch-id`, liveness by side effects, retry by failure mode, gate-loosening countersign, standing orders, single publisher, verify mode for existing fixes. Adapted from pstack by Lauren Tan (MIT).
+- **retry-safety** - stale-leftover test and write-temp-then-rename. Adapted from pstack by Lauren Tan (MIT).
+- **reduce** - two-axis reader-load test, revert-if-no-drop rule, comments-as-symptoms, and rename grep. Adapted from pstack by Lauren Tan (MIT).
+- **thermometer** - Climb mode, "distrust the number" checklist, diagnose-only mode, and cheapest-lever-first ordering. Adapted from pstack by Lauren Tan (MIT).
 - **review** - range pin uses `git merge-base` or a recorded task-start commit instead of `HEAD~1`; reviewer prompt gains read-only, no-helpers, unverified-author-claims, reasonable-user judgment, severity calibration, and a "Declined to judge" list; trigger description now states when, not process. Adapted from obra/superpowers (MIT).
 - **refire** - legitimacy test for the triggering state, persisted-state hint, sibling sweep, always-on signal, premise check at two failed fixes, revert-the-refuted-hypothesis, reproduce on the user's surface, "say what you do not understand", and a "no root cause found" exit. New `references/` (root-cause-tracing, defense-in-depth, condition-based-waiting) and `scripts/find-polluter.sh` with tests. Adapted from obra/superpowers (MIT) and pstack by Lauren Tan (MIT).
 - **taste** - step 4 runs the project's own suite even when the task named one file and reports every failure by name; added the revert-the-fix red/green check for regression tests. Adapted from obra/superpowers (MIT).
