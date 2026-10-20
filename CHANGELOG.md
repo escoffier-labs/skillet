@@ -8,6 +8,14 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **runner** - drives an open PR to merge-ready with a declared mode, blockers worked in order and batched into one push, CI classified before any retry, and a stop at merge-ready. Adapted from the babysit and shipping playbooks in pstack by Lauren Tan (MIT).
+- **eighty-six** - mines repeated agent mistakes and enforces each at the highest working level, with a rule-to-enforcer table. Adapted from the correct skill in pstack by Lauren Tan (MIT).
+- **relief** - pause and pickup of in-flight work with a local wip checkpoint and an untracked resume note. Adapted from the pause-safely and session-pickup playbooks in pstack by Lauren Tan (MIT).
+- **lineage** - traces why code exists with git archaeology, Brigade evidence, and five confidence tiers. Adapted from the why skill in pstack by Lauren Tan (MIT).
+- **hone** - deepens a prompt or worker brief before dispatch without deciding the author's choices. Adapted from the sharpen skill in pstack by Lauren Tan (MIT).
+- **ticket-rail** - issue intake and repro gate: dedupe outcomes, hold or verify when a fix exists, no confirmed repro and no authored fix. Adapted from the benny triage and reproduce playbooks in pstack by Lauren Tan (MIT).
+- **test-kitchen** - creates and maintains a project-local verify skill that drives the real app. Adapted from the create and maintain verification skills in pstack by Lauren Tan (MIT).
+- **diagnose-session** - evidence-first analysis of a misbehaving agent run, with context-safe transcript reading and redaction before sharing. Adapted from diagnosing-superpowers in obra/superpowers by Jesse Vincent (MIT).
 - `skills.sh.json` groups the skills.sh repo page into eight sections that match the `using-skillet` stations, so visitors see the roster by job instead of one flat list sorted by installs.
 - **trim** - test value bar with three modes: an authoring gate for every new test, a read-only-first audit of junk patterns with per-candidate evidence, and a subsystem campaign procedure (lanes, ledger, keepers, preservation review with mutations). Adapted from OpenClaw's MIT-licensed `test-audit` skill. **taste** now runs the trim authoring gate before writing each test.
 - **brief** - decision-ready output with a recommendation/report split, estimative-language reference, and eval coverage for recommendation shape, report-shape facts without confidence, invented-alternative refusal, and a single-fact non-trigger.
@@ -23,6 +31,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- **sendback** adds `references/bot-triage.md` (fix / dismiss / ask rubric, ask-by-default list, learned-pattern format) and replies inside the inline review thread; **using-skillet** routes the eight new skills, adds a Chains table, verbatim-checklist and skip rules, a proportionality line, and `mise` before any plan mode. Untrusted-content roster extended to the new skills that ingest external text.
 - The Brigade work loop (brief -> work -> verify with capture -> handoff) is now defined once in `docs/brigade-process-model.md` as a process model with named gates. `using-skillet`, `check`, and `memory-handoff` reference it instead of restating their own versions of the loop.
 - The README catalog now names **plate** in the Ship workflow and includes **pi** in **stagiaire**'s supported dispatch targets.
 - **t3-code** - added the complete controller-to-remote setup loop, saved environment pairing, per-host transport choice, and an SSH local-forward fallback when the T3 Tailnet port is blocked.

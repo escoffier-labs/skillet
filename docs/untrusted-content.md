@@ -6,7 +6,7 @@ Skills that fetch or ingest content from outside the trusted skill text must dec
 
 A skill is in scope when its procedure regularly brings **external or third-party text into the model context** as working material: web pages and vendor docs, package advisories, review comments, chat exports, transcripts, pasted drafts, or repository trees the skill is scanning for leaks. Pure local-code skills that only read the workspace to audit or edit it are out of scope.
 
-The roster is declared once in `tests/lint-skills.sh` as `EXTERNAL_CONTENT_SKILLS`. Add a skill there when it starts ingesting external content; remove it only when that intake goes away.
+The roster is declared once in `tests/lint-skills.sh` as `EXTERNAL_CONTENT_SKILLS` (it includes runner, ticket-rail, lineage, diagnose-session, eighty-six, relief, and test-kitchen, which read review threads, issue reports, PR history, transcripts, resume trails, and app output). Add a skill there when it starts ingesting external content; remove it only when that intake goes away.
 
 ## Required section
 
