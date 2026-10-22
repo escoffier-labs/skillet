@@ -2,7 +2,7 @@
 
 ## 0.1.1 - 2026-09-25
 
-- Validation: a consolidated row that survives its mutation is repaired before landing; disable bytecode caches during mutation runs; run the full gate outside shell `&` jobs, which ignore SIGINT. All three came from landing the first trim batch on a real repo.
+- Validation: a consolidated row that survives its mutation is repaired before landing; remove existing bytecode caches before each mutation run and keep new ones disabled; run the full gate outside shell `&` jobs, which ignore SIGINT. All three came from landing the first trim batch on a real repo.
 
 ## 0.1.0 - 2026-09-24
 
