@@ -15,7 +15,7 @@
     {
       "title": "Debug and verify",
       "description": "Root cause before fixes, evidence before claims, measurements before performance changes.",
-      "skills": ["refire", "check", "brief", "stocktake", "thermometer", "ticket-rail", "diagnose-session", "test-kitchen"]
+      "skills": ["refire", "check", "brief", "stocktake", "thermometer", "ticket-rail", "diagnose-session", "test-kitchen", "create-formal-verification-skill", "maintain-formal-verification-skill", "statechart"]
     },
     {
       "title": "Review and ship",

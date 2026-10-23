@@ -1,6 +1,6 @@
 ---
 name: using-skillet
-version: 0.1.8
+version: 0.1.9
 license: MIT
 description: Use when starting any conversation - establishes how to find and use skillet skills, requiring skill invocation before ANY response including clarifying questions.
 ---
@@ -67,6 +67,9 @@ Load skills through your platform's skill mechanism, never by reading SKILL.md w
 - `thermometer` - profile a measured performance problem and compare the same workload before and after one change.
 - `ticket-rail` - triage an incoming issue: classify, dedupe, repro gate; no repro, no fix.
 - `diagnose-session` - on request, evidence-first analysis of a misbehaving agent run.
+- `create-formal-verification-skill` - only on explicit formal verification requests: create a local verifier for a code-backed property. Ordinary application checks go to test-kitchen.
+- `maintain-formal-verification-skill` - only on explicit requests to reconcile a formal model, proof, or harness with changed code.
+- `statechart` - only on explicit requests for user-visible Mermaid statecharts, TLA+ counterexample stories, model comparisons, or chart-to-model scaffolding.
 - `test-kitchen` - on request, build or maintain a project-local skill that drives the real app.
 
 **Review and ship:**

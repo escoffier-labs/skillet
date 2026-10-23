@@ -1,0 +1,9 @@
+{
+  "id": "statechart",
+  "version": "0.1.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh statechart",
+    "bash tests/test-statechart.sh"
+  ],
+  "trust_level": "workspace"
+}

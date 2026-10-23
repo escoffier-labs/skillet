@@ -2,6 +2,10 @@
 
 Earlier history lives in the repo-level CHANGELOG.md.
 
+## 0.1.9 - 2026-10-23
+
+- Routes `create-formal-verification-skill`, `maintain-formal-verification-skill`, and `statechart` into the station list.
+
 ## 0.1.8 - 2026-10-20
 
 - Routes `pr-security-review`, `supply-chain-harden`, and `mcp-server-review` into the station list.
