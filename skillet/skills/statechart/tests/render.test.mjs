@@ -16,24 +16,23 @@ for (const mode of ["installed", "missing", "failed", "no-output"]) {
     try {
       const bin = join(dir, "bin");
       mkdirSync(bin);
+      // CommonJS keeps the extensionless stand-ins compatible with Node 18.15+.
       const executable = (name, body) => writeFileSync(join(bin, name), `#!${process.execPath}\n${body}\n`, { mode: 0o755 });
       executable("java", `
-import fs from "node:fs";
+const fs = require("node:fs");
 const args = process.argv.slice(2);
 const dump = args.indexOf("-dump");
 if (dump !== -1) fs.writeFileSync(args[dump + 2], 'strict digraph DiskGraph {\\n1 [label="/\\\\\\\\ on = FALSE",style = filled]\\n2 [label="/\\\\\\\\ on = TRUE"]\\n1 -> 2 [label="On"];\\n2 -> 1 [label="Off"];\\n}\\n');
 console.log("Model checking completed.");
 `);
-      executable("npx", `import fs from "node:fs"; fs.writeFileSync("install-attempt", "npx"); process.exit(99);`);
+      executable("npx", `const fs = require("node:fs"); fs.writeFileSync("install-attempt", "npx"); process.exit(99);`);
       if (mode !== "missing") executable("mmdc", `
-import fs from "node:fs";
+const fs = require("node:fs");
 const args = process.argv.slice(2);
 fs.writeFileSync("renderer-args.json", JSON.stringify(args));
 if (${JSON.stringify(mode)} === "failed") { console.error("renderer failed"); process.exit(1); }
 if (${JSON.stringify(mode)} !== "no-output") fs.writeFileSync(args[args.indexOf("-o") + 1], "rendered by installed mmdc");
 `);
-      // Extensions let Node load the stand-ins as ESM even on Node 18/20.
-      writeFileSync(join(bin, "package.json"), '{"type":"module"}\n');
       writeFileSync(join(dir, "tla2tools.jar"), "test stand-in, not TLC");
       writeFileSync(join(dir, "Lamp.tla"), "---- MODULE Lamp ----\nVARIABLE on\nInit == on = FALSE\nOn == on' = TRUE\nOff == on' = FALSE\nSpec == Init /\\ [][On \\/ Off]_on\n====\n");
       writeFileSync(join(dir, "Lamp.cfg"), "SPECIFICATION Spec\n");
