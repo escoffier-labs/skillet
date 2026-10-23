@@ -16,8 +16,10 @@ or omitting `--png`.
 The higher-level `from-chart` route checks all scaffold destination entries with
 `lstat` before generation when the model is missing. Existing configs, mappings,
 directories, and dangling links are preserved without partial scaffolds. Existing
-models are still reused. Direct `chart-to-tla.mjs` replacement behavior is unchanged.
-The upstream renderer stand-ins now use `mmdc`. All upstream test cases remain.
+models are still reused, with regeneration guidance pointing to an unused module
+or fresh scratch folder. Direct `chart-to-tla.mjs` replacement behavior is unchanged.
+The upstream renderer stand-ins now use `mmdc`, and existing message assertions
+match the regeneration guidance. All upstream test cases remain.
 Skillet adds offline renderer and scaffold regression files and a shell test wrapper
 requiring Node.js 18.15 or later.
 

@@ -823,7 +823,7 @@ test("statechart.mjs writes the spec next to the chart, keeps it on the next run
   const again = node("statechart.mjs", ["from-chart", "notes-app.mmd"], dir, noTlc);
   assert.equal(
     again.stdout,
-    "Kept NotesApp.tla. Delete it to write the spec again from notes-app.mmd.\n",
+    "Kept NotesApp.tla. To scaffold again from notes-app.mmd, choose an unused --module NAME or a fresh scratch folder.\n",
   );
   const spec = node("statechart.mjs", ["from-spec", "NotesApp.tla"], dir, noTlc);
   assert.equal(spec.status, 2);
@@ -1204,7 +1204,7 @@ Wrote chart.mmd, bug-1.mmd, stories.md, summary.json in Sync-statechart.
   assert.equal(coded.status, 1, coded.stderr);
   assert.equal(
     coded.stdout,
-    `Kept Sync.tla. Delete it to write the spec again from sync.mmd.
+    `Kept Sync.tla. To scaffold again from sync.mmd, choose an unused --module NAME or a fresh scratch folder.
 TLC on Sync.tla with Sync.cfg:
   TypeOK holds.
   NeverSyncedWhileOffline holds.

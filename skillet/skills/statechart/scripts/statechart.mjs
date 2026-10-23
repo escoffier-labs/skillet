@@ -927,7 +927,7 @@ async function fromChart(input, { "expect-broken": expected, ...flags }) {
   const map = spec.replace(/\.tla$/, ".map.mjs");
   const inputs = snapshot([input]);
   if (fs.existsSync(spec)) {
-    console.log(`Kept ${rel(spec)}. Delete it to write the spec again from ${rel(input)}.`);
+    console.log(`Kept ${rel(spec)}. To scaffold again from ${rel(input)}, choose an unused --module NAME or a fresh scratch folder.`);
   } else {
     const collisions = [spec, cfgOf(spec), map].filter((file) =>
       fs.lstatSync(file, { throwIfNoEntry: false }),
