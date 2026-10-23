@@ -1,0 +1,8 @@
+{
+  "id": "maintain-formal-verification-skill",
+  "version": "0.1.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh maintain-formal-verification-skill"
+  ],
+  "trust_level": "workspace"
+}

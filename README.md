@@ -22,7 +22,7 @@
 
 <p align="center">
   <img src="https://shieldcn.dev/github/release/escoffier-labs/skillet.svg" alt="Latest release">
-  <img src="https://shieldcn.dev/badge/skills-51-orange.svg" alt="51 skills">
+  <img src="https://shieldcn.dev/badge/skills-54-orange.svg" alt="54 skills">
   <img src="https://shieldcn.dev/badge/license-MIT-green.svg" alt="MIT license">
 </p>
 
@@ -129,6 +129,9 @@ Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflo
 | **hone** | Deepens a prompt or worker brief before it is sent: what a top practitioner would do, the rawest source material, the methods and tools, and independent proof of correctness. Rewrites without deciding the author's open choices and without running the task. Adapted from pstack (MIT). |
 | **ticket-rail** | Issue intake and repro gate: frozen source coordinates, whole-thread reading, a bounded cause trace, classification, four dedupe outcomes, create only for a clear live net-new bug. An existing PR or claimed fix means hold or verify, never a competing patch, and no confirmed repro means no authored fix. Internal verdict by default. Adapted from pstack (MIT). |
 | **test-kitchen** | Creates and maintains a project-local verify skill that drives the real app: launch, read-only doctor, drive recipes with stable handles, evidence rules, cleanup that kills only what the run started, and a feature map. Maintain mode ends clean, changed, or blocked and never edits product code. Runs only on request. Adapted from pstack (MIT). |
+| **create-formal-verification-skill** | On explicit request, creates a project-local formal verifier for one code-backed property, with source mapping, bounds, a broken control, and a tracked sync revision. |
+| **maintain-formal-verification-skill** | On explicit request, reconciles existing formal checks with changed source, separates model drift from bugs, and preserves properties unless an intentional contract change is evidenced. |
+| **statechart** | On explicit request, draws user-visible Mermaid charts and counterexample stories from TLA+ models, compares code with agreed behavior or fixes, and scaffolds models from charts. Bundled offline tests use Node.js. TLC and PNG rendering require separately installed tools. |
 | **diagnose-session** | Evidence-first diagnosis of a misbehaving agent run: intake before analysis, current-project transcripts only, every finding cites path:line, every number computed, human turns only count as prompts, context-safe extraction, redaction before sharing. Starts with plan adherence, repeated work, and cost and time. Runs only on request. Adapted from obra/superpowers (MIT). |
 | **skillify** | The meta-skill: turn a script, runbook, or repeated workflow into a new skill, with a fresh-agent test before you call it done. |
 | **t3-code** | Sets up and troubleshoots T3 Code across Linux and Windows machines: project state, saved environments, headless services, Windows Scheduled Tasks, direct Tailnet access, Tailscale Serve, local SSH tunnels, updates, launchers, and icons. |
@@ -180,8 +183,8 @@ line-check, bug-hunt, security-sweep, latent-premises, retry-safety, and researc
 skillet is not an agent, a runtime, or a service. It does not:
 
 - run anything on its own or install a daemon, scheduler, or background process
-- ship a CLI or a binary; the skills are markdown the harness reads
-- carry a runtime dependency or call out to the network on its own
+- run a standalone agent CLI or ship binaries. Some skills bundle scripts that run only when invoked
+- install runtime dependencies or call out to the network on its own. Optional script tools and prerequisites are documented in each package
 - replace your harness, your model, or your editor
 - apply changes from read-only skills (line-check, bug-hunt, security-sweep, latent-premises, retry-safety, special, research-brief). Applying audit findings is the separate, opt-in **expedite** step
 - cut releases automatically; **release-cut** runs on request, never per feature

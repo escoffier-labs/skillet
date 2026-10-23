@@ -8,6 +8,9 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **create-formal-verification-skill** and **maintain-formal-verification-skill** - explicit-request formal verification workflows with source mapping, broken controls, sync commits, and drift-versus-bug reporting. Adapted from pstack by Lauren Tan (MIT).
+- **statechart** - explicit-request Mermaid charts, counterexample stories, code/spec/fix comparisons, and chart-to-TLA+ scaffolding. Bundles pinned pstack scripts, models, fixtures, and tests (MIT), with offline renderer regressions and installed-only `mmdc` rendering. TLC integrations report skips when unavailable.
+
 - **pr-security-review** - diff-scoped security review with a verdict-first report, an input-to-sink trace, CI/CD, dependency, and agent/LLM lenses, location-only secret handling, and reviewer-safety rules for attacker-controlled PR text. Named to avoid the built-in /security-review command.
 - **supply-chain-harden** - applies supply-chain controls to a repository as one reviewable branch, one commit per control: SHA-pinned actions, token permissions, workflow injection fixes, Dependabot, zizmor and gitleaks CI jobs, npm trusted publishing with provenance, Docker digest pins, `.env` ignores, `SECURITY.md`, and lockfiles. Fleet mode runs through fleet-conductor.
 - **mcp-server-review** - read-only security review of an MCP server: tool inventory with sibling gate-consistency checks, transport and auth, exec versus execFile, credential handling, process-wide TLS bypass and SSRF, fencing of attacker-influenced tool output, tool poisoning and rug-pull checks, and supply chain. Reports in the security-sweep spine.

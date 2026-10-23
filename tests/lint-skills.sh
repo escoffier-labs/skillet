@@ -53,6 +53,9 @@ EXTERNAL_CONTENT_SKILLS=(
   relief
   test-kitchen
   skillify
+  create-formal-verification-skill
+  maintain-formal-verification-skill
+  statechart
 )
 
 check_skill() {
