@@ -76,7 +76,9 @@ const FROM_SPEC = `from-spec SPEC.tla
 const FROM_CHART = `from-chart CHART.mmd
   Writes NAME.tla, NAME.cfg, and NAME.map.mjs next to the chart. When NAME.tla already exists, it
   writes none of them. Then it checks the spec as from-spec does, and compares the chart that the
-  spec draws with CHART.mmd.
+  spec draws with CHART.mmd. Before scaffolding, it refuses any existing destination entry,
+  including directories and dangling symlinks. Choose an unused --module NAME or a fresh scratch
+  folder to scaffold without replacing existing files.
 
   --module NAME      The TLA+ module name. Default: the chart's file name in CamelCase, such as
                      NotesApp for notes-app.mmd.
@@ -648,6 +650,8 @@ function render(charts, shown) {
           ? `mmdc did not write ${shown(png)}`
           : (r.stderr || r.error?.message || `mmdc exited ${r.status}`).trim();
       console.error(`could not render ${shown(chart)}: ${reason}`);
+      if (r.error?.code !== "ENOENT" && r.status !== 0)
+        console.error("Set PUPPETEER_EXECUTABLE_PATH to an installed browser, or omit --png.");
     }
   }
   return pngs;
@@ -925,6 +929,13 @@ async function fromChart(input, { "expect-broken": expected, ...flags }) {
   if (fs.existsSync(spec)) {
     console.log(`Kept ${rel(spec)}. Delete it to write the spec again from ${rel(input)}.`);
   } else {
+    const collisions = [spec, cfgOf(spec), map].filter((file) =>
+      fs.lstatSync(file, { throwIfNoEntry: false }),
+    );
+    if (collisions.length)
+      throw new CannotFinish(
+        `Refusing to scaffold: existing destination entries ${collisions.map(rel).join(", ")}. Choose an unused --module NAME or a fresh scratch folder. No scaffold files were written.`,
+      );
     script("chart-to-tla.mjs", [input, "--module", name], input);
     console.log(`Wrote ${name}.tla, ${name}.cfg, and ${name}.map.mjs from ${rel(input)}.`);
   }

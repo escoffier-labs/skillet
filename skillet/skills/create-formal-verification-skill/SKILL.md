@@ -59,8 +59,13 @@ starting result, including any genuine bug that was already present.
 
 ## Write the project-local verify skill
 
-Use the project's skill location and valid frontmatter. Give the next agent these
-concrete fields, with real values and no placeholders:
+Use the project's skill location and valid frontmatter. If no project convention
+exists, use the active harness's documented project-local directory, for example
+`.claude/skills/verify-<project>/` for Claude Code or
+`.agents/skills/verify-<project>/` for Codex. State the chosen path and keep generated
+verify skills out of a shipped skill catalog such as `skillet/skills/`. Follow
+existing project policy without asking when it already settles placement.
+Give the next agent these concrete fields, with real values and no placeholders:
 
 - Trigger: changes that touch the covered area.
 - Property and user harm, covered files and functions, and file/line mapping.

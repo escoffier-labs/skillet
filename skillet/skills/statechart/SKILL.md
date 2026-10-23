@@ -13,13 +13,14 @@ reader-facing labels. Charts describe the explored model under its stated bounds
 
 ## Scope, prerequisites, and trust
 
-Run only on explicit request. Work on copies in an authored scratch folder outside
-the product tree. The helpers write scaffolds next to inputs and replace their own
-output folder. Product fixes remain outside scope unless the current request already explicitly
+Run only on explicit request. Generate charts from copies in an authored scratch
+folder outside the product tree. Committed verification models stay where their
+project-local verify skill points. The helpers write scaffolds next to inputs and
+replace their own output folder. Product fixes remain outside scope unless the current request already explicitly
 authorizes them. Keep existing invariants.
 Ordinary application smoke checks belong to test-kitchen.
 
-Use Node.js 18 or later for the bundled scripts and tests, with no npm dependencies.
+Use Node.js 18.15 or later for the bundled scripts and tests, with no npm dependencies.
 Model checking requires an existing `tla2tools.jar` via `TLA2TOOLS` and Java 11 or
 later via `JAVA` (default `java`). PNG output requires an already-installed `mmdc`
 on PATH and its configured browser. An installed browser may be selected with
@@ -77,8 +78,11 @@ things. Add one `%% never NAME: StateA & StateB -- plain-language rule` comment 
 rule. Represent closing the app as a transition to the next visible state.
 
 Run `node scripts/statechart.mjs from-chart Agreed.mmd`. It writes TLA+, config,
-and mapping scaffolds only when the model does not already exist, then checks and
-compares behavior. A broken rule is a design finding for the user. Add code-backed
+and mapping scaffolds only when all three destination entries are absent, then
+checks and compares behavior. Existing entries, including directories and dangling
+symlinks, block scaffolding before any file is written. Choose an unused
+`--module NAME` or a fresh scratch folder. An existing model is reused with its
+config and mapping. A broken rule is a design finding for the user. Add code-backed
 guards and variables to the generated model, rerun, and present differences for
 the user to decide whether the code or agreed chart should change. Scaffolding
 alone is not a proof of the implementation.

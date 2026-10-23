@@ -58,7 +58,10 @@ if (${JSON.stringify(mode)} !== "no-output") fs.writeFileSync(args[args.indexOf(
         assert.doesNotMatch(run.stdout, /Wrote .*chart\.png/);
         assert.match(run.stderr, /could not render Lamp-statechart\/chart\.mmd:/);
         if (mode === "missing") assert.match(run.stderr, /mmdc.*not installed.*no packages were installed/i);
-        if (mode === "failed") assert.match(run.stderr, /renderer failed/);
+        if (mode === "failed") {
+          assert.match(run.stderr, /renderer failed/);
+          assert.match(run.stderr, /PUPPETEER_EXECUTABLE_PATH.*installed browser.*omit --png/);
+        }
         if (mode === "no-output") assert.match(run.stderr, /did not write.*chart\.png/);
       }
     } finally {
