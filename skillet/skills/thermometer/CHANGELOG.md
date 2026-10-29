@@ -2,6 +2,11 @@
 
 Earlier history lives in the repository changelog.
 
+## 0.2.1 - 2026-10-28
+
+- Require a decision, a meaningful difference, and a noise rule before sampling.
+  Adapted from pstack's measurement guidance (MIT).
+
 ## 0.2.0 - 2026-10-20
 
 - Added Climb mode (frozen, proven harness; one hypothesis per iteration; keep only wins beyond noise with the regression gate green; full revert otherwise) in `references/climb.md`. Adapted from pstack by Lauren Tan (MIT).

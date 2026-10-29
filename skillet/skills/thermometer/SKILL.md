@@ -1,6 +1,6 @@
 ---
 name: thermometer
-version: 0.2.0
+version: 0.2.1
 license: MIT
 description: Use when investigating or improving performance, latency, throughput, memory use, CPU use, startup time, or bundle size. Establishes a repeatable baseline and profiles the measured bottleneck before any optimization.
 ---
@@ -35,6 +35,11 @@ Turn the complaint into one primary metric:
 - artifact or bundle size for a named build target
 
 Name the workload, environment, dataset size, cache state, build mode, and target. If no target exists, use the baseline to quantify the opportunity and report the measured result without inventing a service-level objective.
+
+Before collecting samples, record the decision the measurement will inform and
+the smallest difference that would change it. State how you will judge noise.
+If repeated runs vary more than that difference, stop and report that the
+measurement cannot support the decision.
 
 ## 2. Choose the proving command
 
