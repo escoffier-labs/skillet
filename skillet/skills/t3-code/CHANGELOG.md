@@ -1,5 +1,9 @@
 # t3-code changelog
 
+## Unreleased
+
+- Explain project pinning, archival and restoration on T3 0.1.6, with live-schema and readback checks.
+
 ## 0.1.3 - 2026-07-24
 
 - Added the official T3 Code website, download page, GitHub repository, releases page, and npm package.
