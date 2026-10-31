@@ -2,6 +2,10 @@
 
 Earlier history lives in the repo-level CHANGELOG.md.
 
+## Unreleased
+
+- Distinguish ad hoc audit receipts from eligible manifest-backed scoring evidence. Capture alone does not make a receipt scoreable.
+
 ## 0.2.0 - 2026-10-20
 
 - Claims table: an inconclusive or wrong-surface check is reported as not verified, never as a pass.

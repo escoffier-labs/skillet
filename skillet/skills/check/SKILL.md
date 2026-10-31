@@ -17,13 +17,19 @@ No completion claim without fresh verification evidence in this same response. H
 
 ## Brigade-wired repos: verify with capture
 
-When the repo has `.brigade/` (or `brigade status --target .` succeeds), do not run the proving command raw. Route it through Brigade so the exit code becomes a receipt the outcome ledger can score:
+When the repo has `.brigade/` (or `brigade status --target .` succeeds), do not run the proving command raw. Route it through Brigade so the command output and exit code become an audit receipt:
 
 ```bash
 brigade work verify run --target . --command "<proving command>" --capture <skill-or-card-id>
 # or after a brigade run that changed code:
 brigade outcome capture <skill-or-card-id> --run-receipt latest
 ```
+
+Ad hoc `--command` and `--argv-json` runs provide audit evidence. Capture
+attributes the receipt but does not make it scoreable. Scoring requires an
+eligible registered verifier manifest with the required subject, check, and
+artifact attribution. Inspect the receipt's scoreability result before claiming
+that it affects ranking. A zero exit code alone does not establish a score.
 
 Then, when GraphTrail/MiseLedger are installed, feed the next run:
 
