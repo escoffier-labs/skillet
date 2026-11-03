@@ -1,5 +1,9 @@
 # stagiaire changelog
 
+## Unreleased
+
+- Route T3 Code background agents through `delegate_task` and keep native Claude Agent calls synchronous.
+
 ## 0.1.1 - 2026-10-20
 
 - Trimmed the description from 568 to under 500 characters and removed the procedure summary ("dispatching that vendor's own CLI as a one-shot worker"), keeping only the triggers and the Brigade roster pointer. Descriptions that summarize the workflow get followed instead of the body (finding from obra/superpowers, MIT).

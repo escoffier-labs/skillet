@@ -48,6 +48,14 @@ Dispatch, status vocabulary, who may spawn, and fix-round limits live in the sha
 3. Run the full suite and every checker yourself, once, on the integrated result ([check](../check/SKILL.md): a station's "verified" is a claim, not evidence). Per-station green proves each piece; only the integrated run proves the meal. The final verification is yours and is never delegated.
 4. One station red or blocked? Handle it directly or redispatch with something changed (more context, smaller scope). Do not let one red station hold the integration of the green ones longer than it must.
 
+## T3 Code background agents
+
+In T3 Code, use `delegate_task` for a background agent, even when a native
+subagent tool supports the selected model. Keep native Claude `Agent` calls
+synchronous with `run_in_background: false`. Retain the returned T3 `taskId`
+for the matching task lifecycle. A request for a background agent does not
+authorize a new top-level thread. Check the attached tool catalog before use.
+
 ## Common mistakes
 
 - One agent per failing test file, straight from the CI list, no triage. The symptom list is not a work breakdown.
