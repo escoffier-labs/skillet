@@ -742,6 +742,48 @@ PY
   return "$rc"
 }
 
+# Skills are installed one directory at a time, so every relative link must
+# resolve inside its own skill package. Covers inline links (with optional
+# titles and balanced parentheses) and reference-style definitions.
+check_package_links() {
+  local link_error
+  if ! link_error="$(python3 - "$@" 2>&1 <<'PY'
+import pathlib
+import re
+import sys
+
+INLINE = re.compile(
+    r"\[[^\]\n]+\]\(\s*<?((?:[^\s()<>]|\([^\s()]*\))+)>?"
+    r"(?:\s+(?:\"[^\"\n]*\"|'[^'\n]*'|\([^()\n]*\)))?\s*\)"
+)
+REFDEF = re.compile(r"(?m)^ {0,3}\[[^\]\n]+\]:\s*<?([^\s>]+)>?")
+
+for package_arg in sys.argv[1:]:
+    package = pathlib.Path(package_arg).resolve()
+    for path in sorted(package.rglob("*.md")):
+        text = path.read_text(encoding="utf-8")
+        text = re.sub(r"(?ms)^```.*?^```[^\n]*", "", text)
+        text = re.sub(r"`[^`\n]*`", "", text)
+        destinations = [m.group(1) for m in INLINE.finditer(text)]
+        destinations += [m.group(1) for m in REFDEF.finditer(text)]
+        for destination in destinations:
+            link = destination.split("#", 1)[0]
+            if not link or re.match(r"[a-zA-Z][a-zA-Z0-9+.-]*:", link):
+                continue
+            target = (path.parent / link).resolve()
+            if not target.is_relative_to(package):
+                print(f"{path}: link leaves installed skill directory: {link}")
+                raise SystemExit(1)
+            if not target.exists():
+                print(f"{path}: local link target missing: {link}")
+                raise SystemExit(1)
+PY
+)"; then
+    echo "[fail] package links: $link_error"
+    return 1
+  fi
+}
+
 check_catalog() {
   local readme="$ROOT/README.md"
   local workflow="$ROOT/.github/workflows/lint-skills.yml"
@@ -759,25 +801,6 @@ import sys
 
 skills_dir, readme_path = map(pathlib.Path, sys.argv[1:])
 local_ids = {path.name for path in skills_dir.iterdir() if path.is_dir()}
-
-# Skills are installed independently. Relative links must stay inside the package.
-for skill_id in sorted(local_ids):
-    package = (skills_dir / skill_id).resolve()
-    for path in sorted(package.rglob("*.md")):
-        text = path.read_text(encoding="utf-8")
-        text = re.sub(r"(?ms)^```.*?^```[^\n]*", "", text)
-        text = re.sub(r"`[^`\n]*`", "", text)
-        for match in re.finditer(r"\[[^\]\n]+\]\(([^)]+)\)", text):
-            link = match.group(1).split("#", 1)[0]
-            if not link or re.match(r"[a-zA-Z][a-zA-Z0-9+.-]*:", link):
-                continue
-            target = (path.parent / link).resolve()
-            if not target.is_relative_to(package):
-                print(f"{path}: link leaves installed skill directory: {link}")
-                raise SystemExit(1)
-            if not target.exists():
-                print(f"{path}: local link target missing: {link}")
-                raise SystemExit(1)
 
 catalog_ids = set()
 in_skill_table = False
@@ -1208,6 +1231,16 @@ check_linter_regressions() {
   printf '\n[Repo docs](../../../docs/brigade-process-model.md)\n' >>"$fixture/skillet/skills/memory-handoff/SKILL.md"
   assert_fixture_rejected "link outside installed skill package" "$fixture" "" "link leaves installed skill directory"
 
+  fixture="$tmp/skill-refdef-outside-package"
+  cp -a "$ROOT"/. "$fixture"
+  printf '\n[repo docs]: ../../../docs/brigade-process-model.md\n' >>"$fixture/skillet/skills/memory-handoff/SKILL.md"
+  assert_fixture_rejected "reference definition outside installed skill package" "$fixture" "" "link leaves installed skill directory"
+
+  fixture="$tmp/skill-link-outside-single"
+  cp -a "$ROOT"/. "$fixture"
+  printf '\n[Repo docs](../../../docs/brigade-process-model.md "Process model")\n' >>"$fixture/skillet/skills/memory-handoff/SKILL.md"
+  assert_fixture_rejected "titled link outside package in single-skill lint" "$fixture" "memory-handoff" "link leaves installed skill directory"
+
   fixture="$tmp/readme-catalog-malformed"
   cp -a "$ROOT"/. "$fixture"
   sed -i '/| \*\*memory-handoff\*\* |/a | **Phantom Skill** | Deliberate malformed catalog row. |' "$fixture/README.md"
@@ -1460,6 +1493,7 @@ PY
 
 if [ "$#" -ge 1 ]; then
   check_skill "$SKILLS_DIR/$1" || FAIL=1
+  check_package_links "$SKILLS_DIR/$1" || FAIL=1
 else
   if [ "${LINT_SKILLS_SKIP_SELF_TESTS:-0}" != "1" ]; then
     check_linter_regressions || FAIL=1
@@ -1467,6 +1501,7 @@ else
   for d in "$SKILLS_DIR"/*/; do
     check_skill "$d" || FAIL=1
   done
+  check_package_links "$SKILLS_DIR"/*/ || FAIL=1
   check_catalog || FAIL=1
   check_workflow_skill_references || FAIL=1
   check_skill_boundaries || FAIL=1

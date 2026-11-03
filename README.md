@@ -39,6 +39,8 @@ npx skills add escoffier-labs/skillet
 brigade add skills
 ```
 
+Skillet no longer ships general workflow skills. Several skills hand off to [Superpowers](https://github.com/obra/superpowers) skills by name, such as `superpowers:systematic-debugging` or `superpowers:test-driven-development`, so install Superpowers alongside skillet. Without it, those handoff steps have no target. Every other step in each skill still applies.
+
 ## What it does
 
 | | Job | What you get |
