@@ -1389,6 +1389,8 @@ PY
 
   fixture="$tmp/body-script-references-ok"
   cp -a "$ROOT"/. "$fixture"
+  # The package-link check runs in single-skill lint, so the linked helper must exist.
+  : >"$fixture/skillet/skills/grill/scripts/d.sh"
   printf '%s\n' '' 'Run `uv run scripts/a.py`, then `chmod +x scripts/b.sh`, `git add scripts/c.sh`, see [the helper](scripts/d.sh) and use sh `scripts/e.sh`.' '```bash' 'node scripts/f.js && deno run scripts/g.ts' '```' >>"$fixture/skillet/skills/grill/SKILL.md"
   if ! warn_output="$(LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$self_test_path" bash "$fixture/tests/lint-skills.sh" grill 2>&1)" ||
     printf '%s\n' "$warn_output" | grep -q 'has no interpreter or runner'; then
