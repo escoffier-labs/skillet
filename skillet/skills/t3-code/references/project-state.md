@@ -8,7 +8,23 @@ T3 normally stores server data under `~/.t3/userdata`, but `--base-dir` or `T3CO
 
 Stop and back up the state database before any direct write. Read-only inspection can usually happen while T3 is running.
 
-## Inspect active projects
+## Inspect registered projects
+
+Prefer `t3_project_list` and `t3_project_read` when attached tools are available.
+T3 0.1.6 adds project pinning and archival. An archived project can be absent
+from project pickers while its threads and files remain intact. Check archival
+before registering a replacement for a missing sidebar entry.
+
+When the selected server advertises `pinned` and `archived` in
+`t3_project_update`, use those fields for the requested organization change.
+`archived: true` archives a project, `archived: false` restores it, and `pinned`
+controls whether it leads project pickers. Read back `archivedAt` or `pinnedAt`
+to verify the result. Older servers can drop these fields. Confirm live support and read back state
+after an accepted call. Project deletion has
+different effects and is not an archival fallback.
+
+The queries below list undeleted projects. On newer schemas, this includes
+archived projects. Inspect the schema before adding an `archived_at` filter.
 
 When `sqlite3` is available:
 
