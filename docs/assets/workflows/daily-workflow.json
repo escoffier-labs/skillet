@@ -23,14 +23,14 @@
       "title": "SHAPE",
       "nodes": [
         {
-          "id": "mise",
-          "label": "mise",
+          "id": "design",
+          "label": "design",
           "detail": "approved design",
           "kind": "accent"
         },
         {
-          "id": "recipe",
-          "label": "recipe",
+          "id": "plan",
+          "label": "plan",
           "detail": "implementation plan"
         }
       ]
@@ -39,15 +39,15 @@
       "title": "BUILD",
       "nodes": [
         {
-          "id": "fire",
-          "label": "fire",
+          "id": "execute",
+          "label": "execute",
           "detail": "execute the ticket",
           "kind": "focus",
           "badge": "gate"
         },
         {
-          "id": "check",
-          "label": "check",
+          "id": "verify",
+          "label": "verify",
           "detail": "fresh evidence"
         }
       ]
@@ -56,8 +56,8 @@
       "title": "SHIP",
       "nodes": [
         {
-          "id": "pass",
-          "label": "pass",
+          "id": "finish",
+          "label": "finish",
           "detail": "public gate"
         },
         {
@@ -70,13 +70,13 @@
     }
   ],
   "edges": [
-    {"from": "special", "to": "mise"},
-    {"from": "audit", "to": "recipe"},
-    {"from": "mise", "to": "recipe"},
-    {"from": "recipe", "to": "fire"},
-    {"from": "fire", "to": "check"},
-    {"from": "check", "to": "pass"},
-    {"from": "check", "to": "memory"}
+    {"from": "special", "to": "design"},
+    {"from": "audit", "to": "plan"},
+    {"from": "design", "to": "plan"},
+    {"from": "plan", "to": "execute"},
+    {"from": "execute", "to": "verify"},
+    {"from": "verify", "to": "finish"},
+    {"from": "verify", "to": "memory"}
   ],
   "context": {
     "title": "OPERATING CONTRACT",

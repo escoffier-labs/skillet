@@ -11,7 +11,7 @@ An unguarded premise is an undeclared allergen. The dish is fine for most diners
 
 **Core principle:** a premise is only a finding when it is genuinely unenforced AND you can name what concretely breaks when it fails. Enforced premises are fine. Consequences you cannot name are hypotheses, not findings.
 
-**Read-only.** This is a review lens. Fixing is a separate engagement: hand the finished report to [expedite](../expedite/SKILL.md), which works the backlog in leverage order.
+**Read-only.** This is a review lens. Fixing is a separate engagement: hand the finished report to [expedite](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/expedite/SKILL.md), which works the backlog in leverage order.
 
 ## The taxonomy
 
@@ -27,16 +27,16 @@ Hunt in five categories. Each finding gets exactly one.
 
 ## Process
 
-1. **Pin the scope.** Default to the diff or the recently changed code, same as [reduce](../reduce/SKILL.md).
+1. **Pin the scope.** Default to the diff or the recently changed code, same as [reduce](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/reduce/SKILL.md).
 2. **Enumerate the premises.** For each changed function, list what it takes for granted, category by category.
 3. **Check enforcement before flagging.** Read enough surrounding code to tell whether the type system, a framework contract, or a validated boundary upstream already guarantees the premise. Enforced means NOT a finding, and re-guarding it is over-defensive noise.
 4. **Name the break.** State the concrete failure when the premise stops holding: which input or state change, which wrong result or crash. Cannot name it? Drop it.
-5. **Classify honestly.** If you can construct a failing input from code visible today, it is a present defect. Hand it to [bug-hunt](../bug-hunt/SKILL.md) severity rules, not this report. If the premise holds on everything the system can currently produce, it is latent. Report it here.
+5. **Classify honestly.** If you can construct a failing input from code visible today, it is a present defect. Hand it to [bug-hunt](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/bug-hunt/SKILL.md) severity rules, not this report. If the premise holds on everything the system can currently produce, it is latent. Report it here.
 6. **Point at one resolution.** Every finding ends with exactly one arrow: **guard it** (add the check), **document it** (state the precondition where the next caller will read it), or **encode it in the type** (make the compiler enforce it). Pick the cheapest one that actually closes the hazard.
 
 ## Report contract
 
-Same spine as the shared [audit report format](../../../docs/audit-report-format.md) so findings compose into one backlog and feed [expedite](../expedite/SKILL.md). Severity is the cost of the premise breaking: **critical** (silent corruption or security exposure) / **high** (crash or wrong results on inputs the system will plausibly see soon) / **medium** (breaks under realistic growth or configuration change) / **low** (brittleness worth a note). Effort is the resolution cost: **S** (under 30 min) / **M** (under half a day) / **L** (multi-day).
+Same spine as the shared [audit report format](https://github.com/escoffier-labs/skillet/blob/main/docs/audit-report-format.md) so findings compose into one backlog and feed [expedite](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/expedite/SKILL.md). Severity is the cost of the premise breaking: **critical** (silent corruption or security exposure) / **high** (crash or wrong results on inputs the system will plausibly see soon) / **medium** (breaks under realistic growth or configuration change) / **low** (brittleness worth a note). Effort is the resolution cost: **S** (under 30 min) / **M** (under half a day) / **L** (multi-day).
 
 ```markdown
 # latent-premises report: <scope> (<date>)

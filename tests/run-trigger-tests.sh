@@ -13,7 +13,7 @@
 # (Read, Grep, Glob) before the Skill call are allowed. The run stops as soon
 # as the verdict is known, so most passes end after the first few tool calls.
 #
-# Use it to guard changes to skill descriptions, using-skillet and the
+# Use it to guard changes to skill descriptions and the
 # SessionStart hook: run it before and after and compare the table.
 #
 # Environment (flags win over environment):

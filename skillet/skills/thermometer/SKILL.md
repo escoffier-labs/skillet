@@ -108,7 +108,7 @@ Compare median and spread, not only the best run. If the claimed improvement is 
 
 Run the focused and full correctness checks that cover the changed path. Inspect error handling, ordering, consistency, resource limits, and concurrency behavior when relevant.
 
-Run the [distrust-the-number checklist](references/distrust-the-number.md) on the after measurement. Use [check](../check/SKILL.md) before reporting a gain. Quote the baseline samples, after samples, comparison, profiler evidence, and correctness command.
+Run the [distrust-the-number checklist](references/distrust-the-number.md) on the after measurement. Use `superpowers:verification-before-completion` before reporting a gain. Quote the baseline samples, after samples, comparison, profiler evidence, and correctness command.
 
 ## Performance report
 

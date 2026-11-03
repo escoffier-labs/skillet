@@ -11,7 +11,7 @@ When the shift changes, the outgoing cook leaves the station set and a note on w
 
 **Core principle:** the trail says what happened; the artifact says what is true. Trust the first to find your place and the second to decide.
 
-This is not the memory-handoff inbox. A resume note is task state for the next worker and lives in a scratch path. Durable findings (decisions, root causes, gotchas that outlive the task) still go through [memory-handoff](../memory-handoff/SKILL.md), never into the resume note alone.
+This is not the memory-handoff inbox. A resume note is task state for the next worker and lives in a scratch path. Durable findings (decisions, root causes, gotchas that outlive the task) still go through [memory-handoff](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/memory-handoff/SKILL.md), never into the resume note alone.
 
 ## Handing off (pause)
 
@@ -30,10 +30,10 @@ Do this when the user asks you to stop, or when context pressure forces it. "Kee
 3. **Rebuild state from git.** `git status`, `git log <base>..HEAD`, `git diff <base>...HEAD --stat`, `git worktree list`, and the PR state. Set what landed beside what was planned and name the resume point.
 4. **State a verdict:**
    - `continue` - the plan stands; do the next step.
-   - `ship` - the work is finished; take it through [pass](../pass/SKILL.md).
+   - `ship` - the work is finished; take it through `superpowers:finishing-a-development-branch` plus the repo's own PR rules.
    - `ratify or override` - a prior conclusion needs a decision; say which and why.
-   - `postmortem` - the run failed; diagnose before building more ([diagnose-session](../diagnose-session/SKILL.md), [refire](../refire/SKILL.md)).
-5. **Test inherited claims on the real artifact.** "Tests pass", "bug fixed", and "PR is green" from the previous worker are claims, not evidence ([check](../check/SKILL.md)). Re-run the one proving command behind each claim you will build on. Do not re-derive what is verified and do not redo finished work.
+   - `postmortem` - the run failed; diagnose before building more ([diagnose-session](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/diagnose-session/SKILL.md), `superpowers:systematic-debugging`).
+5. **Test inherited claims on the real artifact.** "Tests pass", "bug fixed", and "PR is green" from the previous worker are claims, not evidence (`superpowers:verification-before-completion`). Re-run the one proving command behind each claim you will build on. Do not re-derive what is verified and do not redo finished work.
 6. **Tell the user:** where the prior worker stopped, what you inherited versus redid (ideally nothing redone), the resume point, and the verdict.
 
 ## Untrusted content

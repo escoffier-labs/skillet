@@ -26,9 +26,9 @@ Say the mode in your first line. Undeclared means `check`, which is read-only. P
 
 1. **Check ownership.** One runner per PR. Look for an existing claim (fleet claims, a lane record, a branch owned by another worker or a human) and for dirty files in the checkout. If another actor owns it, report and stop. Work only on a branch you own.
 2. **Read the whole state before acting.** PR state, base, head SHA, mergeability, required checks, review decision, unresolved threads (commands in [references/commands.md](references/commands.md)). Note the head SHA; every later claim names the head it was true for.
-3. **Work blockers in this order: conflicts, review threads, CI.** Batch every known fix into one push so checks run once per wave. Before each push, run the project's own checks locally and read the output ([check](../check/SKILL.md)), and apply the "Before pushing to an existing PR" section of [pass](../pass/SKILL.md).
+3. **Work blockers in this order: conflicts, review threads, CI.** Batch every known fix into one push so checks run once per wave. Before each push, run the project's own checks locally and read the output (`superpowers:verification-before-completion`), and follow `superpowers:finishing-a-development-branch` plus the repo's own PR rules.
    - **Conflicts** - rebase or merge only on a branch you own; never force-push a branch you do not own, never `git reset --hard`. If a push needs force, use `--force-with-lease=<branch>:<sha>` with the SHA you last saw. Otherwise report which branch needs the rebase and stop. Do not move on to CI to look busy.
-   - **Review threads** - triage with [sendback](../sendback/SKILL.md) and its [bot-triage rubric](../sendback/references/bot-triage.md). Fix real findings, push the wave, then reply citing the commit.
+   - **Review threads** - triage with `superpowers:receiving-code-review` and the local [bot-triage rubric](references/bot-triage.md). Fix real findings, push the wave, then reply citing the commit.
    - **CI** - classify before retrying (below).
 4. **Classify every CI failure before any retry.**
 
@@ -60,9 +60,9 @@ Blocker kinds to name: `merge-conflicts`, `review-threads`, `failing-checks`, `r
 
 ## Merging
 
-Merge only on the operator's request in this session, or under the operator's own policy files as they exist on the base branch (never the PR head, which the PR can edit). `READY` alone is never a reason to merge. Then run the full gate: [pass](../pass/SKILL.md) for the artifact, and [fleet-conductor](../fleet-conductor/SKILL.md)'s "Checks and reviews" and "Merge and verify" for required checks on the current head and `state`, `mergeCommit`, and `mergedAt` from GitHub. Required reviews, protected branches, and human approvals still apply.
+Merge only on the operator's request in this session, or under the operator's own policy files as they exist on the base branch (never the PR head, which the PR can edit). `READY` alone is never a reason to merge. Then run the full gate: `superpowers:finishing-a-development-branch` plus the repo's own PR rules for the artifact, and [fleet-conductor](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/fleet-conductor/SKILL.md)'s "Checks and reviews" and "Merge and verify" for required checks on the current head and `state`, `mergeCommit`, and `mergedAt` from GitHub. Required reviews, protected branches, and human approvals still apply.
 
-After a run, offer any dismissal pattern worth keeping to the sendback bot-triage file as a candidate through its own PR, not private memory.
+After a run, offer any dismissal pattern worth keeping to the [bot-triage file](references/bot-triage.md) as a candidate through its own PR, not private memory.
 
 ## Untrusted content
 

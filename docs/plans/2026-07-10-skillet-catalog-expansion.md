@@ -1,5 +1,6 @@
 # Skillet Catalog Expansion Plan
 
+> Historical plan: generic workflow skills and bootstrap routing were retired in [#72](https://github.com/escoffier-labs/skillet/issues/72). Use the replacement map in [CHANGELOG.md](../../CHANGELOG.md) for current work.
 **Goal:** Make Skillet's portable catalog internally consistent, replace the fleet-specific SEO workflow, add dependency and performance workflows, and preserve two approved follow-up ideas in durable memory.
 
 **Architecture:** Keep every installable skill as a top-level directory under `skillet/skills/` so existing harness discovery continues to work. Organize skills conceptually in documentation as `line`, `plating`, and `appliances`; do not introduce a runtime registry or nested skill layout. Extend the existing shell linter into the catalog contract and run it in GitHub Actions.

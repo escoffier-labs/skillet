@@ -15,8 +15,8 @@ The audit skills walk the line looking for what is broken. `special` walks the w
 
 ## What this is not
 
-- Not the audit trio. [line-check](../line-check/SKILL.md), [bug-hunt](../bug-hunt/SKILL.md), and [security-sweep](../security-sweep/SKILL.md) find problems. `special` finds opportunities. A bug is not a feature.
-- Not [mise](../mise/SKILL.md). mise designs an idea you already have. `special` finds the idea worth designing. A chosen special flows into mise next.
+- Not the audit trio. [line-check](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/line-check/SKILL.md), [bug-hunt](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/bug-hunt/SKILL.md), and [security-sweep](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/security-sweep/SKILL.md) find problems. `special` finds opportunities. A bug is not a feature.
+- Not `superpowers:brainstorming`. `superpowers:brainstorming` designs an idea you already have. `special` finds the idea worth designing. A chosen special flows into `superpowers:brainstorming` next.
 
 ## Read the kitchen first
 
@@ -78,7 +78,7 @@ One paragraph: the strongest opportunity and the through-line across the proposa
 
 ## Boundaries
 
-- A chosen special hands to [mise](../mise/SKILL.md) to design, then [recipe](../recipe/SKILL.md) to plan, then [fire](../fire/SKILL.md) to build. `special` stops at the board.
+- A chosen special hands to `superpowers:brainstorming` to design, then `superpowers:writing-plans` to plan, then `superpowers:subagent-driven-development` to build. `special` stops at the board.
 - Problems found along the way route to the audit trio, not into the board. A missing test is a line-check finding, a wrong result is a bug-hunt finding.
 - Direction is the user's decision. `special` recommends and ranks; it does not commit the project to anything.
 
@@ -92,4 +92,4 @@ One paragraph: the strongest opportunity and the through-line across the proposa
 | Re-proposing something that already exists | Grep before you suggest. Proposing an existing feature reads as not having read the code. |
 | Dressing a bug up as a feature | Problems go to the audit trio. `special` is opportunities only. |
 | Chasing whatever is fashionable | Ecosystem fit means serving the stated goals, not bolting on the trend of the month. |
-| Starting to build the special | Read-only. The board is the deliverable; cooking is mise, recipe, fire. |
+| Starting to build the special | Read-only. The board is the deliverable; cooking uses `superpowers:brainstorming`, `superpowers:writing-plans`, and `superpowers:subagent-driven-development` or `superpowers:executing-plans`. |

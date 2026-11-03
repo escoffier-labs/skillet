@@ -25,7 +25,7 @@ Sweep with each lens. With parallel subagents available, one finder per lens; ot
 
 Focus finders on code that is reachable and load-bearing: entry points, hot paths, recently changed files (`git log --since` is a good prior). A bug in dead code is info, not a finding.
 
-Two deep lenses live as their own skills: [latent-premises](../latent-premises/SKILL.md) for unguarded assumptions that hold today with no trigger yet, and [retry-safety](../retry-safety/SKILL.md) for side effects that double-apply on a re-run. Reach for them when the sweep keeps surfacing "could break later" candidates that fail the trigger rule.
+Two deep lenses live as their own skills: [latent-premises](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/latent-premises/SKILL.md) for unguarded assumptions that hold today with no trigger yet, and [retry-safety](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/retry-safety/SKILL.md) for side effects that double-apply on a re-run. Reach for them when the sweep keeps surfacing "could break later" candidates that fail the trigger rule.
 
 ## Verification (mandatory)
 

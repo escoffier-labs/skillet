@@ -1,5 +1,6 @@
 # Public T3 Code Skill Implementation Plan
 
+> Historical plan: generic workflow skills and bootstrap routing were retired in [#72](https://github.com/escoffier-labs/skillet/issues/72). Use the replacement map in [CHANGELOG.md](../../CHANGELOG.md) for current work.
 **Goal:** Add a sanitized, standalone T3 Code operations skill to Skillet.
 
 **Architecture:** One skill directory contains the trigger and workflow, three focused references, registry metadata, and its changelog. Existing catalog surfaces receive the minimum updates needed for discovery.

@@ -23,14 +23,14 @@ Design for the contributor you actually have: an agent that has read only the fi
    | 1. Remove the capability | One owner per piece of state, one supported way per task, hide internals so the wrong import fails, one source of truth for hand-synced lists, delete dead code an agent would copy | Delete the old helper instead of documenting "use the new one" |
    | 2. Types | Make the bad state unwritable | Branded id type, exhaustive switch, a required field |
    | 3. Lint or CI check | Fails on the mistake and the **error names the replacement**: which file, type, or function to use. If the pattern is already common, fail only when a change adds more (ratchet against a baseline) | "Do not call `fetch` here; use `http.client` from `lib/http`" |
-   | 4. Test | Cover behavior; fix or delete tests that stay green when the behavior breaks or fail when only internals change ([trim](../trim/SKILL.md)) | Regression test pinned to the past incident |
+   | 4. Test | Cover behavior; fix or delete tests that stay green when the behavior breaks or fail when only internals change (`superpowers:test-driven-development`) | Regression test pinned to the past incident |
    | 5. Docs or agent rule | Last, and only for judgment calls nothing can check | "Prefer small PRs" |
 
    For each class write why no higher level worked. "It was easier" is not a reason.
 3. **Report first.** Present the table: class, evidence, today's enforcer (or none), proposed level, why not higher, change size. Apply nothing yet. The operator approves a subset.
 4. **Respect the repo's boundaries.** Read the repository's instructions for change-size and dependency limits before proposing. Every new enforcer, dependency, or CI edit appears in the step 3 report and waits for the approved subset. A level that would need a new dependency or a refactor past the stated file limit is proposed as a decision, with the next level down as the fallback.
 5. **Apply the approved subset, one commit per class.** Same command locally and in CI. Exceptions live on the offending line with a reason, an expiry date, and a named human approval; never in a global ignore list.
-6. **Prove each new check fails on a real past mistake.** Take the commit or diff that made the mistake (from step 1), apply it to a scratch worktree or branch, run the check, and show it red with the actionable error. Then show it green on the corrected code. A check never seen failing is untested ([taste](../taste/SKILL.md), [check](../check/SKILL.md)).
+6. **Prove each new check fails on a real past mistake.** Take the commit or diff that made the mistake (from step 1), apply it to a scratch worktree or branch, run the check, and show it red with the actionable error. Then show it green on the corrected code. A check never seen failing is untested (`superpowers:test-driven-development`, `superpowers:verification-before-completion`).
 7. **Keep the rule-to-enforcer table** in the instruction file:
 
    | Rule | Enforced by | Level |
