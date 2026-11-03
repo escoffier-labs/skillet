@@ -95,11 +95,11 @@ For a reader who was away. Read only what changed since their last message, then
 2. **What changed:** a few plain bullets in the reader's words, not commit hashes and file lists.
 3. **Pending decisions:** every one as its own item, with what it is, what it changes for them, the evidence for your pick, the risk, and the pick. A deadline or risk that needs their action (an expiring key) is an item too. Group items that one call settles. Riskiest first.
 
-The reply grows with the number of items and never drops one to stay short; a decision left out is a decision made silently. Anything reported as done keeps [check](../check/SKILL.md)'s evidence line (the command and its output), even here, because the reader may act on it.
+The reply grows with the number of items and never drops one to stay short; a decision left out is a decision made silently. Anything reported as done keeps `superpowers:verification-before-completion`'s evidence line (the command and its output), even here, because the reader may act on it.
 
 ## Relationship to check
 
-[check](../check/SKILL.md) governs **whether** a claim of done, fixed, or passing may be made at all: it requires fresh verification evidence in the same reply. `brief` governs **how** that evidence is presented once check is satisfied.
+`superpowers:verification-before-completion` governs **whether** a claim of done, fixed, or passing may be made at all: it requires fresh verification evidence in the same reply. `brief` governs **how** that evidence is presented once check is satisfied.
 
 The report shape's `Evidence:` line is where check's evidence lands. Its brevity is a presentation constraint and never licence to shorten, skip, or paraphrase the verification. A compact report of a command you did not run is still a false report.
 

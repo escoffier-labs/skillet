@@ -11,7 +11,7 @@ Fleet work fails when dispatch is faster than control. This skill gives one cond
 
 **Core principle:** every lane is bounded, every hold has a release trigger, every collision is recorded, and every landing claim comes from GitHub.
 
-Use [stations](../stations/SKILL.md) for parallel work inside one repository when the coordinator is also implementing. Use [review](../review/SKILL.md) for a single independent review. Use this skill when the work spans enough lanes, pull requests, or repositories that dispatch and landing need their own control record.
+Use `superpowers:dispatching-parallel-agents` for parallel work inside one repository when the coordinator is also implementing. Use `superpowers:requesting-code-review` for a single independent review. Use this skill when the work spans enough lanes, pull requests, or repositories that dispatch and landing need their own control record.
 
 ## Establish ground truth
 

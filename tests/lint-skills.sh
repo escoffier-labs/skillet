@@ -38,13 +38,10 @@ EXTERNAL_CONTENT_SKILLS=(
   plate
   publish-readiness
   research-brief
-  review
-  sendback
   security-sweep
   brigade-handoffs
   reel-check
   stocktake
-  trim
   runner
   ticket-rail
   lineage
@@ -52,7 +49,6 @@ EXTERNAL_CONTENT_SKILLS=(
   eighty-six
   relief
   test-kitchen
-  skillify
   create-formal-verification-skill
   maintain-formal-verification-skill
   statechart
@@ -746,9 +742,50 @@ PY
   return "$rc"
 }
 
+# Skills are installed one directory at a time, so every relative link must
+# resolve inside its own skill package. Covers inline links (with optional
+# titles and balanced parentheses) and reference-style definitions.
+check_package_links() {
+  local link_error
+  if ! link_error="$(python3 - "$@" 2>&1 <<'PY'
+import pathlib
+import re
+import sys
+
+INLINE = re.compile(
+    r"\[[^\]\n]+\]\(\s*<?((?:[^\s()<>]|\([^\s()]*\))+)>?"
+    r"(?:\s+(?:\"[^\"\n]*\"|'[^'\n]*'|\([^()\n]*\)))?\s*\)"
+)
+REFDEF = re.compile(r"(?m)^ {0,3}\[[^\]\n]+\]:\s*<?([^\s>]+)>?")
+
+for package_arg in sys.argv[1:]:
+    package = pathlib.Path(package_arg).resolve()
+    for path in sorted(package.rglob("*.md")):
+        text = path.read_text(encoding="utf-8")
+        text = re.sub(r"(?ms)^```.*?^```[^\n]*", "", text)
+        text = re.sub(r"`[^`\n]*`", "", text)
+        destinations = [m.group(1) for m in INLINE.finditer(text)]
+        destinations += [m.group(1) for m in REFDEF.finditer(text)]
+        for destination in destinations:
+            link = destination.split("#", 1)[0]
+            if not link or re.match(r"[a-zA-Z][a-zA-Z0-9+.-]*:", link):
+                continue
+            target = (path.parent / link).resolve()
+            if not target.is_relative_to(package):
+                print(f"{path}: link leaves installed skill directory: {link}")
+                raise SystemExit(1)
+            if not target.exists():
+                print(f"{path}: local link target missing: {link}")
+                raise SystemExit(1)
+PY
+)"; then
+    echo "[fail] package links: $link_error"
+    return 1
+  fi
+}
+
 check_catalog() {
   local readme="$ROOT/README.md"
-  local routing="$SKILLS_DIR/using-skillet/SKILL.md"
   local workflow="$ROOT/.github/workflows/lint-skills.yml"
   local count badge id catalog_error
   count="$(find "$SKILLS_DIR" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
@@ -757,14 +794,13 @@ check_catalog() {
     echo "[fail] catalog: README badge says ${badge:-missing}, found $count skills"
     return 1
   fi
-  if ! catalog_error="$(python3 - "$SKILLS_DIR" "$readme" "$routing" 2>&1 <<'PY'
+  if ! catalog_error="$(python3 - "$SKILLS_DIR" "$readme" 2>&1 <<'PY'
 import pathlib
 import re
 import sys
 
-skills_dir, readme_path, routing_path = map(pathlib.Path, sys.argv[1:])
+skills_dir, readme_path = map(pathlib.Path, sys.argv[1:])
 local_ids = {path.name for path in skills_dir.iterdir() if path.is_dir()}
-external_routing_ids = {"brigade-work"}
 
 catalog_ids = set()
 in_skill_table = False
@@ -782,37 +818,15 @@ for line in readme_path.read_text(encoding="utf-8").splitlines():
             raise SystemExit(1)
         catalog_ids.add(match.group(1))
 
-routing_ids = set()
-in_routing_catalog = False
-for line in routing_path.read_text(encoding="utf-8").splitlines():
-    if line == "## The stations (skillet skills by job)":
-        in_routing_catalog = True
-        continue
-    if in_routing_catalog and line == "## Skill priority":
-        in_routing_catalog = False
-        continue
-    if in_routing_catalog and line.startswith("- "):
-        match = re.fullmatch(r"- `([a-z0-9]+(?:-[a-z0-9]+)*)` - .+", line)
-        if not match:
-            print(f"using-skillet routing catalog contains an unparseable entry: {line}")
-            raise SystemExit(1)
-        routing_ids.add(match.group(1))
-
 def render(ids):
     return ", ".join(sorted(ids))
 
 missing_from_readme = local_ids - catalog_ids
 unknown_in_readme = catalog_ids - local_ids
-missing_from_routing = local_ids - routing_ids
-unknown_in_routing = routing_ids - local_ids - external_routing_ids
 if missing_from_readme:
     print(f"README missing: {render(missing_from_readme)}")
 elif unknown_in_readme:
     print(f"README contains unknown skills: {render(unknown_in_readme)}")
-elif missing_from_routing:
-    print(f"using-skillet missing: {render(missing_from_routing)}")
-elif unknown_in_routing:
-    print(f"using-skillet contains unknown skills: {render(unknown_in_routing)}")
 else:
     raise SystemExit(0)
 raise SystemExit(1)
@@ -1212,10 +1226,20 @@ check_linter_regressions() {
   sed -i '/| \*\*memory-handoff\*\* |/a | **phantom-skill** | Deliberate fixture for reverse catalog validation. |' "$fixture/README.md"
   assert_fixture_rejected "phantom README catalog entry" "$fixture"
 
-  fixture="$tmp/routing-catalog-phantom"
+  fixture="$tmp/skill-link-outside-package"
   cp -a "$ROOT"/. "$fixture"
-  sed -i '/- `memory-handoff`/a - `phantom-skill` - deliberate fixture for reverse catalog validation.' "$fixture/skillet/skills/using-skillet/SKILL.md"
-  assert_fixture_rejected "phantom routing catalog entry" "$fixture"
+  printf '\n[Repo docs](../../../docs/brigade-process-model.md)\n' >>"$fixture/skillet/skills/memory-handoff/SKILL.md"
+  assert_fixture_rejected "link outside installed skill package" "$fixture" "" "link leaves installed skill directory"
+
+  fixture="$tmp/skill-refdef-outside-package"
+  cp -a "$ROOT"/. "$fixture"
+  printf '\n[repo docs]: ../../../docs/brigade-process-model.md\n' >>"$fixture/skillet/skills/memory-handoff/SKILL.md"
+  assert_fixture_rejected "reference definition outside installed skill package" "$fixture" "" "link leaves installed skill directory"
+
+  fixture="$tmp/skill-link-outside-single"
+  cp -a "$ROOT"/. "$fixture"
+  printf '\n[Repo docs](../../../docs/brigade-process-model.md "Process model")\n' >>"$fixture/skillet/skills/memory-handoff/SKILL.md"
+  assert_fixture_rejected "titled link outside package in single-skill lint" "$fixture" "memory-handoff" "link leaves installed skill directory"
 
   fixture="$tmp/readme-catalog-malformed"
   cp -a "$ROOT"/. "$fixture"
@@ -1315,12 +1339,12 @@ PY
 
   fixture="$tmp/verify-without-capture"
   cp -a "$ROOT"/. "$fixture"
-  sed -i 's/brigade work verify run --target \. --command "<proving command>" --capture <skill-or-card-id>/brigade work verify run --target . --command "<proving command>"/' "$fixture/skillet/skills/check/SKILL.md"
+  printf '\n```bash\nbrigade work verify run --target . --command "pytest"\n```\n' >>"$fixture/skillet/skills/memory-handoff/SKILL.md"
   assert_fixture_rejected "Brigade verify command without atomic capture" "$fixture"
 
   fixture="$tmp/workflow-phantom"
   cp -a "$ROOT"/. "$fixture"
-  sed -i 's/recipe, taste, stocktake, thermometer, reduce/recipe, taste, stocktake, thermometer, reduce, ghost-workflow-skill/' "$fixture/README.md"
+  sed -i 's/stocktake, thermometer, reduce/stocktake, thermometer, reduce, ghost-workflow-skill/' "$fixture/README.md"
   assert_fixture_rejected "unresolved workflow skill ID" "$fixture"
 
   fixture="$tmp/body-argument-placeholder"
@@ -1365,6 +1389,8 @@ PY
 
   fixture="$tmp/body-script-references-ok"
   cp -a "$ROOT"/. "$fixture"
+  # The package-link check runs in single-skill lint, so the linked helper must exist.
+  : >"$fixture/skillet/skills/grill/scripts/d.sh"
   printf '%s\n' '' 'Run `uv run scripts/a.py`, then `chmod +x scripts/b.sh`, `git add scripts/c.sh`, see [the helper](scripts/d.sh) and use sh `scripts/e.sh`.' '```bash' 'node scripts/f.js && deno run scripts/g.ts' '```' >>"$fixture/skillet/skills/grill/SKILL.md"
   if ! warn_output="$(LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$self_test_path" bash "$fixture/tests/lint-skills.sh" grill 2>&1)" ||
     printf '%s\n' "$warn_output" | grep -q 'has no interpreter or runner'; then
@@ -1387,22 +1413,11 @@ PY
     regression_failures=1
   fi
 
-  fixture="$tmp/hook-error-string"
+  fixture="$tmp/hook-context-injection"
   cp -a "$ROOT"/. "$fixture"
-  python3 - "$fixture/skillet/hooks/session-start" <<'PY'
-import sys
-from pathlib import Path
-
-path = Path(sys.argv[1])
-text = path.read_text(encoding="utf-8")
-old = 'if [ ! -r "$skill_md" ]; then\n  exit 1\nfi'
-assert old in text, "fail-closed guard not found"
-path.write_text(text.replace(old, 'if [ ! -r "$skill_md" ]; then\n  echo "Error reading using-skillet skill"\n  exit 1\nfi'), encoding="utf-8")
-PY
-  # Run the hook test directly against the mutated fixture instead of the
-  # whole linter.
+  printf '#!/usr/bin/env bash\necho "injected bootstrap context"\n' >"$fixture/skillet/hooks/session-start"
   if PATH="$self_test_path" bash "$fixture/tests/hooks/test-session-start.sh" >/dev/null 2>&1; then
-    echo "[fail] self-test: hook that emits an error string on failure was accepted"
+    echo "[fail] self-test: hook context injection was accepted"
     regression_failures=1
   fi
 
@@ -1480,6 +1495,7 @@ PY
 
 if [ "$#" -ge 1 ]; then
   check_skill "$SKILLS_DIR/$1" || FAIL=1
+  check_package_links "$SKILLS_DIR/$1" || FAIL=1
 else
   if [ "${LINT_SKILLS_SKIP_SELF_TESTS:-0}" != "1" ]; then
     check_linter_regressions || FAIL=1
@@ -1487,6 +1503,7 @@ else
   for d in "$SKILLS_DIR"/*/; do
     check_skill "$d" || FAIL=1
   done
+  check_package_links "$SKILLS_DIR"/*/ || FAIL=1
   check_catalog || FAIL=1
   check_workflow_skill_references || FAIL=1
   check_skill_boundaries || FAIL=1

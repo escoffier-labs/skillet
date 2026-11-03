@@ -86,7 +86,7 @@ Run, in order:
 
 For security work, confirm the vulnerable resolved version is absent. For runtime or toolchain work, confirm CI and deployment pins match local configuration.
 
-Use [check](../check/SKILL.md) before reporting the update as complete. Include the old and new resolved versions plus the commands that prove them.
+Use `superpowers:verification-before-completion` before reporting the update as complete. Include the old and new resolved versions plus the commands that prove them.
 
 ## Audit report
 

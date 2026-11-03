@@ -11,7 +11,7 @@ Fire the same ticket twice and the kitchen must not charge the table twice. Time
 
 **Core principle:** the standard is idempotent read-modify-write at the side-effecting edge. The operation reads current state before writing, so a re-run over work already done completes the remainder and changes nothing else. Anything short of that needs a named reason it is still safe.
 
-**Read-only.** This is a review lens. Fixing is a separate engagement: hand the finished report to [expedite](../expedite/SKILL.md), which works the backlog in leverage order. When the diff touches no side-effecting surface, say so in one line and stop.
+**Read-only.** This is a review lens. Fixing is a separate engagement: hand the finished report to [expedite](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/expedite/SKILL.md), which works the backlog in leverage order. When the diff touches no side-effecting surface, say so in one line and stop.
 
 ## The sweep
 
@@ -55,7 +55,7 @@ The fix arrow is expand-migrate-contract: add the column nullable, backfill, the
 
 ## Report contract
 
-Same spine as the shared [audit report format](../../../docs/audit-report-format.md) so findings compose into one backlog and feed [expedite](../expedite/SKILL.md). Severity is the cost of the second run: **critical** (double charge, double payment, silent corruption) / **high** (duplicate effects a user sees: emails, webhooks, doubled rows) / **medium** (corruption someone can repair by hand, or a hazard that needs a narrow crash window) / **low** (cosmetic duplication). Effort is the fix cost: **S** (under 30 min) / **M** (under half a day) / **L** (multi-day).
+Same spine as the shared [audit report format](https://github.com/escoffier-labs/skillet/blob/main/docs/audit-report-format.md) so findings compose into one backlog and feed [expedite](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/expedite/SKILL.md). Severity is the cost of the second run: **critical** (double charge, double payment, silent corruption) / **high** (duplicate effects a user sees: emails, webhooks, doubled rows) / **medium** (corruption someone can repair by hand, or a hazard that needs a narrow crash window) / **low** (cosmetic duplication). Effort is the fix cost: **S** (under 30 min) / **M** (under half a day) / **L** (multi-day).
 
 ```markdown
 # retry-safety report: <scope> (<date>)

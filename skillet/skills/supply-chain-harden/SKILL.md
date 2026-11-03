@@ -13,10 +13,10 @@ Many repositories ship with the same gaps: third-party actions on mutable tags, 
 
 ## Not this skill
 
-- Read-only audit that reports findings and fixes: [security-sweep](../security-sweep/SKILL.md). Its backlog can feed this skill, and [expedite](../expedite/SKILL.md) applies general findings.
-- Leak scan before a repository goes public: [publish-readiness](../publish-readiness/SKILL.md).
-- Reviewing one PR's security: [pr-security-review](../pr-security-review/SKILL.md). This skill changes the whole repo.
-- Dependency upgrades and CVE fixes in the code itself: [stocktake](../stocktake/SKILL.md).
+- Read-only audit that reports findings and fixes: [security-sweep](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/security-sweep/SKILL.md). Its backlog can feed this skill, and [expedite](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/expedite/SKILL.md) applies general findings.
+- Leak scan before a repository goes public: [publish-readiness](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/publish-readiness/SKILL.md).
+- Reviewing one PR's security: [pr-security-review](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/pr-security-review/SKILL.md). This skill changes the whole repo.
+- Dependency upgrades and CVE fixes in the code itself: [stocktake](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/stocktake/SKILL.md).
 
 ## 1. Preflight
 
@@ -90,7 +90,7 @@ Rules that hold for every control:
 
 ## 5. Fleet mode
 
-For many repositories, hand the per-repo procedure above to [fleet-conductor](../fleet-conductor/SKILL.md) as one bounded lane per repo:
+For many repositories, hand the per-repo procedure above to [fleet-conductor](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/fleet-conductor/SKILL.md) as one bounded lane per repo:
 
 - Lane scope is this skill's ten controls on one repo. The lane ends at the committed branch, or at the push if authorized.
 - Cap concurrent pushing lanes to CI capacity, usually two or three. Read-only baseline scans can run wider.

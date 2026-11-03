@@ -45,20 +45,20 @@
   <text class="workflow-node-label" x="88.0" y="307.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">audit trio</text>
   <text x="88.0" y="327.0" fill="#9aa4b2" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10">findings backlog</text>
   <rect x="283.5" y="196.0" width="181.5" height="68" rx="12" fill="#11161c" stroke="#e0a45c"/>
-  <text class="workflow-node-label" x="299.5" y="225.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">mise</text>
+  <text class="workflow-node-label" x="299.5" y="225.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">design</text>
   <text x="299.5" y="245.0" fill="#9aa4b2" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10">approved design</text>
   <rect x="283.5" y="278.0" width="181.5" height="68" rx="12" fill="#11161c" stroke="#2a323d"/>
-  <text class="workflow-node-label" x="299.5" y="307.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">recipe</text>
+  <text class="workflow-node-label" x="299.5" y="307.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">plan</text>
   <text x="299.5" y="327.0" fill="#9aa4b2" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10">implementation plan</text>
   <rect x="495.0" y="196.0" width="181.5" height="68" rx="12" fill="#0f1318" stroke="#e0a45c"/>
-  <text class="workflow-node-label" x="511.0" y="233.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">fire</text>
+  <text class="workflow-node-label" x="511.0" y="233.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">execute</text>
   <text x="511.0" y="252.0" fill="#9aa4b2" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10">execute the ticket</text>
   <text class="workflow-badge" x="511.0" y="213.0" fill="#e0a45c" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="8" font-weight="600" letter-spacing="1.2">GATE</text>
   <rect x="495.0" y="278.0" width="181.5" height="68" rx="12" fill="#11161c" stroke="#2a323d"/>
-  <text class="workflow-node-label" x="511.0" y="307.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">check</text>
+  <text class="workflow-node-label" x="511.0" y="307.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">verify</text>
   <text x="511.0" y="327.0" fill="#9aa4b2" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10">fresh evidence</text>
   <rect x="706.5" y="196.0" width="181.5" height="68" rx="12" fill="#11161c" stroke="#2a323d"/>
-  <text class="workflow-node-label" x="722.5" y="225.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">pass</text>
+  <text class="workflow-node-label" x="722.5" y="225.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">finish</text>
   <text x="722.5" y="245.0" fill="#9aa4b2" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10">public gate</text>
   <rect x="706.5" y="278.0" width="181.5" height="68" rx="12" fill="#11161c" stroke="#2a323d"/>
   <text class="workflow-node-label" x="722.5" y="307.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">memory handoff</text>

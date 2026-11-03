@@ -39,7 +39,7 @@ Skills that fetch or ingest external content (web pages, advisories, review comm
 
 ## Testing a skill before you call it done
 
-A skill is done when a fresh agent with no prior context can follow it and reach the intended outcome. The **skillify** skill documents the fresh-agent test in detail; the short version:
+A skill is done when a fresh agent with no prior context can follow it and reach the intended outcome. The `superpowers:writing-skills` skill documents the fresh-agent test in detail; the short version:
 
 1. Install or point a clean agent session at the skill.
 2. Give it a realistic task that should trigger the skill.

@@ -2,7 +2,7 @@
 name: diagnose-session
 version: 0.1.0
 license: MIT
-description: Use only when the user asks why an agent run went wrong and wants evidence from the transcripts - "why did that take so long", "why was it so expensive", "it ignored the plan", "it kept redoing X", "that skill never fired", "what was it doing". Runs only when the user asks. Not for debugging product code (use refire).
+description: Use only when the user asks why an agent run went wrong and wants evidence from the transcripts - "why did that take so long", "why was it so expensive", "it ignored the plan", "it kept redoing X", "that skill never fired", "what was it doing". Runs only when the user asks. Not for debugging product code (use superpowers:systematic-debugging).
 ---
 
 # diagnose-session

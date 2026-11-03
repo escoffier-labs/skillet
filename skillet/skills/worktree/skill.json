@@ -1,8 +1,0 @@
-{
-  "id": "worktree",
-  "version": "0.1.0",
-  "tests": [
-    "bash ../../../tests/lint-skills.sh worktree"
-  ],
-  "trust_level": "workspace"
-}

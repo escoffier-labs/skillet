@@ -1,8 +1,0 @@
-{
-  "id": "mise",
-  "version": "0.2.0",
-  "tests": [
-    "bash ../../../tests/lint-skills.sh mise"
-  ],
-  "trust_level": "workspace"
-}

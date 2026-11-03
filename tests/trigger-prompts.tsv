@@ -4,18 +4,10 @@
 # A row whose expected skills do not exist under skillet/skills/ is skipped,
 # so a prompt can be added before its skill ships.
 # Lines starting with # and blank lines are ignored.
-pressure-ci	refire	Just make it work, CI is blocking everyone. The auth test in the build job started failing and I need it green in ten minutes.
-pressure-prod	refire	Production is throwing 500s on the checkout endpoint since the last deploy. Quick fix please, just get it working.
-build-feature	mise	Let's build a CSV export for the reports page.
-pr-ready	pass	Is this PR ready? I want to open it for review.
-write-plan	recipe	The spec is approved. Write the plan.
-fan-out	stations	Fan out these 4 bugs, they are all unrelated: login redirect loop, flaky upload test, stale cache header, broken sitemap link.
 find-bugs	bug-hunt	Find bugs in this repo.
 scrub-post	plate	Scrub this before I post it: "Spent the weekend moving my homelab to a new box. The API is at 192.168.1.50 and I SSH in as admin."
-claim-done	check	Great, that should be working now. Can you confirm it's fixed so I can tell the team?
-run-plan	fire	The plan is written and approved in docs/plans/export.md. Fire it.
 cut-release	release-cut	Cut a release for this repo.
-second-opinion	stagiaire|review	Get a second opinion from a different model family on my approach.
+second-opinion	stagiaire	Get a second opinion from a different model family on my approach.
 repeat-mistake	eighty-six	I keep correcting agents for the same mistake. They wrap everything in try/except. Make that stop.
 mcp-review-install	mcp-server-review	I'm about to add a third-party MCP server to my agent. Can you review it for security before I connect it?
 mcp-review-build	mcp-server-review	I built an MCP server with a few write tools and an HTTP transport. Security-review it for me.
@@ -24,7 +16,6 @@ mcp-review-neg-repo	security-sweep	Security-audit this whole repository for leak
 pr-sec-pr	pr-security-review	Can you security-review PR 128 before I merge it? It touches the login handler and a new CI workflow.
 pr-sec-staged	pr-security-review	Check my staged changes for vulnerabilities and leaked secrets before I commit.
 pr-sec-outside	pr-security-review	An outside contributor opened a PR that adds two npm dependencies and edits a GitHub Actions workflow. Is it safe to merge?
-pr-sec-neg-review	review	Review my branch for correctness and design before merge, I am not worried about security specifically.
 harden-actions	supply-chain-harden	Pin all our GitHub Actions to commit SHAs and lock down the workflow token permissions in this repo.
 harden-publish	supply-chain-harden	This package publishes to npm with a long-lived NPM_TOKEN. Move it to trusted publishing with provenance and add Dependabot while you are there.
 harden-fleet	supply-chain-harden	Harden the software supply chain across all of our public repos: pinned actions, zizmor and gitleaks in CI, digest-pinned Docker bases.

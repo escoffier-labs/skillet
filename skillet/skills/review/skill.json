@@ -1,8 +1,0 @@
-{
-  "id": "review",
-  "version": "0.2.0",
-  "tests": [
-    "bash ../../../tests/lint-skills.sh review"
-  ],
-  "trust_level": "workspace"
-}

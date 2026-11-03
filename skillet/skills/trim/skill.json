@@ -1,8 +1,0 @@
-{
-  "id": "trim",
-  "version": "0.1.1",
-  "tests": [
-    "bash ../../../tests/lint-skills.sh trim"
-  ],
-  "trust_level": "workspace"
-}

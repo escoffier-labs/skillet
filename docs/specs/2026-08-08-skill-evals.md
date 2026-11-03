@@ -214,7 +214,7 @@ bash tests/run-trigger-tests.sh                    # one real call per prompt, d
 bash tests/run-trigger-tests.sh --only pressure-ci --model sonnet
 ```
 
-Run it before and after editing a skill description, `using-skillet`, or the SessionStart hook, and compare the tables. It spends quota and is never part of CI; `tests/runners/test-run-trigger-tests.sh` covers the runner logic offline with a fake CLI.
+Run it before and after editing a skill description or the SessionStart hook, and compare the tables. It spends quota and is never part of CI; `tests/runners/test-run-trigger-tests.sh` covers the runner logic offline with a fake CLI.
 
 ## Hook and lint coverage
 
@@ -232,7 +232,7 @@ brigade work verify run --target . \
 
 Notes:
 
-- This follows the evidence gate owned by `check` and the loop in `docs/brigade-process-model.md`.
+- This follows the evidence gate owned by `superpowers:verification-before-completion` and the loop in `docs/brigade-process-model.md`.
 - Capture id `skill-evals` is a convention for this surface; it is not a skillet skill id.
 - Skillet CI and contributors without Brigade keep using the raw bash commands. No Brigade binary is required to merge eval manifests.
 - Live A/B receipts are more useful for the ledger than dry-run receipts; dry-run capture still proves the gate path works.

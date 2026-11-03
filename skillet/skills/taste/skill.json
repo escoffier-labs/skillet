@@ -1,8 +1,0 @@
-{
-  "id": "taste",
-  "version": "0.2.1",
-  "tests": [
-    "bash ../../../tests/lint-skills.sh taste"
-  ],
-  "trust_level": "workspace"
-}
