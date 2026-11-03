@@ -1,5 +1,9 @@
 # stations changelog
 
+## Unreleased
+
+- Route T3 Code background agents through `delegate_task` and keep native Claude Agent calls synchronous.
+
 Earlier history lives in the repo-level CHANGELOG.md.
 
 ## 0.2.0 - 2026-10-20

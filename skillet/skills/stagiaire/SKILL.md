@@ -65,6 +65,14 @@ For a chef-and-workers setup where a primary model plans, fans out, and synthesi
 
 Give the chef the dispatch table above in its prompt for the cross-vendor seats, and tell it to run them one at a time.
 
+## T3 Code background agents
+
+In T3 Code, use `delegate_task` for a background agent, even when a native
+subagent tool supports the selected model. Keep native Claude `Agent` calls
+synchronous with `run_in_background: false`. Retain the returned T3 `taskId`
+for the matching task lifecycle. A request for a background agent does not
+authorize a new top-level thread. Check the attached tool catalog before use.
+
 ## Rules
 
 - One dispatch, one worker, one answer. Do not chain a second model call to "clean up" a worker's output. Report it as received.
