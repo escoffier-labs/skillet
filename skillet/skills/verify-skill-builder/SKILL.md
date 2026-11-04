@@ -1,10 +1,10 @@
 ---
 name: verify-skill-builder
-version: 0.2.0
+version: 0.2.1
 license: MIT
 metadata:
   formerly: test-kitchen
-description: Use only when the user asks to create, audit, or refresh a project-local verify skill that drives the real app - "make a verify skill for this repo", "script how to prove this app works", "audit the verify skill", "the feature map is stale". Runs only when the user asks. Not for a one-off check (use check). (formerly test-kitchen)
+description: Use only when the user asks to create, audit, or refresh a project-local verify skill that drives the real app - "make a verify skill for this repo", "script how to prove this app works", "audit the verify skill", "the feature map is stale". Runs only when the user asks. Not for a one-off check (use superpowers:verification-before-completion). (formerly test-kitchen)
 ---
 
 # verify-skill-builder
