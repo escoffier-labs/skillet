@@ -1,0 +1,8 @@
+{
+  "id": "verify-skill-builder",
+  "version": "0.2.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh verify-skill-builder"
+  ],
+  "trust_level": "workspace"
+}

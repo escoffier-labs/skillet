@@ -1,0 +1,8 @@
+{
+  "id": "perf-measure",
+  "version": "0.3.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh perf-measure"
+  ],
+  "trust_level": "workspace"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "work-handover",
+  "version": "0.2.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh work-handover"
+  ],
+  "trust_level": "workspace"
+}

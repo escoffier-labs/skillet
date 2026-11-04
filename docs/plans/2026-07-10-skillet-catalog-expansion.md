@@ -13,9 +13,9 @@ Execute task by task. Tick each checkbox after the command succeeds, and commit 
 
 - `tests/lint-skills.sh`: structural and catalog-consistency test for every skill.
 - `.github/workflows/lint-skills.yml`: CI entry point for the shipped linter.
-- `skillet/skills/garnish/`: portable SEO audit-and-fix workflow replacing `seo-fleet`.
-- `skillet/skills/stocktake/`: dependency and toolchain maintenance workflow.
-- `skillet/skills/thermometer/`: profile-before-optimize workflow.
+- `skillet/skills/seo-metadata/`: portable SEO audit-and-fix workflow replacing `seo-fleet`.
+- `skillet/skills/dependency-audit/`: dependency and toolchain maintenance workflow.
+- `skillet/skills/perf-measure/`: profile-before-optimize workflow.
 - `README.md`: accurate count, skill roster, and conceptual `line`/`plating`/`appliances` grouping.
 - `skillet/skills/using-skillet/SKILL.md`: routing entries for every shipped skill.
 - `.claude-plugin/marketplace.json`: complete marketplace description without stale skill omissions.
@@ -30,7 +30,7 @@ Smallest useful slice: three portable skill packages, one stronger existing lint
 
 Highest rung that holds: existing repository primitives and local changes.
 
-Existing pattern to follow: `skillet/skills/special/` for a read-only/apply boundary, `skillet/skills/reduce/` for measured before/after work, and `tests/lint-skills.sh` for package validation.
+Existing pattern to follow: `skillet/skills/feature-ideas/` for a read-only/apply boundary, `skillet/skills/reduce/` for measured before/after work, and `tests/lint-skills.sh` for package validation.
 
 Cut from scope: a new runtime registry, nested skill installation directories, automatic deployment, automatic dependency updates, and implementation of `service` or `mistake-proof`.
 
@@ -48,7 +48,7 @@ Verification: `tests/lint-skills.sh`, run through `brigade work verify run` for 
   - every directory under `skillet/skills/` appears as `| **<id>** |` in `README.md`;
   - every skill appears as ``- `<id>` `` in `using-skillet/SKILL.md`;
   - the README badge count equals the number of skill directories;
-  - `seo-fleet` is absent and `garnish`, `stocktake`, and `thermometer` exist;
+  - `seo-fleet` is absent and `seo-metadata`, `dependency-audit`, and `perf-measure` exist;
   - `.github/workflows/lint-skills.yml` invokes `tests/lint-skills.sh`.
 
   Use this implementation:
@@ -69,8 +69,8 @@ check_catalog() {
     grep -Fq "| **$id** |" "$readme" || { echo "[fail] catalog: README missing $id"; return 1; }
     grep -Fq -- "- \`$id\`" "$routing" || { echo "[fail] catalog: using-skillet missing $id"; return 1; }
   done
-  [ ! -d "$SKILLS_DIR/seo-fleet" ] || { echo "[fail] catalog: seo-fleet must be replaced by garnish"; return 1; }
-  for id in garnish stocktake thermometer; do
+  [ ! -d "$SKILLS_DIR/seo-fleet" ] || { echo "[fail] catalog: seo-fleet must be replaced by seo-metadata"; return 1; }
+  for id in seo-metadata dependency-audit perf-measure; do
     [ -d "$SKILLS_DIR/$id" ] || { echo "[fail] catalog: required skill $id missing"; return 1; }
   done
   [ -f "$workflow" ] && grep -Fq "tests/lint-skills.sh" "$workflow" || {
@@ -81,7 +81,7 @@ check_catalog() {
 ```
 
 - [x] Call `check_catalog || FAIL=1` only for the no-argument full-catalog path, after per-skill checks.
-- [x] Run `tests/lint-skills.sh`; expect failure because `garnish`, `stocktake`, and `thermometer` do not exist and the README count is stale. This is the required RED run.
+- [x] Run `tests/lint-skills.sh`; expect failure because `seo-metadata`, `dependency-audit`, and `perf-measure` do not exist and the README count is stale. This is the required RED run.
 - [x] Create `.github/workflows/lint-skills.yml` with checkout and `tests/lint-skills.sh` on pushes and pull requests:
 
 ```yaml
@@ -105,19 +105,19 @@ jobs:
 
 - [x] Do not expect green yet; the production catalog changes in Tasks 2-5 satisfy the test.
 
-### Task 2: Replace `seo-fleet` with portable `garnish`
+### Task 2: Replace `seo-fleet` with portable `seo-metadata`
 
 **Files:**
 - Delete: `skillet/skills/seo-fleet/`
-- Create: `skillet/skills/garnish/SKILL.md`
-- Create: `skillet/skills/garnish/skill.json`
-- Create: `skillet/skills/garnish/CHANGELOG.md`
+- Create: `skillet/skills/seo-metadata/SKILL.md`
+- Create: `skillet/skills/seo-metadata/skill.json`
+- Create: `skillet/skills/seo-metadata/CHANGELOG.md`
 
-- [x] Remove `seo-fleet` and create `garnish` with frontmatter:
+- [x] Remove `seo-fleet` and create `seo-metadata` with frontmatter:
 
 ```yaml
 ---
-name: garnish
+name: seo-metadata
 description: Use when auditing or fixing discoverability metadata for a website before publication, including titles, descriptions, canonical URLs, robots policy, Open Graph, structured data, and sitemaps. Not for content strategy or keyword research.
 ---
 ```
@@ -128,29 +128,29 @@ description: Use when auditing or fixing discoverability metadata for a website 
 
 ```json
 {
-  "id": "garnish",
+  "id": "seo-metadata",
   "version": "0.1.0",
-  "tests": ["bash ../../../tests/lint-skills.sh garnish"],
+  "tests": ["bash ../../../tests/lint-skills.sh seo-metadata"],
   "trust_level": "workspace"
 }
 ```
 
 - [x] Add a changelog recording the replacement and portable boundary.
-- [x] Run `tests/lint-skills.sh garnish`; expect `[ok] garnish`.
-- [x] Commit: `git add skillet/skills/garnish skillet/skills/seo-fleet && git commit -m "feat: replace seo fleet workflow with garnish"`.
+- [x] Run `tests/lint-skills.sh seo-metadata`; expect `[ok] seo-metadata`.
+- [x] Commit: `git add skillet/skills/seo-metadata skillet/skills/seo-fleet && git commit -m "feat: replace seo fleet workflow with seo-metadata"`.
 
-### Task 3: Add `stocktake`
+### Task 3: Add `dependency-audit`
 
 **Files:**
-- Create: `skillet/skills/stocktake/SKILL.md`
-- Create: `skillet/skills/stocktake/skill.json`
-- Create: `skillet/skills/stocktake/CHANGELOG.md`
+- Create: `skillet/skills/dependency-audit/SKILL.md`
+- Create: `skillet/skills/dependency-audit/skill.json`
+- Create: `skillet/skills/dependency-audit/CHANGELOG.md`
 
 - [x] Create the skill with frontmatter:
 
 ```yaml
 ---
-name: stocktake
+name: dependency-audit
 description: Use when auditing, updating, or migrating project dependencies, runtimes, package managers, lockfiles, or toolchains. Requires reading authoritative release and migration notes, changing one compatibility boundary at a time, and verifying the resolved dependency graph.
 ---
 ```
@@ -158,21 +158,21 @@ description: Use when auditing, updating, or migrating project dependencies, run
 - [x] Encode this workflow: define scope and target versions; inventory manifests, lockfiles, runtime pins, CI pins, and generated clients; establish a green baseline; read primary release/migration/security notes; choose the smallest safe upgrade batch; update declarations and resolved graph; migrate deprecated usage; run focused then full checks; review lockfile and transitive deltas; report deferred breaking upgrades. Never combine unrelated major upgrades, hand-edit lockfiles, or claim a vulnerability is fixed from the manifest alone.
 - [x] Add standard `skill.json` at version `0.1.0`, workspace trust, and the per-skill linter command.
 - [x] Add a changelog with the initial workflow.
-- [x] Run `tests/lint-skills.sh stocktake`; expect `[ok] stocktake`.
-- [x] Commit: `git add skillet/skills/stocktake && git commit -m "feat: add stocktake dependency workflow"`.
+- [x] Run `tests/lint-skills.sh dependency-audit`; expect `[ok] dependency-audit`.
+- [x] Commit: `git add skillet/skills/dependency-audit && git commit -m "feat: add dependency-audit dependency workflow"`.
 
-### Task 4: Add `thermometer`
+### Task 4: Add `perf-measure`
 
 **Files:**
-- Create: `skillet/skills/thermometer/SKILL.md`
-- Create: `skillet/skills/thermometer/skill.json`
-- Create: `skillet/skills/thermometer/CHANGELOG.md`
+- Create: `skillet/skills/perf-measure/SKILL.md`
+- Create: `skillet/skills/perf-measure/skill.json`
+- Create: `skillet/skills/perf-measure/CHANGELOG.md`
 
 - [x] Create the skill with frontmatter:
 
 ```yaml
 ---
-name: thermometer
+name: perf-measure
 description: Use when investigating or improving performance, latency, throughput, memory use, CPU use, startup time, or bundle size. Establishes a repeatable baseline and profiles the measured bottleneck before any optimization.
 ---
 ```
@@ -180,8 +180,8 @@ description: Use when investigating or improving performance, latency, throughpu
 - [x] Encode this workflow: pin the workload and environment; choose a user-visible metric and target; warm up and collect multiple baseline samples; profile before editing; form one bottleneck hypothesis; make one minimal change; repeat the same samples; compare median and spread; run correctness checks; keep only measured improvements; document the ceiling and next trigger. Stop when noise exceeds the claimed gain or the bottleneck is external. Never optimize from intuition, compare different workloads, report a single lucky run, or trade correctness/security for speed without explicit approval.
 - [x] Add standard `skill.json` at version `0.1.0`, workspace trust, and the per-skill linter command.
 - [x] Add a changelog with the initial workflow.
-- [x] Run `tests/lint-skills.sh thermometer`; expect `[ok] thermometer`.
-- [x] Commit: `git add skillet/skills/thermometer && git commit -m "feat: add thermometer performance workflow"`.
+- [x] Run `tests/lint-skills.sh perf-measure`; expect `[ok] perf-measure`.
+- [x] Commit: `git add skillet/skills/perf-measure && git commit -m "feat: add perf-measure performance workflow"`.
 
 ### Task 5: Reconcile routing, packs, manifests, and release history
 
@@ -191,15 +191,15 @@ description: Use when investigating or improving performance, latency, throughpu
 - Modify: `.claude-plugin/marketplace.json`
 - Modify: `CHANGELOG.md`
 
-- [x] Set the README badge to 32 skills: 30 current directories, minus `seo-fleet`, plus `garnish`, `stocktake`, and `thermometer`.
+- [x] Set the README badge to 32 skills: 30 current directories, minus `seo-fleet`, plus `seo-metadata`, `dependency-audit`, and `perf-measure`.
 - [x] Keep top-level skill directories unchanged and divide the roster documentation into:
   - `line`: design, build, audit, review, release, and memory process skills;
-  - `plating`: `publish-scrub`, `grill`, `reel-check`, `garnish`, and `publish-readiness`;
+  - `plating`: `publish-scrub`, `grill`, `reel-check`, `seo-metadata`, and `publish-readiness`;
   - `appliances`: `graphtrail` and `brigade-handoffs`, with explicit external-tool requirements.
-- [x] Give `garnish`, `stocktake`, `thermometer`, and `graphtrail` complete README rows. Remove every `seo-fleet` row and fleet-specific claim.
-- [x] Add matching routes in `using-skillet`. Put `stocktake` and `thermometer` under Debug and verify, `garnish` under Writing and publishing, and `graphtrail` under a new Appliances section. Remove `seo-fleet`.
-- [x] Update the marketplace description to name `garnish`, `stocktake`, `thermometer`, `graphtrail`, `review`, and `worktree`, and remove `seo-fleet`.
-- [x] Repair changelog history by creating a `0.5.1 - 2026-06-29` section for the work already labeled as that release, leaving post-release GraphTrail/registry/evidence-loop work and this catalog expansion under `Unreleased`. Add an explicit breaking-change note: `seo-fleet` was replaced by portable `garnish`; fleet users should retain a repo-local policy skill. Add reference links for `0.5.1` while leaving tag publication to `release-cut`.
+- [x] Give `seo-metadata`, `dependency-audit`, `perf-measure`, and `graphtrail` complete README rows. Remove every `seo-fleet` row and fleet-specific claim.
+- [x] Add matching routes in `using-skillet`. Put `dependency-audit` and `perf-measure` under Debug and verify, `seo-metadata` under Writing and publishing, and `graphtrail` under a new Appliances section. Remove `seo-fleet`.
+- [x] Update the marketplace description to name `seo-metadata`, `dependency-audit`, `perf-measure`, `graphtrail`, `review`, and `worktree`, and remove `seo-fleet`.
+- [x] Repair changelog history by creating a `0.5.1 - 2026-06-29` section for the work already labeled as that release, leaving post-release GraphTrail/registry/evidence-loop work and this catalog expansion under `Unreleased`. Add an explicit breaking-change note: `seo-fleet` was replaced by portable `seo-metadata`; fleet users should retain a repo-local policy skill. Add reference links for `0.5.1` while leaving tag publication to `release-cut`.
 - [x] Run `tests/lint-skills.sh`; expect all 32 skills and `[ok] catalog (32 skills)`.
 - [x] Commit: `git add README.md skillet/skills/using-skillet/SKILL.md .claude-plugin/marketplace.json CHANGELOG.md tests/lint-skills.sh .github/workflows/lint-skills.yml && git commit -m "feat: organize and validate the skill catalog"`.
 

@@ -18,7 +18,7 @@ folder outside the product tree. Committed verification models stay where their
 project-local verify skill points. The helpers write scaffolds next to inputs and
 replace their own output folder. Product fixes remain outside scope unless the current request already explicitly
 authorizes them. Keep existing invariants.
-Ordinary application smoke checks belong to test-kitchen.
+Ordinary application smoke checks belong to verify-skill-builder.
 
 Use Node.js 18.15 or later for the bundled scripts and tests, with no npm dependencies.
 Model checking requires an existing `tla2tools.jar` via `TLA2TOOLS` and Java 11 or

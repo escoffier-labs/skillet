@@ -1,0 +1,8 @@
+{
+  "id": "dependency-audit",
+  "version": "0.2.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh dependency-audit"
+  ],
+  "trust_level": "workspace"
+}

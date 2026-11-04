@@ -1,0 +1,8 @@
+{
+  "id": "feature-ideas",
+  "version": "0.2.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh feature-ideas"
+  ],
+  "trust_level": "workspace"
+}

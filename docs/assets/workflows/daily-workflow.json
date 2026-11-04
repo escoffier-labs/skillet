@@ -8,8 +8,8 @@
       "title": "READ",
       "nodes": [
         {
-          "id": "special",
-          "label": "special",
+          "id": "feature-ideas",
+          "label": "feature-ideas",
           "detail": "new opportunity"
         },
         {
@@ -70,7 +70,7 @@
     }
   ],
   "edges": [
-    {"from": "special", "to": "design"},
+    {"from": "feature-ideas", "to": "design"},
     {"from": "audit", "to": "plan"},
     {"from": "design", "to": "plan"},
     {"from": "plan", "to": "execute"},

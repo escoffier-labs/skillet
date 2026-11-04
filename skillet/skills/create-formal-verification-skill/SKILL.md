@@ -14,7 +14,7 @@ establishes only what its model, assumptions, and bounds describe.
 ## Scope and prerequisites
 
 Run only for an explicit formal verification request. Ordinary application checks
-belong to test-kitchen. Edit verification files, models, harnesses, and the local
+belong to verify-skill-builder. Edit verification files, models, harnesses, and the local
 verify skill. Product fixes remain outside scope unless the current request already explicitly
 authorizes them, including fixes for a bug found by the verifier.
 
