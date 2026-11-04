@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- State that chart runs disable TLC deadlock checking and require a separate
+  deadlock-enabled project check when progress is in scope. Adapted from the
+  pstack statechart workflow. No script behavior changed.
+
 ## [0.1.0] - 2026-10-23
 
 ### Added
