@@ -1,6 +1,6 @@
 {
   "id": "verify-skill-builder",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "tests": [
     "bash ../../../tests/lint-skills.sh verify-skill-builder"
   ],

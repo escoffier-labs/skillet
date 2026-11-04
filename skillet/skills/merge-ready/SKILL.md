@@ -1,8 +1,8 @@
 ---
 name: merge-ready
-version: 0.2.0
+version: 0.2.1
 license: MIT
-description: Use when an open pull request must be driven to merge-ready - conflicts, unanswered review threads, or failing CI are outstanding - or the user says "babysit this PR", "get PR 123 green", "address the review comments", "is it mergeable yet", or "check on PR 123". Not for filing a PR (use pass) or landing a campaign (use fleet-conductor). (formerly runner)
+description: Use when an open pull request must be driven to merge-ready - conflicts, unanswered review threads, or failing CI are outstanding - or the user says "babysit this PR", "get PR 123 green", "address the review comments", "is it mergeable yet", or "check on PR 123". Not for filing a PR (use superpowers:finishing-a-development-branch) or landing a campaign (use fleet-conductor). (formerly runner)
 metadata:
   formerly: runner
 ---

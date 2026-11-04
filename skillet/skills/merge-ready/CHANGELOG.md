@@ -1,5 +1,9 @@
 # merge-ready changelog
 
+## 0.2.1 - 2026-11-04
+
+- Point the filing-a-PR exclusion at `superpowers:finishing-a-development-branch`. The `pass` skill it named was retired on 2026-11-03.
+
 ## 0.2.0 - 2026-11-03
 
 - Renamed to merge-ready; added metadata.formerly and a temporary description suffix for old-name routing. No alias directory ships. Procedures are unchanged; kitchen metaphors now use plain English.

@@ -6,6 +6,10 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- `merge-ready` and `verify-skill-builder` descriptions no longer route to the retired `pass` and `check` skills. They now name `superpowers:finishing-a-development-branch` and `superpowers:verification-before-completion`.
+
 ### Renamed
 
 - Renamed `relief` -> `work-handover`, `stagiaire` -> `cross-vendor-worker`, `ticket-rail` -> `issue-triage`, `test-kitchen` -> `verify-skill-builder`, `thermometer` -> `perf-measure`, `stocktake` -> `dependency-audit`, `special` -> `feature-ideas`, `garnish` -> `seo-metadata`. Each package has a minor version bump and `metadata.formerly` recording its old name. Descriptions end with `(formerly X)` for old-name routing; this suffix will be dropped in the next release. No alias directories ship. Updated catalog consumers and replaced kitchen metaphors in these eight skill bodies with plain English, preserving every procedure, mode, flag, script, and threshold.

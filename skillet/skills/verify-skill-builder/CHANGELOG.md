@@ -1,5 +1,9 @@
 # verify-skill-builder changelog
 
+## 0.2.1 - 2026-11-04
+
+- Point the one-off check exclusion at `superpowers:verification-before-completion`. The `check` skill it named was retired on 2026-11-03.
+
 ## 0.2.0 - 2026-11-03
 
 - Renamed to verify-skill-builder; added metadata.formerly and a temporary description suffix for old-name routing. No alias directory ships. Procedures are unchanged; kitchen metaphors now use plain English.
