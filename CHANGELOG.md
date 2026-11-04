@@ -8,6 +8,8 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Renamed
 
+- Renamed `relief` -> `work-handover`, `stagiaire` -> `cross-vendor-worker`, `ticket-rail` -> `issue-triage`, `test-kitchen` -> `verify-skill-builder`, `thermometer` -> `perf-measure`, `stocktake` -> `dependency-audit`, `special` -> `feature-ideas`, `garnish` -> `seo-metadata`. Each package has a minor version bump and `metadata.formerly` recording its old name. Descriptions end with `(formerly X)` for old-name routing; this suffix will be dropped in the next release. No alias directories ship. Updated catalog consumers and replaced kitchen metaphors in these eight skill bodies with plain English, preserving every procedure, mode, flag, script, and threshold.
+
 - Renamed `plate` -> `publish-scrub`, `expedite` -> `fix-findings`, `line-check` -> `repo-audit`, `runner` -> `merge-ready`, and `eighty-six` -> `mistake-proof`. Each package has a minor version bump and `metadata.formerly` recording its old name. Descriptions end with `(formerly X)` for old-name routing; this suffix will be dropped in the next release. No alias directories ship. Updated catalog consumers and replaced kitchen metaphors in these five skill bodies with plain English, preserving their procedures.
 
 ### Removed

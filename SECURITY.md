@@ -26,7 +26,7 @@ You should get an acknowledgment within 72 hours. If you do not, please follow u
 
 A skill is a set of instructions an AI coding agent follows. The agent runs commands on your machine with your permissions. Treat any skill as **only as trustworthy as the harness and the operator approvals around it**:
 
-- The read-only audit skills (repo-audit, bug-hunt, security-sweep, special) report findings; **fix-findings** is the separate, opt-in step that applies fixes, and it parks anything destructive or breaking for you to decide.
+- The read-only audit skills (repo-audit, bug-hunt, security-sweep, feature-ideas) report findings; **fix-findings** is the separate, opt-in step that applies fixes, and it parks anything destructive or breaking for you to decide.
 - Publish and release skills (publish-readiness, release-cut, pass) gate on operator review and never push or tag without an explicit request.
 - The real boundary is your harness's permission model and your review of what the agent is about to do. Read the skill before you let an agent act on it.
 

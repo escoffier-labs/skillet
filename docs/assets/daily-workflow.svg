@@ -39,7 +39,7 @@
   <line class="workflow-edge" x1="676.5" y1="312.0" x2="706.5" y2="230.0" stroke="#e0a45c" stroke-width="1.5" opacity="0.9" marker-end="url(#workflow-arrow)"/>
   <line class="workflow-edge" x1="676.5" y1="312.0" x2="706.5" y2="312.0" stroke="#e0a45c" stroke-width="1.5" opacity="0.9" marker-end="url(#workflow-arrow)"/>
   <rect x="72.0" y="196.0" width="181.5" height="68" rx="12" fill="#11161c" stroke="#2a323d"/>
-  <text class="workflow-node-label" x="88.0" y="225.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">special</text>
+  <text class="workflow-node-label" x="88.0" y="225.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">feature-ideas</text>
   <text x="88.0" y="245.0" fill="#9aa4b2" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10">new opportunity</text>
   <rect x="72.0" y="278.0" width="181.5" height="68" rx="12" fill="#11161c" stroke="#2a323d"/>
   <text class="workflow-node-label" x="88.0" y="307.0" fill="#dde3ea" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600">audit trio</text>

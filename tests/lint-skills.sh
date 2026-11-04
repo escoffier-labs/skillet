@@ -16,13 +16,13 @@ READ_ONLY_SKILLS=(
   bug-hunt
   security-sweep
   mcp-server-review
-  special
+  feature-ideas
   latent-premises
   retry-safety
   research-brief
 )
 AUDIT_ONLY_SECTIONS=(
-  garnish:AUDIT
+  seo-metadata:AUDIT
 )
 FIX_APPLICATION_PATTERN='(?i)\b(?:apply|implement|execute|perform|make|edit|modify|change|patch|correct|remediate|repair|resolve|write)\b.{0,80}\b(?:fix|fixes|remediation|remediations|recommendation|recommendations|patch|patches|change|changes|edit|edits|file|files|finding|findings)\b'
 
@@ -41,14 +41,14 @@ EXTERNAL_CONTENT_SKILLS=(
   security-sweep
   brigade-handoffs
   reel-check
-  stocktake
+  dependency-audit
   merge-ready
-  ticket-rail
+  issue-triage
   lineage
   diagnose-session
   mistake-proof
-  relief
-  test-kitchen
+  work-handover
+  verify-skill-builder
   create-formal-verification-skill
   maintain-formal-verification-skill
   statechart
@@ -864,10 +864,10 @@ PY
     return 1
   fi
   [ ! -d "$SKILLS_DIR/seo-fleet" ] || {
-    echo "[fail] catalog: seo-fleet must be replaced by garnish"
+    echo "[fail] catalog: seo-fleet must be replaced by seo-metadata"
     return 1
   }
-  for id in garnish stocktake thermometer; do
+  for id in seo-metadata dependency-audit perf-measure; do
     [ -d "$SKILLS_DIR/$id" ] || {
       echo "[fail] catalog: required skill $id missing"
       return 1
@@ -1380,7 +1380,7 @@ PY
 
   fixture="$tmp/audit-only-application"
   cp -a "$ROOT"/. "$fixture"
-  sed -i '/^## AUDIT$/a Apply fixes directly while auditing.' "$fixture/skillet/skills/garnish/SKILL.md"
+  sed -i '/^## AUDIT$/a Apply fixes directly while auditing.' "$fixture/skillet/skills/seo-metadata/SKILL.md"
   assert_fixture_rejected "audit-only fix-application language" "$fixture"
 
   fixture="$tmp/verify-without-capture"
@@ -1390,7 +1390,7 @@ PY
 
   fixture="$tmp/workflow-phantom"
   cp -a "$ROOT"/. "$fixture"
-  sed -i 's/stocktake, thermometer, reduce/stocktake, thermometer, reduce, ghost-workflow-skill/' "$fixture/README.md"
+  sed -i 's/dependency-audit, perf-measure, reduce/dependency-audit, perf-measure, reduce, ghost-workflow-skill/' "$fixture/README.md"
   assert_fixture_rejected "unresolved workflow skill ID" "$fixture"
 
   fixture="$tmp/body-argument-placeholder"

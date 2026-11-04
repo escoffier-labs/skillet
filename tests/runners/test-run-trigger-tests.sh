@@ -12,14 +12,14 @@ fail() { echo "  [FAIL] $1"; FAILURES=$((FAILURES + 1)); }
 
 # Hermetic copy of the runner so its relative paths resolve inside TMP.
 FIX="$TMP/repo"
-mkdir -p "$FIX/tests" "$FIX/skillet/.claude-plugin" "$FIX/skillet/skills/special" "$FIX/skillet/skills/bug-hunt"
+mkdir -p "$FIX/tests" "$FIX/skillet/.claude-plugin" "$FIX/skillet/skills/feature-ideas" "$FIX/skillet/skills/bug-hunt"
 cp "$ROOT/tests/run-trigger-tests.sh" "$FIX/tests/"
 cp -r "$ROOT/tests/lib" "$FIX/tests/lib"
-printf 'x\n' >"$FIX/skillet/skills/special/SKILL.md"
+printf 'x\n' >"$FIX/skillet/skills/feature-ideas/SKILL.md"
 printf 'x\n' >"$FIX/skillet/skills/bug-hunt/SKILL.md"
 printf '{"name":"skillet"}\n' >"$FIX/skillet/.claude-plugin/plugin.json"
 printf '%s\t%s\t%s\n' \
-  'build' 'special' "Let's build a thing." \
+  'build' 'feature-ideas' "Let's build a thing." \
   'ci' 'bug-hunt' 'Just make it work.' \
   'future' 'not-yet-shipped' 'A prompt for a skill that does not exist yet.' \
   >"$FIX/tests/trigger-prompts.tsv"
@@ -33,16 +33,16 @@ touch "$FAKE_RAN_MARKER"
 cat >/dev/null
 tool() { printf '{"type":"assistant","message":{"content":[{"type":"tool_use","name":"%s","input":%s}]}}\n' "$1" "$2"; }
 if [ "$FAKE_BEHAVIOR" = foreign-init ]; then
-  echo '{"type":"system","subtype":"init","skills":["debug","skillet:special","other-plugin:special"]}'
+  echo '{"type":"system","subtype":"init","skills":["debug","skillet:feature-ideas","other-plugin:feature-ideas"]}'
 else
-  echo '{"type":"system","subtype":"init","skills":["debug","skillet:special","skillet:bug-hunt"]}'
+  echo '{"type":"system","subtype":"init","skills":["debug","skillet:feature-ideas","skillet:bug-hunt"]}'
 fi
 case "$FAKE_BEHAVIOR" in
-  unprefixed) tool Skill '{"skill":"special"}' ;;
-  foreign-skill) tool Skill '{"skill":"other-plugin:special"}' ;;
-  foreign-init) tool Skill '{"skill":"skillet:special"}' ;;
-  skill-first) tool Read '{"file_path":"x"}'; tool Skill '{"skill":"skillet:special"}'; tool Bash '{"command":"ls"}' ;;
-  bash-first) tool Bash '{"command":"ls"}'; tool Skill '{"skill":"skillet:special"}' ;;
+  unprefixed) tool Skill '{"skill":"feature-ideas"}' ;;
+  foreign-skill) tool Skill '{"skill":"other-plugin:feature-ideas"}' ;;
+  foreign-init) tool Skill '{"skill":"skillet:feature-ideas"}' ;;
+  skill-first) tool Read '{"file_path":"x"}'; tool Skill '{"skill":"skillet:feature-ideas"}'; tool Bash '{"command":"ls"}' ;;
+  bash-first) tool Bash '{"command":"ls"}'; tool Skill '{"skill":"skillet:feature-ideas"}' ;;
   wrong-skill) tool Skill '{"skill":"skillet:publish-scrub"}'; tool Edit '{"file_path":"x"}' ;;
   no-tool) echo '{"type":"assistant","message":{"content":[{"type":"text","text":"just text"}]}}' ;;
   crash) echo "boom" >&2; exit 3 ;;
@@ -79,7 +79,7 @@ out="$(run foreign-skill --only build)"; rc=$?
 [ "$rc" -eq 1 ] && pass "a skill from another plugin does not count" || fail "foreign-skill rc=$rc: $out"
 
 out="$(run foreign-init --only build)"; rc=$?
-[ "$rc" -eq 1 ] && printf '%s' "$out" | grep -q 'outside the plugin: other-plugin:special' && pass "init listing a foreign plugin skill fails the row" || fail "foreign-init rc=$rc: $out"
+[ "$rc" -eq 1 ] && printf '%s' "$out" | grep -q 'outside the plugin: other-plugin:feature-ideas' && pass "init listing a foreign plugin skill fails the row" || fail "foreign-init rc=$rc: $out"
 
 out="$(run no-tool --only build)"; rc=$?
 [ "$rc" -eq 1 ] && printf '%s' "$out" | grep -q 'no matching skill call' && pass "no skill call fails" || fail "no-tool rc=$rc: $out"

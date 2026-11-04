@@ -15,7 +15,7 @@ against an obsolete model cannot establish a property of the current code.
 Run only on explicit request. Edit verification models, harnesses, properties, and
 the project-local verify skill. Product code changes remain outside scope unless the current request already
 explicitly authorizes them.
-Ordinary application verification belongs to test-kitchen. Use installed tools.
+Ordinary application verification belongs to verify-skill-builder. Use installed tools.
 An install or new dependency needs existing user authorization, otherwise record
 the prerequisite and blocker. Do not download tools automatically.
 
