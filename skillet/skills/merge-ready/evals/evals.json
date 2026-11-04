@@ -1,6 +1,6 @@
 {
   "schema_version": "skillet.evals.v1",
-  "skill_name": "runner",
+  "skill_name": "merge-ready",
   "evals": [
     {
       "id": "declares-mode-and-stops-at-ready",

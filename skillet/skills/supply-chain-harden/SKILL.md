@@ -13,7 +13,7 @@ Many repositories ship with the same gaps: third-party actions on mutable tags, 
 
 ## Not this skill
 
-- Read-only audit that reports findings and fixes: [security-sweep](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/security-sweep/SKILL.md). Its backlog can feed this skill, and [expedite](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/expedite/SKILL.md) applies general findings.
+- Read-only audit that reports findings and fixes: [security-sweep](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/security-sweep/SKILL.md). Its backlog can feed this skill, and [fix-findings](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/fix-findings/SKILL.md) applies general findings.
 - Leak scan before a repository goes public: [publish-readiness](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/publish-readiness/SKILL.md).
 - Reviewing one PR's security: [pr-security-review](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/pr-security-review/SKILL.md). This skill changes the whole repo.
 - Dependency upgrades and CVE fixes in the code itself: [stocktake](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/stocktake/SKILL.md).

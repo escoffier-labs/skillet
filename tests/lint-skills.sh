@@ -12,7 +12,7 @@ FAIL=0
 # Boundary markers found by the 2026-07-25 audit. Keep these declarations near
 # the lint configuration so new read-only surfaces are added in one place.
 READ_ONLY_SKILLS=(
-  line-check
+  repo-audit
   bug-hunt
   security-sweep
   mcp-server-review
@@ -35,18 +35,18 @@ EXTERNAL_CONTENT_SKILLS=(
   supply-chain-harden
   fleet-conductor
   grill
-  plate
+  publish-scrub
   publish-readiness
   research-brief
   security-sweep
   brigade-handoffs
   reel-check
   stocktake
-  runner
+  merge-ready
   ticket-rail
   lineage
   diagnose-session
-  eighty-six
+  mistake-proof
   relief
   test-kitchen
   create-formal-verification-skill
@@ -306,9 +306,37 @@ while i < len(fm):
     key = m.group(1); rest = m.group(2)
     if key in metadata:
         fail(f"frontmatter duplicate key {key!r}")
-    value, consumed = parse_value(rest, fm, i, lineno, indent)
-    metadata[key] = value
-    i += consumed
+    if key == "metadata" and (not rest or rest.startswith("#")):
+        # Optional metadata is one mapping of scalar values. Keep all other
+        # frontmatter fields on the existing strict scalar parser.
+        value = {}
+        i += 1
+        while i < len(fm):
+            child = fm[i]
+            if not child.strip() or child.lstrip().startswith("#"):
+                i += 1
+                continue
+            if not child.startswith((" ", "\t")):
+                break
+            child_indent = len(child) - len(child.lstrip(" "))
+            match = _KEY_RE.match(child[2:]) if child_indent == 2 else None
+            if not match:
+                fail(f"frontmatter line {i + 2}: metadata requires two-space scalar entries")
+            child_key, child_rest = match.groups()
+            if child_key in value:
+                fail(f"frontmatter duplicate metadata key {child_key!r}")
+            child_value, consumed = parse_value(child_rest, fm, i, i + 2, 2)
+            if not isinstance(child_value, str):
+                fail(f"frontmatter metadata {child_key!r} must be a string")
+            value[child_key] = child_value
+            i += consumed
+        metadata[key] = value
+    else:
+        value, consumed = parse_value(rest, fm, i, lineno, indent)
+        if key == "metadata":
+            fail("frontmatter metadata must be a mapping")
+        metadata[key] = value
+        i += consumed
 
 if not isinstance(metadata, dict):
     fail("frontmatter must be a YAML mapping")
@@ -1185,6 +1213,24 @@ check_linter_regressions() {
     echo "[fail] self-test: folded YAML scalar was rejected"; rm -rf "$tmp"; return 1
   }
 
+  # A portable skill can carry nested metadata without relaxing scalar fields.
+  printf '%s\n' '---' 'name: valid-length' 'version: 0.1.0' 'description: Metadata fixture' 'license: MIT' 'metadata: # optional mapping' '  # old routing name' '  formerly: "legacy-skill"' '---' >"$valid/SKILL.md"
+  PATH="$self_test_path" bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1 || {
+    echo "[fail] self-test: nested metadata mapping was rejected"; rm -rf "$tmp"; return 1
+  }
+  for metadata_case in duplicate indentation nested scalar; do
+    case "$metadata_case" in
+      duplicate) metadata_lines=$'metadata:\n  formerly: legacy-skill\n  formerly: duplicate-skill' ;;
+      indentation) metadata_lines=$'metadata:\n   formerly: legacy-skill' ;;
+      nested) metadata_lines=$'metadata:\n  formerly:\n    name: legacy-skill' ;;
+      scalar) metadata_lines='metadata: legacy-skill' ;;
+    esac
+    printf '%s\n' '---' 'name: valid-length' 'version: 0.1.0' 'description: Metadata fixture' 'license: MIT' "$metadata_lines" '---' >"$valid/SKILL.md"
+    if PATH="$self_test_path" bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1; then
+      echo "[fail] self-test: invalid metadata $metadata_case was accepted"; rm -rf "$tmp"; return 1
+    fi
+  done
+
   assert_fixture_rejected() {
     local label="$1" fixture="$2" skill="${3:-}" expected="${4:-}" output
     local args=()
@@ -1202,24 +1248,24 @@ check_linter_regressions() {
 
   fixture="$tmp/yaml-malformed"
   cp -a "$ROOT"/. "$fixture"
-  sed -i '/^description:/a malformed: [unterminated' "$fixture/skillet/skills/line-check/SKILL.md"
-  assert_fixture_rejected "malformed YAML frontmatter" "$fixture" line-check "skillet/skills/line-check/SKILL.md"
+  sed -i '/^description:/a malformed: [unterminated' "$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "malformed YAML frontmatter" "$fixture" repo-audit "skillet/skills/repo-audit/SKILL.md"
 
   fixture="$tmp/yaml-folded-overlength"
   cp -a "$ROOT"/. "$fixture"
-  sed -i 's/^description:.*/description: >-/' "$fixture/skillet/skills/line-check/SKILL.md"
-  sed -i "/^description: >-$/a\\  $description_1025" "$fixture/skillet/skills/line-check/SKILL.md"
-  assert_fixture_rejected "overlong folded YAML description" "$fixture" line-check
+  sed -i 's/^description:.*/description: >-/' "$fixture/skillet/skills/repo-audit/SKILL.md"
+  sed -i "/^description: >-$/a\\  $description_1025" "$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "overlong folded YAML description" "$fixture" repo-audit
 
   fixture="$tmp/yaml-implicit-number"
   cp -a "$ROOT"/. "$fixture"
-  sed -i 's/^description:.*/description: 0x10/' "$fixture/skillet/skills/line-check/SKILL.md"
-  assert_fixture_rejected "implicit numeric YAML description" "$fixture" line-check
+  sed -i 's/^description:.*/description: 0x10/' "$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "implicit numeric YAML description" "$fixture" repo-audit
 
   fixture="$tmp/yaml-invalid-block"
   cp -a "$ROOT"/. "$fixture"
-  sed -i 's/^description:.*/description: |--/' "$fixture/skillet/skills/line-check/SKILL.md"
-  assert_fixture_rejected "invalid YAML block indicator" "$fixture" line-check
+  sed -i 's/^description:.*/description: |--/' "$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "invalid YAML block indicator" "$fixture" repo-audit
 
   fixture="$tmp/readme-catalog-phantom"
   cp -a "$ROOT"/. "$fixture"
@@ -1324,12 +1370,12 @@ PY
 
   fixture="$tmp/read-only-application"
   cp -a "$ROOT"/. "$fixture"
-  sed -i '/\*\*Read-only\.\*\* Never modify the repo during an audit\./a Apply each finding\047s fix directly before reporting it.' "$fixture/skillet/skills/line-check/SKILL.md"
+  sed -i '/\*\*Read-only\.\*\* Never modify the repo during an audit\./a Apply each finding\047s fix directly before reporting it.' "$fixture/skillet/skills/repo-audit/SKILL.md"
   assert_fixture_rejected "read-only fix-application language" "$fixture"
 
   fixture="$tmp/read-only-application-evasion"
   cp -a "$ROOT"/. "$fixture"
-  sed -i '/\*\*Read-only\.\*\* Never modify the repo during an audit\./a Make the fixes directly, edit files to correct findings, and apply patches.' "$fixture/skillet/skills/line-check/SKILL.md"
+  sed -i '/\*\*Read-only\.\*\* Never modify the repo during an audit\./a Make the fixes directly, edit files to correct findings, and apply patches.' "$fixture/skillet/skills/repo-audit/SKILL.md"
   assert_fixture_rejected "read-only mutation vocabulary" "$fixture"
 
   fixture="$tmp/audit-only-application"
@@ -1349,31 +1395,31 @@ PY
 
   fixture="$tmp/body-argument-placeholder"
   cp -a "$ROOT"/. "$fixture"
-  printf '\nRun the audit against $1 first.\n' >>"$fixture/skillet/skills/line-check/SKILL.md"
-  assert_fixture_rejected "skill-argument placeholder in prose" "$fixture" line-check "skill-argument placeholder"
+  printf '\nRun the audit against $1 first.\n' >>"$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "skill-argument placeholder in prose" "$fixture" repo-audit "skill-argument placeholder"
 
   fixture="$tmp/body-argument-fenced"
   cp -a "$ROOT"/. "$fixture"
-  printf '\n```bash\necho "$1 $ARGUMENTS"\n```\n' >>"$fixture/skillet/skills/line-check/SKILL.md"
-  assert_fixture_rejected "skill-argument placeholder inside a code fence" "$fixture" line-check "skill-argument placeholder"
+  printf '\n```bash\necho "$1 $ARGUMENTS"\n```\n' >>"$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "skill-argument placeholder inside a code fence" "$fixture" repo-audit "skill-argument placeholder"
 
   fixture="$tmp/body-argument-zero"
   cp -a "$ROOT"/. "$fixture"
-  printf '\nPass $0 along.\n' >>"$fixture/skillet/skills/line-check/SKILL.md"
-  assert_fixture_rejected "skill-argument placeholder \$0" "$fixture" line-check "skill-argument placeholder"
+  printf '\nPass $0 along.\n' >>"$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "skill-argument placeholder \$0" "$fixture" repo-audit "skill-argument placeholder"
 
   fixture="$tmp/body-argument-escaped"
   cp -a "$ROOT"/. "$fixture"
-  printf '\n```bash\nawk '"'"'{print \\$1}'"'"' file  # escaped, literal\n```\n' >>"$fixture/skillet/skills/line-check/SKILL.md"
-  if ! LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$self_test_path" bash "$fixture/tests/lint-skills.sh" line-check >/dev/null 2>&1; then
+  printf '\n```bash\nawk '"'"'{print \\$1}'"'"' file  # escaped, literal\n```\n' >>"$fixture/skillet/skills/repo-audit/SKILL.md"
+  if ! LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$self_test_path" bash "$fixture/tests/lint-skills.sh" repo-audit >/dev/null 2>&1; then
     echo "[fail] self-test: an escaped placeholder was rejected"
     regression_failures=1
   fi
 
   fixture="$tmp/body-thinking-keyword"
   cp -a "$ROOT"/. "$fixture"
-  printf '\nUse ultrathink for this step.\n' >>"$fixture/skillet/skills/line-check/SKILL.md"
-  assert_fixture_rejected "extended-thinking trigger keyword" "$fixture" line-check "extended-thinking trigger keyword"
+  printf '\nUse ultrathink for this step.\n' >>"$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "extended-thinking trigger keyword" "$fixture" repo-audit "extended-thinking trigger keyword"
 
   fixture="$tmp/body-bare-script"
   cp -a "$ROOT"/. "$fixture"
@@ -1400,10 +1446,10 @@ PY
 
   fixture="$tmp/body-warnings-only"
   cp -a "$ROOT"/. "$fixture"
-  long_description="Use when the line check needs to run and then the report is written, which hands off to expedite. $(python3 -c 'print("padding " * 80, end="")')"
-  sed -i "s/^description:.*/description: $long_description/" "$fixture/skillet/skills/line-check/SKILL.md"
-  printf '\n```bash\necho "$API_TOKEN"\n```\n' >>"$fixture/skillet/skills/line-check/SKILL.md"
-  if ! warn_output="$(LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$self_test_path" bash "$fixture/tests/lint-skills.sh" line-check 2>&1)"; then
+  long_description="Use when the line check needs to run and then the report is written, which hands off to fix-findings. $(python3 -c 'print("padding " * 80, end="")')"
+  sed -i "s/^description:.*/description: $long_description/" "$fixture/skillet/skills/repo-audit/SKILL.md"
+  printf '\n```bash\necho "$API_TOKEN"\n```\n' >>"$fixture/skillet/skills/repo-audit/SKILL.md"
+  if ! warn_output="$(LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$self_test_path" bash "$fixture/tests/lint-skills.sh" repo-audit 2>&1)"; then
     echo "[fail] self-test: warning-only description or example failed the lint"
     regression_failures=1
   elif ! printf '%s\n' "$warn_output" | grep -Fq 'characters (aim for under 500' ||
@@ -1423,18 +1469,18 @@ PY
 
   fixture="$tmp/version-missing"
   cp -a "$ROOT"/. "$fixture"
-  sed -i '/^version:/d' "$fixture/skillet/skills/line-check/SKILL.md"
-  assert_fixture_rejected "missing frontmatter version" "$fixture" line-check
+  sed -i '/^version:/d' "$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "missing frontmatter version" "$fixture" repo-audit
 
   fixture="$tmp/version-invalid"
   cp -a "$ROOT"/. "$fixture"
-  sed -i '/^name: line-check$/a version: v1.0' "$fixture/skillet/skills/line-check/SKILL.md"
-  assert_fixture_rejected "invalid frontmatter semver" "$fixture" line-check
+  sed -i '/^name: repo-audit$/a version: v1.0' "$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "invalid frontmatter semver" "$fixture" repo-audit
 
   fixture="$tmp/version-mismatch"
   cp -a "$ROOT"/. "$fixture"
-  sed -i 's/^version: 0.1.0$/version: 0.2.0/' "$fixture/skillet/skills/line-check/SKILL.md"
-  assert_fixture_rejected "frontmatter and skill.json version mismatch" "$fixture" line-check
+  sed -i 's/^version: 0.2.0$/version: 0.3.0/' "$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "frontmatter and skill.json version mismatch" "$fixture" repo-audit
 
   fixture="$tmp/brief-estimative-unrouted"
   cp -a "$ROOT"/. "$fixture"
@@ -1477,11 +1523,11 @@ PY
     'exit 1' >"$fixture/bin/brigade"
   chmod +x "$fixture/bin/brigade"
   if brigade_failure_output="$(LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$fixture/bin:$self_test_path" \
-    bash "$fixture/tests/lint-skills.sh" line-check 2>&1)"; then
+    bash "$fixture/tests/lint-skills.sh" repo-audit 2>&1)"; then
     echo "[fail] self-test: unrelated Brigade validator failure was masked"
     regression_failures=1
   elif ! printf '%s\n' "$brigade_failure_output" |
-    grep -Fq '[fail] line-check: brigade skills lint failed'; then
+    grep -Fq '[fail] repo-audit: brigade skills lint failed'; then
     echo "[fail] self-test: fake Brigade validator was not exercised"
     regression_failures=1
   fi

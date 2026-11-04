@@ -1,13 +1,15 @@
 ---
-name: plate
-version: 0.1.1
+name: publish-scrub
+version: 0.2.0
 license: MIT
-description: Use before any prose artifact goes public - a blog post, social post, README section, PR or issue body, commit message, release notes - to scrub identity and infrastructure leaks and apply writing conventions. Also use when the user asks to "scrub this", "is this safe to post", or "clean this up before it goes out". For repo and git-history leak scans use publish-readiness instead.
+description: Use before any prose artifact goes public - a blog post, social post, README section, PR or issue body, commit message, release notes - to scrub identity and infrastructure leaks and apply writing conventions. Also use when the user asks to "scrub this", "is this safe to post", or "clean this up before it goes out". For repo and git-history leak scans use publish-readiness instead. (formerly plate)
+metadata:
+  formerly: plate
 ---
 
-# plate
+# publish-scrub
 
-Plating is the last look before the dish leaves the kitchen: nothing goes out with a thumbprint on the rim. This skill is that final pass over a single piece of outward-facing writing. It catches the things that leak the author's machine, identity, or internal world, and enforces the writing conventions, before the words are published where they cannot be unpublished.
+This skill is the final review of a single piece of outward-facing writing. It catches the things that leak the author's machine, identity, or internal world, and enforces the writing conventions, before the words are published where they cannot be unpublished.
 
 This is per-artifact prose hygiene. It is the companion to publish-readiness, which gates a whole repo and its git history; reach for that one for source trees and commit history, this one for the thing you are about to paste into a post, PR, or commit.
 

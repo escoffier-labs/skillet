@@ -67,7 +67,7 @@ Then the 30-second question, asked of a name a reader would care about: where do
 Reduce stays behavior-preserving, so it reports what a comment reveals and does not fix it here.
 
 - **A comment that justifies a workaround** ("needed because X returns null on Tuesdays") points at a defect somewhere else. Report the root cause and route it (`superpowers:systematic-debugging` or [bug-hunt](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/bug-hunt/SKILL.md)). The comment stays until the root is fixed.
-- **A "do not change this" comment** is a constraint nobody encoded. Report that it belongs in a test, a type, or a lint rule, and route the type or lint work (to eighty-six where installed, otherwise [expedite](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/expedite/SKILL.md)). In apply mode you may add a characterization test that pins the constraint; the comment stays unless the constraint is now encoded, and then it may go.
+- **A "do not change this" comment** is a constraint nobody encoded. Report that it belongs in a test, a type, or a lint rule, and route the type or lint work (to mistake-proof where installed, otherwise [fix-findings](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/fix-findings/SKILL.md)). In apply mode you may add a characterization test that pins the constraint; the comment stays unless the constraint is now encoded, and then it may go.
 - **A comment that restates the code** goes. A comment that records intent, a non-obvious reason, or a link to the spec stays.
 - Suppression comments (lint or type ignores) survive only when the underlying rule would be wrong here; otherwise report the code as the thing to fix.
 
@@ -94,8 +94,8 @@ Dead code in one commit, duplication in the next, guard clauses in the next. Eac
 `reduce` applies changes; it is not an audit and it does not hunt for defects.
 
 - Borrows from `superpowers:test-driven-development` for characterization tests, `superpowers:verification-before-completion` for evidence before claims, and `superpowers:systematic-debugging` when a reduction surfaces a real bug: stop, do not "simplify" the bug away, switch to debugging.
-- Hands accepted report findings to [expedite](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/expedite/SKILL.md) to drive to done.
-- Hands correctness issues to [bug-hunt](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/bug-hunt/SKILL.md), security issues to [security-sweep](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/security-sweep/SKILL.md), and repo-wide quality to [line-check](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/line-check/SKILL.md). Finding a bug is not in scope here; routing it is.
+- Hands accepted report findings to [fix-findings](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/fix-findings/SKILL.md) to drive to done.
+- Hands correctness issues to [bug-hunt](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/bug-hunt/SKILL.md), security issues to [security-sweep](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/security-sweep/SKILL.md), and repo-wide quality to [repo-audit](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/repo-audit/SKILL.md). Finding a bug is not in scope here; routing it is.
 
 ## Output shape
 
@@ -117,10 +117,10 @@ Baseline: <command> -> <result>
 After:    <command> -> <result>   (must match)
 
 ### Handed off
-- correctness/security/design items routed to bug-hunt / security-sweep / line-check
+- correctness/security/design items routed to bug-hunt / security-sweep / repo-audit
 ```
 
-In report mode, findings may also be written in the [audit report format](https://github.com/escoffier-labs/skillet/blob/main/docs/audit-report-format.md) so [expedite](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/expedite/SKILL.md) can consume them later.
+In report mode, findings may also be written in the [audit report format](https://github.com/escoffier-labs/skillet/blob/main/docs/audit-report-format.md) so [fix-findings](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/fix-findings/SKILL.md) can consume them later.
 
 ## Common mistakes
 

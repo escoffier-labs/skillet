@@ -1,0 +1,9 @@
+{
+  "id": "publish-scrub",
+  "version": "0.2.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh publish-scrub",
+    "bash ../../../tests/lint-evals.sh publish-scrub"
+  ],
+  "trust_level": "workspace"
+}

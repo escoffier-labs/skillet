@@ -1,0 +1,8 @@
+{
+  "id": "mistake-proof",
+  "version": "0.2.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh mistake-proof"
+  ],
+  "trust_level": "workspace"
+}

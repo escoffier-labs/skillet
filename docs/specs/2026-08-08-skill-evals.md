@@ -97,7 +97,7 @@ Each element of `evals`:
 ```json
 {
   "schema_version": "skillet.evals.v1",
-  "skill_name": "plate",
+  "skill_name": "publish-scrub",
   "evals": [
     {
       "id": "scrub-private-ip",
@@ -202,7 +202,7 @@ Rules:
 
 ### Workspace and gitignore
 
-Add `.skill-eval-workspace/` to `.gitignore`. Do not commit iteration artifacts. Authors may paste summary numbers into skill `CHANGELOG.md` when an eval run informed a change ("baseline A/B: pass_rate +0.5 on plate scrub-private-ip").
+Add `.skill-eval-workspace/` to `.gitignore`. Do not commit iteration artifacts. Authors may paste summary numbers into skill `CHANGELOG.md` when an eval run informed a change ("baseline A/B: pass_rate +0.5 on publish-scrub scrub-private-ip").
 
 ## Trigger tests (opt-in, separate from evals)
 
@@ -244,15 +244,15 @@ Ship evals for exactly two pilots first:
 
 | Skill | Why first |
 |---|---|
-| **plate** | Mechanical leak rules (private IPs, em dashes, Co-Authored-By) yield objective assertions and small text fixtures. Clear with/without delta expected. |
+| **publish-scrub** | Mechanical leak rules (private IPs, em dashes, Co-Authored-By) yield objective assertions and small text fixtures. Clear with/without delta expected. |
 | **check** | Load-bearing evidence gate. Assertions can lock "quote the proving command" and "failed verify is the finding" without needing a whole product repo. |
 
 Defer evals for the remaining catalog until the pilot format survives one real skill edit cycle. Do not add empty `evals/` directories to every skill.
 
 Suggested first cases (to be authored in the implementation commit, not required for the design commit):
 
-1. **plate / scrub-private-ip** — draft containing a private IP; expect flag + doc-range replacement + confirm-before-rewrite.
-2. **plate / scrub-em-dash-and-trailer** — draft with an em dash and a Co-Authored-By line; expect both flagged.
+1. **publish-scrub / scrub-private-ip** — draft containing a private IP; expect flag + doc-range replacement + confirm-before-rewrite.
+2. **publish-scrub / scrub-em-dash-and-trailer** — draft with an em dash and a Co-Authored-By line; expect both flagged.
 3. **check / claim-without-evidence** — prompt that invites a "tests pass" claim with no run; expect the skill to refuse and demand a proving command.
 4. **check / failed-verify-is-finding** — prompt where the proving command fails; expect report of failure, not silent repair.
 
@@ -265,7 +265,7 @@ Suggested first cases (to be authored in the implementation commit, not required
    - Exit non-zero on any invalid manifest.
 2. `tests/lint-skills.sh` full-catalog path calls `lint-evals.sh` (or inlines an equivalent check) so `station.json`'s existing probe (`bash tests/lint-skills.sh` expecting `[ok] catalog (36 skills)`) still passes and eval validation rides along.
 3. Emit a clear ok line, e.g. `[ok] evals (N manifests)`.
-4. Per-skill lint (`tests/lint-skills.sh plate`) should validate that skill's evals if present.
+4. Per-skill lint (`tests/lint-skills.sh publish-scrub`) should validate that skill's evals if present.
 5. Self-test fixtures in `check_linter_regressions` (or a sibling regression in `lint-evals.sh`): malformed JSON, wrong `skill_name`, missing fixture file, empty assertions.
 6. `.github/workflows/lint-skills.yml` needs no new job if lint-skills invokes lint-evals; keep one workflow.
 
@@ -279,7 +279,7 @@ Ordered smallest useful slice:
 2. Add schema validator `tests/lint-evals.sh` + dry-run harness `tests/run-skill-evals.sh`.
 3. Wire validator into `tests/lint-skills.sh`.
 4. Add `.skill-eval-workspace/` to `.gitignore`.
-5. Author `evals/evals.json` (+ fixtures if needed) for `plate` and `check`.
+5. Author `evals/evals.json` (+ fixtures if needed) for `publish-scrub` and `check`.
 6. Document live A/B procedure in harness `--help` / stderr for `--live`.
 7. Verify with `bash tests/lint-skills.sh` (catalog ok + evals ok).
 8. Push follow-up commits on the same PR.
@@ -299,7 +299,7 @@ Ordered smallest useful slice:
 - Design doc merged or present on the PR branch.
 - `tests/lint-evals.sh` validates manifests; wired from `tests/lint-skills.sh`.
 - `tests/run-skill-evals.sh` supports `--validate` / `--dry-run`, and documents `--live`.
-- Pilot manifests for `plate` and `check`.
+- Pilot manifests for `publish-scrub` and `check`.
 - `bash tests/lint-skills.sh` prints catalog ok and evals ok.
 - No live model dependency in CI.
 - Brigade capture documented, not required.

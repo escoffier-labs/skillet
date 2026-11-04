@@ -1,0 +1,8 @@
+{
+  "id": "fix-findings",
+  "version": "0.3.0",
+  "tests": [
+    "bash ../../../tests/lint-skills.sh fix-findings"
+  ],
+  "trust_level": "workspace"
+}

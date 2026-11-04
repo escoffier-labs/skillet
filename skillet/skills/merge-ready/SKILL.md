@@ -1,13 +1,15 @@
 ---
-name: runner
-version: 0.1.0
+name: merge-ready
+version: 0.2.0
 license: MIT
-description: Use when an open pull request must be driven to merge-ready - conflicts, unanswered review threads, or failing CI are outstanding - or the user says "babysit this PR", "get PR 123 green", "address the review comments", "is it mergeable yet", or "check on PR 123". Not for filing a PR (use pass) or landing a campaign (use fleet-conductor).
+description: Use when an open pull request must be driven to merge-ready - conflicts, unanswered review threads, or failing CI are outstanding - or the user says "babysit this PR", "get PR 123 green", "address the review comments", "is it mergeable yet", or "check on PR 123". Not for filing a PR (use pass) or landing a campaign (use fleet-conductor). (formerly runner)
+metadata:
+  formerly: runner
 ---
 
-# runner
+# merge-ready
 
-The runner carries plates from the pass to the table and does not leave until every plate is down. This skill is that job for an open pull request: clear whatever stands between the PR and a merge button, then stop where the owner's call begins.
+This skill prepares an open pull request for merge: clear whatever stands between the PR and a merge button, then stop where the owner's call begins.
 
 **Core principle:** the forge's merge state is the verdict, not a green check list and not a bot's summary. Driving a PR never authorizes merging it.
 
@@ -24,7 +26,7 @@ Say the mode in your first line. Undeclared means `check`, which is read-only. P
 
 ## Procedure
 
-1. **Check ownership.** One runner per PR. Look for an existing claim (fleet claims, a lane record, a branch owned by another worker or a human) and for dirty files in the checkout. If another actor owns it, report and stop. Work only on a branch you own.
+1. **Check ownership.** One accountable agent per PR. Look for an existing claim (fleet claims, a lane record, a branch owned by another worker or a human) and for dirty files in the checkout. If another actor owns it, report and stop. Work only on a branch you own.
 2. **Read the whole state before acting.** PR state, base, head SHA, mergeability, required checks, review decision, unresolved threads (commands in [references/commands.md](references/commands.md)). Note the head SHA; every later claim names the head it was true for.
 3. **Work blockers in this order: conflicts, review threads, CI.** Batch every known fix into one push so checks run once per wave. Before each push, run the project's own checks locally and read the output (`superpowers:verification-before-completion`), and follow `superpowers:finishing-a-development-branch` plus the repo's own PR rules.
    - **Conflicts** - rebase or merge only on a branch you own; never force-push a branch you do not own, never `git reset --hard`. If a push needs force, use `--force-with-lease=<branch>:<sha>` with the SHA you last saw. Otherwise report which branch needs the rebase and stop. Do not move on to CI to look busy.

@@ -2,7 +2,7 @@
 name: special
 version: 0.1.0
 license: MIT
-description: Use when asked what to build next, what features a repo is missing, where the opportunities are, or to suggest a direction or roadmap grounded in the code. Triggers on "what should we build next", "what's missing", "suggest features", "what's the next thing". Proposes opportunities, not fixes; for finding problems use line-check, bug-hunt, or security-sweep.
+description: Use when asked what to build next, what features a repo is missing, where the opportunities are, or to suggest a direction or roadmap grounded in the code. Triggers on "what should we build next", "what's missing", "suggest features", "what's the next thing". Proposes opportunities, not fixes; for finding problems use repo-audit, bug-hunt, or security-sweep.
 ---
 
 # special
@@ -15,7 +15,7 @@ The audit skills walk the line looking for what is broken. `special` walks the w
 
 ## What this is not
 
-- Not the audit trio. [line-check](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/line-check/SKILL.md), [bug-hunt](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/bug-hunt/SKILL.md), and [security-sweep](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/security-sweep/SKILL.md) find problems. `special` finds opportunities. A bug is not a feature.
+- Not the audit trio. [repo-audit](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/repo-audit/SKILL.md), [bug-hunt](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/bug-hunt/SKILL.md), and [security-sweep](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/security-sweep/SKILL.md) find problems. `special` finds opportunities. A bug is not a feature.
 - Not `superpowers:brainstorming`. `superpowers:brainstorming` designs an idea you already have. `special` finds the idea worth designing. A chosen special flows into `superpowers:brainstorming` next.
 
 ## Read the kitchen first
@@ -79,7 +79,7 @@ One paragraph: the strongest opportunity and the through-line across the proposa
 ## Boundaries
 
 - A chosen special hands to `superpowers:brainstorming` to design, then `superpowers:writing-plans` to plan, then `superpowers:subagent-driven-development` to build. `special` stops at the board.
-- Problems found along the way route to the audit trio, not into the board. A missing test is a line-check finding, a wrong result is a bug-hunt finding.
+- Problems found along the way route to the audit trio, not into the board. A missing test is a repo-audit finding, a wrong result is a bug-hunt finding.
 - Direction is the user's decision. `special` recommends and ranks; it does not commit the project to anything.
 
 ## Common mistakes

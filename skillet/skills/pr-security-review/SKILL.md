@@ -9,7 +9,7 @@ description: Use when asked to security-review a pull request, a commit range, o
 
 A defensive security review of one change set: a PR, a commit range, or staged changes. The question is narrow: does this diff introduce or expose a vulnerability that did not exist before? Report findings with fixes. Never teach exploitation beyond what verifying the fix needs.
 
-**Read-only.** Do not edit code, push, or comment on the PR unless the user asks. Fixing findings belongs to the author or [expedite](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/expedite/SKILL.md).
+**Read-only.** Do not edit code, push, or comment on the PR unless the user asks. Fixing findings belongs to the author or [fix-findings](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/fix-findings/SKILL.md).
 
 ## Boundaries
 
@@ -19,7 +19,7 @@ A defensive security review of one change set: a PR, a commit range, or staged c
 | Security of the whole repo, history, or current dependency state | [security-sweep](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/security-sweep/SKILL.md) |
 | General correctness and design review of a change | `superpowers:requesting-code-review` |
 | Is my own PR ready to file | `superpowers:finishing-a-development-branch` plus the repo's own PR rules |
-| Applying the fixes | [expedite](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/expedite/SKILL.md) |
+| Applying the fixes | [fix-findings](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/fix-findings/SKILL.md) |
 
 If the diff touches an MCP server, supply-chain hardening, or similar specialist surface, say so in the report and use the matching skill if it is installed.
 

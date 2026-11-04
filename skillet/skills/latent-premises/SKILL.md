@@ -2,7 +2,7 @@
 name: latent-premises
 version: 0.2.0
 license: MIT
-description: "Use when reviewing a diff or module for hidden assumptions - things the code takes for granted that nothing guarantees - or when asked \"what could break this later\", \"what does this assume\", or to harden code that works today. Complements bug-hunt: bug-hunt finds defects with triggers today; this finds the ones waiting for tomorrow. Read-only review. Applying the resolutions belongs to expedite."
+description: "Use when reviewing a diff or module for hidden assumptions - things the code takes for granted that nothing guarantees - or when asked \"what could break this later\", \"what does this assume\", or to harden code that works today. Complements bug-hunt: bug-hunt finds defects with triggers today; this finds the ones waiting for tomorrow. Read-only review. Applying the resolutions belongs to fix-findings."
 ---
 
 # latent-premises
@@ -11,7 +11,7 @@ An unguarded premise is an undeclared allergen. The dish is fine for most diners
 
 **Core principle:** a premise is only a finding when it is genuinely unenforced AND you can name what concretely breaks when it fails. Enforced premises are fine. Consequences you cannot name are hypotheses, not findings.
 
-**Read-only.** This is a review lens. Fixing is a separate engagement: hand the finished report to [expedite](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/expedite/SKILL.md), which works the backlog in leverage order.
+**Read-only.** This is a review lens. Fixing is a separate engagement: hand the finished report to [fix-findings](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/fix-findings/SKILL.md), which works the backlog in leverage order.
 
 ## The taxonomy
 
@@ -36,7 +36,7 @@ Hunt in five categories. Each finding gets exactly one.
 
 ## Report contract
 
-Same spine as the shared [audit report format](https://github.com/escoffier-labs/skillet/blob/main/docs/audit-report-format.md) so findings compose into one backlog and feed [expedite](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/expedite/SKILL.md). Severity is the cost of the premise breaking: **critical** (silent corruption or security exposure) / **high** (crash or wrong results on inputs the system will plausibly see soon) / **medium** (breaks under realistic growth or configuration change) / **low** (brittleness worth a note). Effort is the resolution cost: **S** (under 30 min) / **M** (under half a day) / **L** (multi-day).
+Same spine as the shared [audit report format](https://github.com/escoffier-labs/skillet/blob/main/docs/audit-report-format.md) so findings compose into one backlog and feed [fix-findings](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/fix-findings/SKILL.md). Severity is the cost of the premise breaking: **critical** (silent corruption or security exposure) / **high** (crash or wrong results on inputs the system will plausibly see soon) / **medium** (breaks under realistic growth or configuration change) / **low** (brittleness worth a note). Effort is the resolution cost: **S** (under 30 min) / **M** (under half a day) / **L** (multi-day).
 
 ```markdown
 # latent-premises report: <scope> (<date>)

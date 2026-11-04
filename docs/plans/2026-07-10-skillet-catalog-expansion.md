@@ -20,7 +20,7 @@ Execute task by task. Tick each checkbox after the command succeeds, and commit 
 - `skillet/skills/using-skillet/SKILL.md`: routing entries for every shipped skill.
 - `.claude-plugin/marketplace.json`: complete marketplace description without stale skill omissions.
 - `CHANGELOG.md`: migration note, new skills, catalog fixes, and repaired 0.5.1 release section.
-- `.claude/memory-handoffs/`: review-gated durable note for `service` and `eighty-six`.
+- `.claude/memory-handoffs/`: review-gated durable note for `service` and `mistake-proof`.
 
 ## Demi pass
 
@@ -32,7 +32,7 @@ Highest rung that holds: existing repository primitives and local changes.
 
 Existing pattern to follow: `skillet/skills/special/` for a read-only/apply boundary, `skillet/skills/reduce/` for measured before/after work, and `tests/lint-skills.sh` for package validation.
 
-Cut from scope: a new runtime registry, nested skill installation directories, automatic deployment, automatic dependency updates, and implementation of `service` or `eighty-six`.
+Cut from scope: a new runtime registry, nested skill installation directories, automatic deployment, automatic dependency updates, and implementation of `service` or `mistake-proof`.
 
 Growth trigger: add another conceptual pack only when at least three skills share a distinct audience and trigger family.
 
@@ -123,7 +123,7 @@ description: Use when auditing or fixing discoverability metadata for a website 
 ```
 
 - [x] The body must define two explicit modes. `AUDIT` is read-only and checks head metadata, indexing policy, sitemap/canonical agreement, per-page uniqueness, rendered output, and project-local policy. `FIX` runs only when requested, uses the site's existing framework and components, changes one finding at a time, and requires a rendered build plus re-audit before success claims.
-- [x] The body must contain no personal handles, private fleet constants, fixed domains, fixed theme colors, or assumed framework. It must route prose through `plate` and verification through `check`.
+- [x] The body must contain no personal handles, private fleet constants, fixed domains, fixed theme colors, or assumed framework. It must route prose through `publish-scrub` and verification through `check`.
 - [x] Add `skill.json`:
 
 ```json
@@ -194,7 +194,7 @@ description: Use when investigating or improving performance, latency, throughpu
 - [x] Set the README badge to 32 skills: 30 current directories, minus `seo-fleet`, plus `garnish`, `stocktake`, and `thermometer`.
 - [x] Keep top-level skill directories unchanged and divide the roster documentation into:
   - `line`: design, build, audit, review, release, and memory process skills;
-  - `plating`: `plate`, `grill`, `reel-check`, `garnish`, and `publish-readiness`;
+  - `plating`: `publish-scrub`, `grill`, `reel-check`, `garnish`, and `publish-readiness`;
   - `appliances`: `graphtrail` and `brigade-handoffs`, with explicit external-tool requirements.
 - [x] Give `garnish`, `stocktake`, `thermometer`, and `graphtrail` complete README rows. Remove every `seo-fleet` row and fleet-specific claim.
 - [x] Add matching routes in `using-skillet`. Put `stocktake` and `thermometer` under Debug and verify, `garnish` under Writing and publishing, and `graphtrail` under a new Appliances section. Remove `seo-fleet`.
@@ -210,7 +210,7 @@ description: Use when investigating or improving performance, latency, throughpu
 
 - [x] Write a `research` handoff using `no-card` routing to `.learnings/FEATURE_REQUESTS.md`.
 - [x] Record `service`: deploy and rollback gate with preflight, staged rollout, health checks, rollback criteria, and post-deploy verification. State that it should be built only after a repeated deployment workflow supplies concrete commands and stop conditions.
-- [x] Record `eighty-six`: safe deprecation/removal workflow covering consumer discovery, migration window, staged deletion, absence verification, and rollback. State that it differs from `reduce`, which is local and behavior-preserving.
+- [x] Record `mistake-proof`: safe deprecation/removal workflow covering consumer discovery, migration window, staged deletion, absence verification, and rollback. State that it differs from `reduce`, which is local and behavior-preserving.
 - [x] Record the naming preference: new public skills keep kitchen-themed names with literal trigger descriptions.
 - [x] Run `brigade handoff lint --target .`; expect the new handoff `[ok]`.
 - [x] Do not commit the ignored handoff; leave it in the review-gated inbox for memory-owner ingestion.

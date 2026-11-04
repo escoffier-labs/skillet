@@ -6,6 +6,10 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Renamed
+
+- Renamed `plate` -> `publish-scrub`, `expedite` -> `fix-findings`, `line-check` -> `repo-audit`, `runner` -> `merge-ready`, and `eighty-six` -> `mistake-proof`. Each package has a minor version bump and `metadata.formerly` recording its old name. Descriptions end with `(formerly X)` for old-name routing; this suffix will be dropped in the next release. No alias directories ship. Updated catalog consumers and replaced kitchen metaphors in these five skill bodies with plain English, preserving their procedures.
+
 ### Removed
 
 - Retired 15 skills with owner approval on 2026-11-03 ([#72](https://github.com/escoffier-labs/skillet/issues/72)). `trim` and `demi` lost the head-to-head trial against Superpowers 7.0.1. The other 13 generic workflow skills were replaced by Superpowers on 2026-10-28. Removed their packages, catalog/grouping entries, trigger rows, and bootstrap context injection. The compatibility SessionStart entry point now exits silently. The wrapper and pre-push guard remain.

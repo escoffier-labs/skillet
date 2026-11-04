@@ -5,10 +5,10 @@
 # so a prompt can be added before its skill ships.
 # Lines starting with # and blank lines are ignored.
 find-bugs	bug-hunt	Find bugs in this repo.
-scrub-post	plate	Scrub this before I post it: "Spent the weekend moving my homelab to a new box. The API is at 192.168.1.50 and I SSH in as admin."
+scrub-post	publish-scrub	Scrub this before I post it: "Spent the weekend moving my homelab to a new box. The API is at 192.168.1.50 and I SSH in as admin."
 cut-release	release-cut	Cut a release for this repo.
 second-opinion	stagiaire	Get a second opinion from a different model family on my approach.
-repeat-mistake	eighty-six	I keep correcting agents for the same mistake. They wrap everything in try/except. Make that stop.
+repeat-mistake	mistake-proof	I keep correcting agents for the same mistake. They wrap everything in try/except. Make that stop.
 mcp-review-install	mcp-server-review	I'm about to add a third-party MCP server to my agent. Can you review it for security before I connect it?
 mcp-review-build	mcp-server-review	I built an MCP server with a few write tools and an HTTP transport. Security-review it for me.
 mcp-review-descriptions	mcp-server-review	Check this MCP server's tool descriptions and exec calls for anything dangerous before I install it.

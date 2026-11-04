@@ -1,13 +1,15 @@
 ---
-name: eighty-six
-version: 0.1.0
+name: mistake-proof
+version: 0.2.0
 license: MIT
-description: Use when agents keep repeating the same mistake in a repository, the operator keeps correcting the same thing, or the user asks to "make this mistake impossible", "stop agents doing X", "harden the repo against agent errors", or audit which CLAUDE.md or AGENTS.md rules anything actually enforces.
+description: Use when agents keep repeating the same mistake in a repository, the operator keeps correcting the same thing, or the user asks to "make this mistake impossible", "stop agents doing X", "harden the repo against agent errors", or audit which CLAUDE.md or AGENTS.md rules anything actually enforces. (formerly eighty-six)
+metadata:
+  formerly: eighty-six
 ---
 
-# eighty-six
+# mistake-proof
 
-In a kitchen, to 86 an item is to take it off the menu so nobody can order it again. This skill does that for agent mistakes: instead of writing "do not do X" and hoping, change the repo so X cannot happen, or fails loudly with the fix in the error message.
+This skill prevents repeated agent mistakes: instead of writing "do not do X" and hoping, change the repo so X cannot happen, or fails loudly with the fix in the error message.
 
 **Core principle:** a rule nothing enforces is a wish. Fix each mistake class at the highest level that works.
 

@@ -8,7 +8,7 @@ body:
       label: What happened
       description: Which skill, what did you ask the agent to do, and what did you expect versus what you got?
       placeholder: |
-        I asked the agent to "audit this repo" expecting line-check to fire, but it did X instead.
+        I asked the agent to "audit this repo" expecting repo-audit to fire, but it did X instead.
     validations:
       required: true
   - type: input
@@ -16,7 +16,7 @@ body:
     attributes:
       label: Skill
       description: Which skill is affected (or "discovery / install" if a skill failed to load).
-      placeholder: line-check
+      placeholder: repo-audit
     validations:
       required: true
   - type: input

@@ -2,7 +2,7 @@
 name: security-sweep
 version: 0.1.2
 license: MIT
-description: Use when asked to security-audit a repository, find vulnerabilities and prescribe fixes, check for leaked secrets, review dependencies for known CVEs, or harden a project before exposure. Read-only audit. Applying the fixes belongs to expedite.
+description: Use when asked to security-audit a repository, find vulnerabilities and prescribe fixes, check for leaked secrets, review dependencies for known CVEs, or harden a project before exposure. Read-only audit. Applying the fixes belongs to fix-findings.
 ---
 
 # security-sweep
@@ -56,7 +56,7 @@ Confirm before reporting: trace the path from untrusted input to the sink, or co
 
 ## Report contract
 
-Same spine as line-check and bug-hunt. Severity: **critical** (exploitable now: leaked live credential, unauthenticated destructive endpoint, injection on a reachable path) / **high** (exploitable with common conditions) / **medium** (defense-in-depth gap) / **low** (hardening) / **info**. Effort: S / M / L.
+Same spine as repo-audit and bug-hunt. Severity: **critical** (exploitable now: leaked live credential, unauthenticated destructive endpoint, injection on a reachable path) / **high** (exploitable with common conditions) / **medium** (defense-in-depth gap) / **low** (hardening) / **info**. Effort: S / M / L.
 
 ```markdown
 # security-sweep report: <repo> (<date>)
