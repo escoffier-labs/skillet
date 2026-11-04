@@ -20,7 +20,7 @@ body:
     attributes:
       label: When should it fire (and when should it NOT)
       description: A first cut at the trigger description. Being specific about the non-triggers keeps it from stepping on other skills.
-      placeholder: Fires when the user asks to do X; not for Y (that is line-check) or Z (that is plate).
+      placeholder: Fires when the user asks to do X; not for Y (that is repo-audit) or Z (that is publish-scrub).
     validations:
       required: true
   - type: input

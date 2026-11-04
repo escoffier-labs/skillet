@@ -1,6 +1,10 @@
-# plate changelog
+# publish-scrub changelog
 
 Earlier history lives in the repo-level CHANGELOG.md.
+
+## 0.2.0 - 2026-11-03
+
+- Renamed to publish-scrub; added metadata.formerly and a temporary description suffix for old-name routing. No alias directory ships. Procedures are unchanged; kitchen metaphors now use plain English.
 
 ## 0.1.1 - 2026-08-08
 

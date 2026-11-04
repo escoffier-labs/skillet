@@ -88,7 +88,7 @@ Do not change the production domain, indexing status, redirect policy, analytics
 
 Use `superpowers:verification-before-completion` before any readiness claim. Evidence must include the build command and rendered output for the tags or files changed. A source diff alone does not prove what a crawler receives.
 
-Run public prose through [plate](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/plate/SKILL.md), including descriptions, social preview copy, `robots.txt` comments, and public examples.
+Run public prose through [publish-scrub](https://github.com/escoffier-labs/skillet/blob/main/skillet/skills/publish-scrub/SKILL.md), including descriptions, social preview copy, `robots.txt` comments, and public examples.
 
 ## Stop conditions
 

@@ -1,21 +1,23 @@
 ---
-name: expedite
-version: 0.2.0
+name: fix-findings
+version: 0.3.0
 license: MIT
-description: Use when the user wants to act on an audit, fix the findings in a line-check/bug-hunt/security-sweep/latent-premises/retry-safety report, work a prioritized backlog, or asks to "fix the findings", "work the backlog", "clear the audit", or "do the high-leverage items". The step after the audit roster.
+description: Use when the user wants to act on an audit, fix the findings in a repo-audit/bug-hunt/security-sweep/latent-premises/retry-safety report, work a prioritized backlog, or asks to "fix the findings", "work the backlog", "clear the audit", or "do the high-leverage items". The step after the audit skills. (formerly expedite)
+metadata:
+  formerly: expedite
 ---
 
-# expedite
+# fix-findings
 
-The expeditor at the pass drives tickets from the board to plated, in priority order, and lets nothing leave half-cooked. This skill takes an audit backlog (from line-check, bug-hunt, security-sweep, latent-premises, or retry-safety) and executes it: highest-leverage finding first, one focused change at a time, each one verified before the next is started.
+This skill takes an audit backlog (from repo-audit, bug-hunt, security-sweep, latent-premises, or retry-safety) and executes it: highest-leverage finding first, one focused change at a time, each one verified before the next is started.
 
-The audit roster is read-only on purpose. This is the separate step it hands off to. Findings already carry severity, effort, location, and a fix. The work is execution discipline, not re-analysis.
+The audit skills are read-only on purpose. This is the separate step they hand off to. Findings already carry severity, effort, location, and a fix. The work is execution discipline, not re-analysis.
 
 ## Preconditions
 
 Check before touching anything; stop and report if any fail:
-- A backlog exists. The input is an audit report following the report contract (a `## Backlog` section, or `## Findings` to sort yourself). No report? Run line-check, bug-hunt, security-sweep, latent-premises, or retry-safety first, do not freelance.
-- Working on a branch, never the default branch. Create one if needed (`expedite/<audit>-<date>`).
+- A backlog exists. The input is an audit report following the report contract (a `## Backlog` section, or `## Findings` to sort yourself). No report? Run repo-audit, bug-hunt, security-sweep, latent-premises, or retry-safety first, do not freelance.
+- Working on a branch, never the default branch. Create one if needed (`fix-findings/<audit>-<date>`).
 - Clean tree to start, so each finding's change is isolable.
 
 ## Execution
@@ -25,7 +27,7 @@ Work the backlog in leverage order (impact relative to effort), the order the re
 For each finding:
 
 1. **Read the finding, then the actual code at its "Where".** Confirm it still reproduces. Reality drifts from the report, and earlier fixes in this run may have moved or resolved later findings; a finding already fixed gets marked done and skipped, not "fixed" again. If an earlier change relocated the code, update the "Where" before proceeding.
-2. **Make the smallest change that resolves it.** One finding, one focused change. Do not bundle, do not refactor adjacent code the finding did not name, do not gold-plate.
+2. **Make the smallest change that resolves it.** One finding, one focused change. Do not bundle, do not refactor adjacent code the finding did not name, do not add unnecessary scope.
 3. **For a bug or behavior change, write the failing test first** (`superpowers:test-driven-development`). Watch it fail, then make it pass; the failing test is the proof the change does what the finding claims. For a defect whose cause is unclear, reproduce it and trace it to the root cause before proposing a fix (`superpowers:systematic-debugging`). A bandaid that masks the symptom is not a fix.
 4. **Verify the finding is actually gone.** Re-check the "Where", run the relevant tests, run the command the fix claims to repair, and read the output before marking anything done (`superpowers:verification-before-completion`). Evidence, not assertion.
 5. **Commit per finding** with a message naming the effect, not the plumbing. Keeps the diff reviewable and lets any single fix be reverted alone.
@@ -45,12 +47,12 @@ A finding is out of bounds for autonomous execution when its fix would be destru
 - One finding per change. "While I was in there" is how an audit fix becomes an unreviewable rewrite.
 - Never weaken a test or delete an assertion to make a finding "pass". That is faking the fix.
 - Never mark a finding done without verifying the original problem is gone. The report is a checklist of resolved problems, not of attempts.
-- Re-running the audit skill after expediting is the honest close: it should come back clean on what you fixed.
+- Re-running the audit skill after applying the fixes is the honest close: it should come back clean on what you fixed.
 
 ## Output shape
 
 ```markdown
-## expedite: <repo> (<date>)
+## fix-findings: <repo> (<date>)
 Branch: <branch>
 
 ### Parked (need a decision)

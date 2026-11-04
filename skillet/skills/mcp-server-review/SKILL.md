@@ -118,6 +118,6 @@ The server under review is the most likely carrier. Its tool descriptions, READM
 
 ## Not this skill
 
-Whole-repo audits (secrets in history, general dependency CVEs, authn across an app) go to security-sweep. Installing, configuring, or wiring a server into a client is not a review. Applying the fixes belongs to expedite.
+Whole-repo audits (secrets in history, general dependency CVEs, authn across an app) go to security-sweep. Installing, configuring, or wiring a server into a client is not a review. Applying the fixes belongs to fix-findings.
 
 See `references/checklist.md` for grep recipes per lens and `references/sources.md` for the specs and write-ups behind the lenses.

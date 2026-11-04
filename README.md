@@ -45,8 +45,8 @@ Skillet no longer ships general workflow skills. Several skills hand off to [Sup
 
 | | Job | What you get |
 |---|---|---|
-| **Audit** | See what matters first | line-check, bug-hunt, security-sweep, latent-premises, retry-safety with priority-sorted backlogs |
-| **Ship** | Gate what goes public and get PRs merge-ready | publish-readiness, garnish, release-cut, plate, runner |
+| **Audit** | See what matters first | repo-audit, bug-hunt, security-sweep, latent-premises, retry-safety with priority-sorted backlogs |
+| **Ship** | Gate what goes public and get PRs merge-ready | publish-readiness, garnish, release-cut, publish-scrub, merge-ready |
 | **Execute** | Plan, build, upgrade, and measure | stocktake, thermometer, reduce, fleet-conductor |
 | **Remember** | File what you learned | memory-handoff compatible with Brigade; relief for in-flight task state |
 
@@ -62,7 +62,7 @@ npx skills add escoffier-labs/skillet          # install the roster
 Then ask your agent naturally, or invoke a skill directly:
 
 ```
-/line-check        # seven-station repo audit, priority-sorted backlog
+/repo-audit        # seven-area repo audit, priority-sorted backlog
 /security-sweep    # defensive security audit, each finding with a prescribed fix
 /publish-readiness # leak scan before a repo goes public
 ```
@@ -75,18 +75,18 @@ Six skills, one report contract ([docs/audit-report-format.md](docs/audit-report
 
 | Skill | What it does |
 |-------|--------------|
-| **line-check** | The flagship. A chef's line check for your repo: walks seven stations (docs, agent-readiness, tests/CI, hygiene, structure, release hygiene, TODO mining), scores each, and delivers a backlog sorted by impact relative to effort. Brigade-aware: if the repo uses [brigade](https://github.com/escoffier-labs/brigade), its handoff and memory health get audited too. |
+| **repo-audit** | Reviews seven audit areas (docs, agent-readiness, tests/CI, hygiene, structure, release hygiene, TODO mining), scores each, and delivers a backlog sorted by impact relative to effort. Brigade-aware: if the repo uses [brigade](https://github.com/escoffier-labs/brigade), its handoff and memory health get audited too. |
 | **bug-hunt** | Correctness sweep across five lenses with mandatory adversarial verification. Only bugs that survive a refutation attempt make the report, each with a concrete trigger. |
 | **security-sweep** | Defensive security audit: secrets (tree and history), dependency CVEs, injection surfaces, authn/authz, exposure. Every finding ships with its remediation. |
 | **mcp-server-review** | Read-only security review of one MCP server, one you build or one you are about to install. Eight lenses: tool inventory and gate consistency, transport and auth, process execution, credentials, TLS and SSRF, output fencing, tool description integrity, supply chain. Reports in the security-sweep spine. |
 | **latent-premises** | Hunts the assumptions code takes for granted that nothing enforces: input shape, callee contracts, environment, ordering, cardinality. A finding needs a nameable break and ends with one resolution arrow (guard it, document it, or encode it in the type). The forward-looking counterpart to bug-hunt. |
 | **retry-safety** | Checks whether a diff's side effects survive a second run: database writes, migrations, network mutations, payments, queue consumers. The standard is idempotent read-modify-write at the side-effecting edge, and migrations also get the deploy-window lens (expand-migrate-contract). |
 
-The audit roster is read-only by design. **expedite** is the step that closes the loop:
+The audit roster is read-only by design. **fix-findings** is the step that closes the loop:
 
 | Skill | What it does |
 |-------|--------------|
-| **expedite** | Takes an audit backlog and drives it to done: highest-priority finding first, one focused change at a time, each one verified before the next, parking anything destructive or breaking for you to decide. The execution partner to the audit roster. |
+| **fix-findings** | Takes an audit backlog and drives it to done: highest-priority finding first, one focused change at a time, each one verified before the next, parking anything destructive or breaking for you to decide. The execution partner to the audit roster. |
 
 ### The line
 
@@ -101,11 +101,11 @@ Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflo
 | **research-brief** | Produces a read-only factual brief from a scoped question, dated source register, claim-to-source map, recorded disagreements, and a fresh citation-support pass. Reports inaccessible and unchecked evidence instead of filling gaps. |
 | **special** | The chef's special: walks the repo for what is possible rather than what is broken, and proposes net-new features grounded in evidence already in the code (unfinished work, asymmetries, adjacent capability, friction, ecosystem fit). Read-only, priority-sorted, every proposal tied to a signal in the walk-in and cut if it is ungrounded or fights a stated non-goal. The opportunity-finding counterpart to the audit roster. A chosen special feeds `superpowers:brainstorming`. |
 | **stagiaire** | A cook visiting from another kitchen: dispatches one-shot workers on other vendors' CLIs (cursor-agent, grok, codex, claude, agy, ollama, opencode, pi) over the user's own logins, with the exact headless flags and the silent-failure trap for each. One model call per dispatch, no API keys. Points at brigade's roster when dispatches become routine. |
-| **reduce** | Behavior-preserving simplification: boils the excess off code you just changed and concentrates the intent without altering what it does. Establishes a behavior lock (tests green before and after) before touching anything, refuses load-bearing redundancy and premature abstraction, applies one category per commit, and hands correctness or design issues to bug-hunt, security-sweep, or line-check. Applies by default, drops to a report when behavior cannot be locked. |
+| **reduce** | Behavior-preserving simplification: boils the excess off code you just changed and concentrates the intent without altering what it does. Establishes a behavior lock (tests green before and after) before touching anything, refuses load-bearing redundancy and premature abstraction, applies one category per commit, and hands correctness or design issues to bug-hunt, security-sweep, or repo-audit. Applies by default, drops to a report when behavior cannot be locked. |
 | **stocktake** | Dependency and toolchain maintenance: inventories manifests, lockfiles, runtime pins, CI pins, and the resolved graph before changing one compatibility boundary. Reads maintainer release and migration notes, reviews transitive deltas, and verifies the final resolved versions. |
 | **thermometer** | Measured performance work: pins a workload and metric, collects multiple baseline samples, profiles the bottleneck, changes one hypothesis, and compares the same samples again without trading away correctness. |
 | **pr-security-review** | Security review scoped to a diff: a PR, commit range, or staged changes. Traces each changed input to its sink and covers OWASP classes plus CI/CD workflows, new dependencies, agent and LLM surfaces, SSRF, deserialization, crypto, and security-relevant literals. Reports secrets by location and type only, treats PR text as attacker-controlled, and opens with a block, fix-before-merge, or ok verdict. Read-only. |
-| **runner** | The runner who does not leave until the plate is down: drives an open PR to merge-ready from a declared mode (drive, background, threads-only, check), working conflicts, then review threads, then CI in one batched push. Classifies a CI failure before any retry (a flake earns one fresh run, an identical second failure was never a flake, a failure outside the diff means a stale base). Skipped or stale reviews are not approval, and merge-ready never authorizes the merge. Adapted from pstack (MIT). |
+| **merge-ready** | Drives an open PR to merge-ready from a declared mode (drive, background, threads-only, check), working conflicts, then review threads, then CI in one batched push. Classifies a CI failure before any retry (a flake earns one fresh run, an identical second failure was never a flake, a failure outside the diff means a stale base). Skipped or stale reviews are not approval, and merge-ready never authorizes the merge. Adapted from pstack (MIT). |
 | **brief** | Decision-ready BLUF answers: leads with the judgment, keeps the basis on screen, and splits recommendation from report so an observed result does not get a confidence marking. |
 | **fleet-conductor** | Conducts large backlogs and multi-repository campaigns with bounded lanes, explicit held triggers, collision records, draft-readiness gates, and GitHub merge evidence. Preserves human branches and requires operator approval for competing valid approaches. |
 | **supply-chain-harden** | Hardens a repository's software supply chain as one reviewable branch, one commit per control: actions pinned to commit SHAs, least-privilege workflow tokens, workflow injection fixes, grouped Dependabot, zizmor and gitleaks in CI, npm trusted publishing with provenance, digest-pinned Docker bases, `.env` ignores, and `SECURITY.md`. Never weakens an existing check. Fleet mode hands one lane per repo to fleet-conductor. |
@@ -114,7 +114,7 @@ Generated from [`docs/assets/workflows/daily-workflow.json`](docs/assets/workflo
 | **memory-handoff** | Ends a session by writing durable knowledge into a structured handoff a memory owner can review and file. Pairs with brigade, works standalone. |
 | **relief** | The shift change: pauses in-flight work at a safe boundary with a local wip checkpoint (named files, never on the default branch, never pushed) and an untracked resume note, or picks work up by reading the trail, rebuilding state from git, picking a verdict, and verifying inherited claims on the real artifact. Task state only; durable findings still go through memory-handoff. Adapted from pstack (MIT). |
 | **lineage** | Why does this code exist: git archaeology (blame, pickaxe, PR bodies and review threads, ADRs, tests), Brigade evidence searched first, five confidence tiers from direct to unknown, mechanics kept apart from motivation, and a Preserve / Change / Avoid / Risk close before an edit. Adapted from pstack (MIT). |
-| **eighty-six** | Takes a repeated agent mistake off the menu: mines commits, reverts, and review threads for classes (twice counts), fixes each at the highest working level (remove the capability, types, a lint whose error names the replacement, a test, docs last), proves each check fails on a real past mistake, and keeps a rule-to-enforcer table. Report first, apply an approved subset. Adapted from pstack (MIT). |
+| **mistake-proof** | Prevents repeated agent mistakes: mines commits, reverts, and review threads for classes (twice counts), fixes each at the highest working level (remove the capability, types, a lint whose error names the replacement, a test, docs last), proves each check fails on a real past mistake, and keeps a rule-to-enforcer table. Report first, apply an approved subset. Adapted from pstack (MIT). |
 | **hone** | Deepens a prompt or worker brief before it is sent: what a top practitioner would do, the rawest source material, the methods and tools, and independent proof of correctness. Rewrites without deciding the author's open choices and without running the task. Adapted from pstack (MIT). |
 | **ticket-rail** | Issue intake and repro gate: frozen source coordinates, whole-thread reading, a bounded cause trace, classification, four dedupe outcomes, create only for a clear live net-new bug. An existing PR or claimed fix means hold or verify, never a competing patch, and no confirmed repro means no authored fix. Internal verdict by default. Adapted from pstack (MIT). |
 | **test-kitchen** | Creates and maintains a project-local verify skill that drives the real app: launch, read-only doctor, drive recipes with stable handles, evidence rules, cleanup that kills only what the run started, and a feature map. Maintain mode ends clean, changed, or blocked and never edits product code. Runs only on request. Adapted from pstack (MIT). |
@@ -130,8 +130,8 @@ Publication gates for prose, video, site metadata, and whole repositories.
 
 | Skill | What it does |
 |-------|--------------|
-| **plate** | The last look before prose goes public: scrubs a blog post, social draft, PR body, or commit message for internal hostnames, private IPs, leaked paths, and AI-authorship disclosures, applies writing conventions, and previews every change before editing the author's voice. |
-| **grill** | Hardens a technical post for Hacker News, Lobsters, or another skeptical audience. Checks claims, sources, numbers, title framing, and the objections likely to appear in comments, then hands the draft to plate. |
+| **publish-scrub** | The last look before prose goes public: scrubs a blog post, social draft, PR body, or commit message for internal hostnames, private IPs, leaked paths, and AI-authorship disclosures, applies writing conventions, and previews every change before editing the author's voice. |
+| **grill** | Hardens a technical post for Hacker News, Lobsters, or another skeptical audience. Checks claims, sources, numbers, title framing, and the objections likely to appear in comments, then hands the draft to publish-scrub. |
 | **reel-check** | Checks rendered reels, screen recordings, and demo videos for identity or infrastructure leaks in both source text and sampled frames, then verifies the new render. |
 | **garnish** | Audits or fixes portable website metadata: titles, descriptions, canonical URLs, robots policy, Open Graph, structured data, sitemaps, and rendered output. Project-local policy supplies domains and account values. |
 | **publish-readiness** | The gate before a repository goes public: working-tree and git-history leak scans, hygiene checks, and the history-rewrite recipe for content that already leaked. |
@@ -150,13 +150,13 @@ These skills operate optional tools. They remain top-level skill packages, but t
 Ask naturally ("audit this repo", "is this safe to publish", "cut a release") or invoke directly:
 
 ```
-/line-check
+/repo-audit
 /security-sweep
 /brigade-handoffs
 /pressure-test   (add "answer your own questions, I'm going afk" for sous mode)
 ```
 
-line-check, bug-hunt, security-sweep, latent-premises, retry-safety, and research-brief are read-only by design. The audit skills produce reports and backlogs; research-brief produces sourced findings. **expedite** is the separate, opt-in step that applies audit fixes, parking anything destructive or breaking for you to decide.
+repo-audit, bug-hunt, security-sweep, latent-premises, retry-safety, and research-brief are read-only by design. The audit skills produce reports and backlogs; research-brief produces sourced findings. **fix-findings** is the separate, opt-in step that applies audit fixes, parking anything destructive or breaking for you to decide.
 
 ## Why not something else?
 
@@ -173,7 +173,7 @@ skillet is not an agent, a runtime, or a service. It does not:
 - run a standalone agent CLI or ship binaries. Some skills bundle scripts that run only when invoked
 - install runtime dependencies or call out to the network on its own. Optional script tools and prerequisites are documented in each package
 - replace your harness, your model, or your editor
-- apply changes from read-only skills (line-check, bug-hunt, security-sweep, latent-premises, retry-safety, special, research-brief). Applying audit findings is the separate, opt-in **expedite** step
+- apply changes from read-only skills (repo-audit, bug-hunt, security-sweep, latent-premises, retry-safety, special, research-brief). Applying audit findings is the separate, opt-in **fix-findings** step
 - cut releases automatically; **release-cut** runs on request, never per feature
 
 The skills carry the procedure and the discipline. You stay in the loop for anything destructive, breaking, or public.

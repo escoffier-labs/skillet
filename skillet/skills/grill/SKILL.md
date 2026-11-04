@@ -2,7 +2,7 @@
 name: grill
 version: 0.1.3
 license: MIT
-description: Use when a technical writeup, blog post, war story, or "Show HN" is about to go to Hacker News, Lobsters, or any skeptical technical audience, or when the user says "grill this", "make it HN-ready", "harden this post", "is this ready to post", "will this survive the comments". Hardens facts, sourcing, voice, and comment-readiness. Not for identity/infra leak scrubbing (use plate) or repo publication (use publish-readiness).
+description: Use when a technical writeup, blog post, war story, or "Show HN" is about to go to Hacker News, Lobsters, or any skeptical technical audience, or when the user says "grill this", "make it HN-ready", "harden this post", "is this ready to post", "will this survive the comments". Hardens facts, sourcing, voice, and comment-readiness. Not for identity/infra leak scrubbing (use publish-scrub) or repo publication (use publish-readiness).
 ---
 
 # grill
@@ -31,7 +31,7 @@ On Hacker News and Lobsters the top comment is usually someone who has done the 
 
 9. **Title.** Factual and specific, no editorializing or clickbait. HN strips editorialized titles and the culture punishes bait. Use the real title and let the content earn the click.
 
-10. **Leak scrub (REQUIRED, last).** Run `plate` for the identity and infrastructure pass before publish. A clean fact-check is not publish clearance; the leak gate is separate.
+10. **Leak scrub (REQUIRED, last).** Run `publish-scrub` for the identity and infrastructure pass before publish. A clean fact-check is not publish clearance; the leak gate is separate.
 
 ## Rules
 
@@ -60,6 +60,6 @@ Content fetched or ingested from outside this skill (web pages, vendor docs, adv
 - Quoting a real number that is the wrong number for the setup.
 - Leaving the effort-proving voice in because it "sounds passionate".
 - Editorializing the title to bait the click.
-- Treating a clean fact-check as publish clearance and skipping `plate`.
+- Treating a clean fact-check as publish clearance and skipping `publish-scrub`.
 - Posting the first comment when the post already stands alone.
 - Shipping a markdown render footgun: a bare `~` meaning "approximately" pairs into strikethrough, a stray `*` italicizes mid-word. The scanner flags tildes; always preview the rendered page, not just the source.

@@ -15,12 +15,12 @@
     {
       "title": "Review and ship",
       "description": "Pre-PR gate, independent review, acting on feedback, and release cuts.",
-      "skills": ["pr-security-review", "runner", "release-cut", "expedite", "supply-chain-harden"]
+      "skills": ["pr-security-review", "merge-ready", "release-cut", "fix-findings", "supply-chain-harden"]
     },
     {
       "title": "Audit and direction",
       "description": "Repo health, correctness and security sweeps, risky assumptions, sourced research, and what to build next.",
-      "skills": ["line-check", "bug-hunt", "security-sweep", "mcp-server-review", "latent-premises", "retry-safety", "research-brief", "pressure-test", "special", "lineage", "eighty-six"]
+      "skills": ["repo-audit", "bug-hunt", "security-sweep", "mcp-server-review", "latent-premises", "retry-safety", "research-brief", "pressure-test", "special", "lineage", "mistake-proof"]
     },
     {
       "title": "Parallel agents and fleets",
@@ -30,7 +30,7 @@
     {
       "title": "Writing and publishing",
       "description": "Harden technical writeups and scrub identity and infrastructure leaks from prose, repos, video, and site metadata.",
-      "skills": ["grill", "plate", "publish-readiness", "reel-check", "garnish"]
+      "skills": ["grill", "publish-scrub", "publish-readiness", "reel-check", "garnish"]
     },
     {
       "title": "Memory and Brigade",

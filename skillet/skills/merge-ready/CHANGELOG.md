@@ -1,4 +1,8 @@
-# runner changelog
+# merge-ready changelog
+
+## 0.2.0 - 2026-11-03
+
+- Renamed to merge-ready; added metadata.formerly and a temporary description suffix for old-name routing. No alias directory ships. Procedures are unchanged; kitchen metaphors now use plain English.
 
 ## 0.1.0 - 2026-10-20
 

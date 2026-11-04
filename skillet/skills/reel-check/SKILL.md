@@ -2,12 +2,12 @@
 name: reel-check
 version: 0.1.1
 license: MIT
-description: Use before a rendered reel, screen-recording, demo video, or GIF goes public (social, YouTube, a landing page) to catch identity and infrastructure leaks burned into the frames. Also use when the user asks "is this reel safe to post", "scrub this video", or before a video-publishing pipeline ships an MP4. For plain prose use plate; for repos use publish-readiness.
+description: Use before a rendered reel, screen-recording, demo video, or GIF goes public (social, YouTube, a landing page) to catch identity and infrastructure leaks burned into the frames. Also use when the user asks "is this reel safe to post", "scrub this video", or before a video-publishing pipeline ships an MP4. For plain prose use publish-scrub; for repos use publish-readiness.
 ---
 
 # reel-check
 
-The video equivalent of plate: the last look before a reel leaves the kitchen. A reel leaks differently from prose, so it needs its own pass. plate scrubs a block of text you can read and edit. A reel is a rendered MP4 you **cannot grep**, built from two surfaces that each leak:
+The video equivalent of publish-scrub: the last look before a reel leaves the kitchen. A reel leaks differently from prose, so it needs its own pass. publish-scrub scrubs a block of text you can read and edit. A reel is a rendered MP4 you **cannot grep**, built from two surfaces that each leak:
 
 1. **The composition source** - the text that gets burned into the frames.
 2. **The recording footage** - whatever the screen capture happened to show.
@@ -25,11 +25,11 @@ The captions, titles, and labels viewers read come from source files, not the vi
 - **Narration** - `SCRIPT.md`, TTS input text, voiceover scripts (a leak spoken aloud is still a leak).
 - **Brand sheet** - `DESIGN.md` and any generated metadata that ships with the project.
 
-Leak types are the same as plate: internal hostnames and machine names, private IPs (RFC 1918), LAN URLs / ports / dashboards, absolute home paths (`/home/<user>`, `/Users/<name>`), non-public personal emails, and AI-authorship disclosure. See plate for the full list, the doc-range replacements (RFC 5737 `192.0.2.x`), and the writing conventions (no em dashes). A cold agent will not know the user's machine names - ask, or flag any internal-looking host for confirmation.
+Leak types are the same as publish-scrub: internal hostnames and machine names, private IPs (RFC 1918), LAN URLs / ports / dashboards, absolute home paths (`/home/<user>`, `/Users/<name>`), non-public personal emails, and AI-authorship disclosure. See publish-scrub for the full list, the doc-range replacements (RFC 5737 `192.0.2.x`), and the writing conventions (no em dashes). A cold agent will not know the user's machine names - ask, or flag any internal-looking host for confirmation.
 
 ### 2. Recording footage (incidental leaks)
 
-A screen recording shows far more than the text you authored. This is the surface plate has no concept of, and it is the one most often missed. Eyeball the footage for:
+A screen recording shows far more than the text you authored. This is the surface publish-scrub has no concept of, and it is the one most often missed. Eyeball the footage for:
 
 - **Shell prompts** - `user@hostname` in the terminal prompt, the path in `pwd`, a private IP in an `ssh`/`curl` command.
 - **Browser chrome** - the URL bar, an internal dashboard, a private IP, logged-in account name or avatar.
@@ -61,7 +61,7 @@ Read every sampled frame. Burned-in text and incidental footage leaks only show 
 2. Wait for confirmation before rewriting the user's voice. A hostname is an obvious fix; a caption reword is a stylistic call.
 3. Apply: scrub source text, then **re-render**; for footage, re-record or crop/blur, then re-render.
 4. **Frame-verify the new MP4** - re-sample frames and confirm the leak is gone from the drawn pixels. Scrubbing the source is not done until the rendered frames prove it.
-5. Run plate on any caption/narration prose for the writing conventions.
+5. Run publish-scrub on any caption/narration prose for the writing conventions.
 
 ## Untrusted content
 

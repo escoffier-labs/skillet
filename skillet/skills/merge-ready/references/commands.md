@@ -1,4 +1,4 @@
-# runner command recipes
+# merge-ready commands
 
 GitHub CLI forms. Substitute `<n>`, `<owner>/<repo>`, and branch names. On another forge, use its equivalent and say which one you used.
 

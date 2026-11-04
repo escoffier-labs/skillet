@@ -43,7 +43,7 @@ case "$FAKE_BEHAVIOR" in
   foreign-init) tool Skill '{"skill":"skillet:special"}' ;;
   skill-first) tool Read '{"file_path":"x"}'; tool Skill '{"skill":"skillet:special"}'; tool Bash '{"command":"ls"}' ;;
   bash-first) tool Bash '{"command":"ls"}'; tool Skill '{"skill":"skillet:special"}' ;;
-  wrong-skill) tool Skill '{"skill":"skillet:plate"}'; tool Edit '{"file_path":"x"}' ;;
+  wrong-skill) tool Skill '{"skill":"skillet:publish-scrub"}'; tool Edit '{"file_path":"x"}' ;;
   no-tool) echo '{"type":"assistant","message":{"content":[{"type":"text","text":"just text"}]}}' ;;
   crash) echo "boom" >&2; exit 3 ;;
 esac
@@ -70,7 +70,7 @@ out="$(run bash-first --only build)"; rc=$?
 [ "$rc" -eq 1 ] && printf '%s' "$out" | grep -q 'FAIL.*first action Bash' && pass "action before the skill fails" || fail "bash-first rc=$rc: $out"
 
 out="$(run wrong-skill --only build)"; rc=$?
-[ "$rc" -eq 1 ] && printf '%s' "$out" | grep -q 'skills called: skillet:plate' && pass "wrong skill fails and names what fired" || fail "wrong-skill rc=$rc: $out"
+[ "$rc" -eq 1 ] && printf '%s' "$out" | grep -q 'skills called: skillet:publish-scrub' && pass "wrong skill fails and names what fired" || fail "wrong-skill rc=$rc: $out"
 
 out="$(run unprefixed --only build)"; rc=$?
 [ "$rc" -eq 1 ] && printf '%s' "$out" | grep -q 'FAIL' && pass "an unprefixed skill name does not count" || fail "unprefixed rc=$rc: $out"

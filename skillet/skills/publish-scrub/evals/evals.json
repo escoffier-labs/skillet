@@ -1,6 +1,6 @@
 {
   "schema_version": "skillet.evals.v1",
-  "skill_name": "plate",
+  "skill_name": "publish-scrub",
   "evals": [
     {
       "id": "scrub-private-ip",
