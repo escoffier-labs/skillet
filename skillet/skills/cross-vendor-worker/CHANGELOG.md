@@ -1,5 +1,9 @@
 # cross-vendor-worker changelog
 
+## Unreleased
+
+- Document OpenCode 2.2.6 background-job waiting, timeout and cancellation behavior, and worktree flag constraints from upstream release notes.
+
 ## 0.2.0 - 2026-11-03
 
 - Renamed to cross-vendor-worker; added metadata.formerly and a temporary description suffix for old-name routing. No alias directory ships. Procedures are unchanged; kitchen metaphors now use plain English.
