@@ -42,6 +42,13 @@ Each of these was found by a dispatch that looked successful and was not. Check 
 - **pi's system prompt does not name the model, and bad tier suffixes pass through.** Identity self-reports hallucinate (a gpt-5.6-sol run claimed to be GPT-5.2). Verify at the request layer, not by asking. An invalid `:tier` suffix becomes a literal model id the backend rejects, while valid tiers (`off` through `max`) are parsed and applied. pi serves gpt-5.6-luna where opencode cannot.
 - **opencode can edit the wrong project, on both versions.** Workers non-deterministically apply edits to a previously registered project instead of their own directory (anomalyco/opencode#36498). Seen on the v2 beta (3/10 runs) and on stable 1.17.18 (overwrote canonical files in a real multi-job run, though a minimal repro passes). Do not trust opencode-native isolated file-editing workers on any version. For dispatch, one-shot read tasks are fine, and empty output with exit 0 usually means the model slug is broken upstream, not that the model had nothing to say.
 
+OpenCode 2.2.6 waits for background jobs started by `opencode run` before
+exiting, with no built-in deadline. Bound scripted runs with an external
+timeout and keep persistent servers or watchers out of worker tasks. SIGTERM
+cancels the session and its background jobs and exits with status 143.
+`--worktree` cannot be combined with `--continue` or `--session`; its presence
+does not establish that the project-isolation issue above is fixed.
+
 ## Orchestrating instead of dispatching once
 
 For a setup with an orchestrator and workers where a primary model plans, fans out, and synthesizes, opencode's agent config does it natively. Two rules make it safe and cheap:
