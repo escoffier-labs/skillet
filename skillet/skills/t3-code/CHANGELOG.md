@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Document command setup and the CLI installation prompt on newer T3 nightlies.
+
 - Explain project pinning, archival and restoration on T3 0.1.6, with live-schema and readback checks.
 
 ## 0.1.3 - 2026-07-24

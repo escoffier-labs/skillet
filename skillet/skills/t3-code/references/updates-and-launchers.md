@@ -81,6 +81,13 @@ yay -S t3code-bin
 
 The website download page remains the source for the Windows installer, macOS disk images, and Linux AppImage when a package manager is not used.
 
+Nightly 20261109.4399 sets up the `t3` command on fresh desktop installs,
+and `npx t3` can offer to install it. Treat that offer as an installation
+change: confirm the intended channel and existing command path before
+accepting. Recheck command resolution afterward; an older desktop install
+may still need its existing setup procedure.
+See [the nightly release](https://github.com/pingdotgg/t3code/releases/tag/v0.1.8-nightly.20261109.4399).
+
 ## Identify the install source
 
 Before updating, record:
