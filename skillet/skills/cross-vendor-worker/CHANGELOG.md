@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Clarify that Claude Code print mode does not enforce read-only tool access, including mod calls in 2.1.321.
+
 - Document OpenCode 2.2.6 background-job waiting, timeout and cancellation behavior, and worktree flag constraints from upstream release notes.
 
 ## 0.2.0 - 2026-11-03
