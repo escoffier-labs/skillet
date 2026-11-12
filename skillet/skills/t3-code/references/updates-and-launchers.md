@@ -84,7 +84,7 @@ The website download page remains the source for the Windows installer, macOS di
 Nightly 20261109.4399 sets up the `t3` command on fresh desktop installs,
 and `npx t3` can offer to install it. Treat that offer as an installation
 change: confirm the intended channel and existing command path before
-accepting. Recheck command resolution afterward; an older desktop install
+accepting. Recheck command resolution afterward. An older desktop install
 may still need its existing setup procedure.
 See [the nightly release](https://github.com/pingdotgg/t3code/releases/tag/v0.1.8-nightly.20261109.4399).
 
@@ -112,6 +112,20 @@ Check these independently:
 - Wrapper or symlink that selects a version.
 
 An update banner may refer to one component while another is already current.
+
+## Refresh tools discovered by the server
+
+Nightly 20261112.4580 lets Environment Rescan discover tools installed after
+the server started. After an authorized tool install, rescan the selected
+environment and verify its detected executable and version. Check the live
+catalog for the supported operation before constructing a tool call.
+
+T3-managed OpenCode updates also restart the OpenCode background service on
+the new version. Verify the running service and a fresh provider read after
+the update. An external CLI update still needs its own runtime verification.
+These changes do not authorize an update or a restart during active work.
+
+See [the nightly release](https://github.com/pingdotgg/t3code/releases/tag/v0.1.10-nightly.20261112.4580).
 
 ## Durable local layout
 

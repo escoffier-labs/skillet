@@ -1,5 +1,9 @@
 # t3-code changelog
 
+## 2026-11-12
+
+- Document environment rescanning after tool installation and runtime verification after T3-managed OpenCode updates. Checked against nightly 20261112.4580 release notes.
+
 ## Unreleased
 
 - Document command setup and the CLI installation prompt on newer T3 nightlies.
