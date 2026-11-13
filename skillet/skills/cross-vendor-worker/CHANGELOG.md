@@ -1,5 +1,9 @@
 # cross-vendor-worker changelog
 
+## 2026-11-13
+
+- Distinguish Codex 0.169.0 project trust from sandbox permissions and the Git directory check.
+
 ## Unreleased
 
 - Document OpenCode 2.2.6 background-job waiting, timeout and cancellation behavior, and worktree flag constraints from upstream release notes.
