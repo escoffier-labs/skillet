@@ -25,7 +25,7 @@ Then rewrite the prompt so it asks for exactly that.
 ## Rewrite rules
 
 - **Same task, more depth.** Keep the goal and scope. If a change would widen scope, list it under open choices instead.
-- **Leave the author's decisions open.** Where the prompt has a real fork (which approach, which tradeoff, which audience, how much to spend), do not choose. List it.
+- **Separate experiments from preferences.** If a bounded experiment within the stated scope can decide a technical choice, ask the worker to run it and recommend an option from the observed results. Keep product, audience, budget, and preference decisions with the author. If the experiment would need more scope or permission, list it as an open choice.
 - **Make the asks checkable.** Each added requirement should name an observable result, not an adjective ("rigorous", "thorough").
 - **Keep the voice and constraints.** Preserve stated limits, output format, and anything the author fixed on purpose. Do not add ceremony, role-play preambles, or filler.
 - **Do not run it.** No research, no code, no answers to the underlying task. If you need a fact to sharpen the prompt, say what to look up and leave it to the author.
