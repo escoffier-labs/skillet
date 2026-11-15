@@ -1,5 +1,9 @@
 # graphtrail changelog
 
+## Unreleased
+
+- Route structural queries through Brigade Code Graph and document the 0.31 engine names, index precedence and evidence command aliases.
+
 Earlier history lives in the repo-level CHANGELOG.md.
 
 ## 0.1.1 - 2026-07-09

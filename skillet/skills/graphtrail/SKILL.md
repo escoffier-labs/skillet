@@ -2,45 +2,54 @@
 name: graphtrail
 version: 0.1.1
 license: MIT
-description: Use when answering structural code questions in an indexed repo - who calls this, what does this call, what breaks if I change it, what changed between two versions. Reach for it BEFORE grep whenever the question is about relationships between symbols rather than text. Triggers include "who calls", "what uses", "blast radius", "impact of changing", "callers of", "what depends on", and reviewing a diff's structural effect.
+description: Compatibility skill for structural code questions in an indexed repo. Use Brigade Code Graph through `brigade code` for callers, callees, impact, affected tests, context, cycles, and graph diffs. Never call the retired application or MCP server directly.
 ---
 
-# graphtrail
+# Brigade Code Graph
 
-GraphTrail keeps a SQLite code graph (symbols, imports, call edges) per repo, synced incrementally and queryable through 9 MCP tools. The point of this skill: for structural questions, the graph answers in one call what grep answers in five speculative ones, and the graph knows about relationships grep cannot see (cross-file call resolution through imports, transitive impact, before/after structure).
+The `graphtrail` skill id remains as a compatibility alias for existing harness profiles. The supported agent-facing surface is Brigade Code Graph through the `brigade code` command family.
 
-## When to use which tool
+## Start and freshness
 
-- **"Who calls X?"** -> `callers`. **"What does X call?"** -> `callees`. Exact answers from resolved call edges, including cross-file calls resolved through imports. grep finds the string `X(`; the graph finds the actual callers of THIS `X`.
-- **"What breaks if I change X?"** -> `impact` with `--depth` for transitive reach. This is the blast-radius question; hop counts tell you how direct the dependency is.
-- **"Where is symbol X?"** -> `search` (qualified-name aware, path-filterable). Faster and more precise than grep for symbol lookup; use grep when you want arbitrary text, comments, or strings.
-- **"What is around this file?"** -> `file_neighbors` (imports in, imports out, co-change candidates) and `context` for an orientation brief before editing unfamiliar code.
-- **"What changed structurally?"** -> `diff` with two DB snapshots (`--before`/`--after`). Reports added/removed/changed symbols (body-hash exact: a body edit with unchanged signature is detected) and call-edge changes, with line-insensitive edge counts alongside raw ones. Brigade attaches these deltas to verify and run receipts automatically, and records `context_eval.brief_hit_rate` when a pre-run code-graph brief is compared to the post-run delta (did the brief name the files that actually changed?).
-- **"Which repos are indexed?"** -> `repos`; per-repo numbers -> `stats`.
+Run commands from the repository root.
 
-## Freshness
+```bash
+brigade code doctor . --json
+brigade code sync .
+```
 
-The graph re-syncs on a 15-minute timer, at session start (hook), and on demand: query tools accept `refresh: true` to run an incremental sync before answering. Sync is incremental and cheap; a no-op pass is sub-second. Use `refresh: true` when you just wrote code and are about to ask about it.
+Sync before a structural claim when the repository changed after the latest index. The graph is derived state and can be rebuilt.
 
-## When NOT to use it
+## Choose the query by the question
 
-- Text questions: strings, comments, TODO hunts, log messages. That is grep/ripgrep.
-- Pattern-shaped syntax questions ("find every `foo(_, None)` call shape"): that is ast-grep, which matches tree structure by example. The three lanes are exact-graph (graphtrail), tree-pattern (ast-grep), and text (grep). Pick by question shape.
-- Repos with no `.graphtrail/` index: check `repos` first; index one with `graphtrail sync <root>` if it should be covered.
+- Who calls a symbol: `brigade code callers '<symbol>' --json`
+- What a symbol calls: `brigade code callees '<symbol>' --json`
+- Transitive blast radius: `brigade code impact '<symbol>' --depth 3 --json`
+- Tests attributed to changed files: `brigade code affected <file>... --json`
+- Symbol lookup: `brigade code search '<query>' --json`
+- File dependencies: `brigade code neighbors <path> --json`
+- Task orientation: `brigade code context '<task>' --personalized --markdown`
+- Dependency cycles: `brigade code cycles --json`
+- Structural comparison: `brigade code diff --before <db> --after <db> --json`
 
-## Honest limits
+Use `rg` for strings, comments, log text, and arbitrary patterns. Use `ast-grep` for syntax-shaped patterns. Use Brigade Code Graph for resolved relationships between symbols and files.
 
-- Call edges include the call line, so raw added/removed edge counts churn on pure line shifts; the diff's line-insensitive counts exist for exactly this. Read both.
-- Dynamic dispatch, reflection, and metaprogrammed calls are not in the graph. An empty `callers` result means no STATIC callers.
-- The graph is derived state, rebuildable by rescan. When in doubt about staleness, `refresh: true` or `graphtrail sync`.
+## Reporting contract
 
-## Brigade loop (when the repo is Brigade-wired)
+Paste actual impacted symbols and attributed tests into the work reasoning before a non-trivial edit. An empty result means no static relationship was found. It does not prove that dynamic dispatch, reflection, generated code, or runtime configuration has no dependency.
 
-GraphTrail is half of the measured context loop. After work flows through Brigade:
+Do not invoke the retired executable, direct MCP tools, or application repository commands. If `brigade code` is unavailable, name that check as skipped and continue with source inspection.
 
-1. Verify/run receipts carry `code_graph_delta` (fail-open if GraphTrail is missing).
-2. `brigade receipts export miseledger --new-only --import` archives those receipts.
-3. The next `brigade run` can attach a MiseLedger evidence brief; when a code-graph brief was present, `context_eval.brief_hit_rate` measures coverage.
-4. `brigade operator checkup` reports graph ok / ledger ok / last brief hit rate in one glance.
+Raw graph diffs can count line shifts as edge churn. Read line-insensitive counts as well as raw counts. Supported Brigade verification and run receipts may attach graph deltas. Missing engine support or an uncovered file is a skipped graph check, never proof of no impact. Follow the repository's verification policy for receipt and scoring limits.
 
-Use `brigade-work` for the full verify → capture → export discipline; this skill is the structural-query half.
+## Brigade 0.31 engine compatibility
+
+New indexes use `.brigade/code-graph/code-graph.db`. Existing legacy indexes
+stay in place, and the new location wins when both exist. Check
+`brigade code doctor . --json` before assuming an index is missing.
+
+The canonical engine names are `brigade-code-graph` and `brigade-evidence`.
+Prefer `BRIGADE_CODE_GRAPH_DB` for an explicit database path. Conflicting
+old and new database variables are refused. Use `brigade receipts export
+evidence` and `brigade work import context --from-evidence` for the evidence
+loop. Older command spellings remain supported aliases.

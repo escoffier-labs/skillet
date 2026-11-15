@@ -49,6 +49,12 @@ cancels the session and its background jobs and exits with status 143.
 `--worktree` cannot be combined with `--continue` or `--session`; its presence
 does not establish that the project-isolation issue above is fixed.
 
+OpenCode 2.3.0 subagents always run in the background. A task call returns
+the child session ID immediately. Retain that ID and read the later report.
+An idle report can still say the child's own background work is running.
+Treat that report as partial and collect the final result before claiming
+completion. Returning a session ID does not mean the task finished.
+
 ## Orchestrating instead of dispatching once
 
 For a setup with an orchestrator and workers where a primary model plans, fans out, and synthesizes, opencode's agent config does it natively. Two rules make it safe and cheap:
