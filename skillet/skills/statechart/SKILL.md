@@ -1,6 +1,6 @@
 ---
 name: statechart
-version: 0.1.0
+version: 0.1.1
 license: MIT
 description: Use only when the user explicitly asks for a Mermaid statechart, a user-visible chart of a TLA+ model or counterexample, a code/spec/fix chart comparison, or a TLA+ scaffold from an agreed chart.
 ---
@@ -38,6 +38,18 @@ from reviewed data or report the blocker.
 Run `node scripts/statechart.mjs --help` from this package for all flags, output
 files, chart conventions, and exit codes. Use absolute script paths when working
 in scratch. See [PROVENANCE.md](PROVENANCE.md) for source and local changes.
+
+## Deadlock coverage
+
+The bundled helper passes TLC's `-deadlock` option, which disables deadlock
+checking. A passing chart run therefore does not establish deadlock freedom.
+Deadlock freedom alone also does not establish liveness or termination. Check the
+requested temporal property separately when it is in scope.
+When progress or termination is part of the requested property, run the project's
+verifier with deadlock checking enabled and report that result separately.
+Distinguish an intended terminal state from an unexpected stuck state using the
+code and agreed behavior. Add a terminal-only stuttering action only when that
+behavior is justified. Do not add a general self-loop to conceal a deadlock.
 
 ## From model or code to chart
 
