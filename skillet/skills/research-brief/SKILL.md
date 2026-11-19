@@ -1,7 +1,8 @@
 ---
 name: research-brief
-version: 0.1.0
 license: MIT
+metadata:
+  version: "0.1.0"
 description: Use when the user asks for researched, sourced, evidence-backed, or current findings, especially for a recommendation or factual brief. Do not use for a single-page summary, ordinary codebase inspection, review of an existing technical post, or decision pressure-testing when the request already supplies all evidence.
 ---
 

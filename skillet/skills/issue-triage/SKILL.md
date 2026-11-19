@@ -1,8 +1,8 @@
 ---
 name: issue-triage
-version: 0.2.0
 license: MIT
 metadata:
+  version: "0.2.0"
   formerly: ticket-rail
 description: Use when an issue, bug report, support thread, or user complaint arrives and needs triage before anyone fixes it - "triage this issue", "is this a duplicate", "can you reproduce this", "should we open an issue for this", "someone reported X". Not for fixing a confirmed bug (use superpowers:systematic-debugging). (formerly ticket-rail)
 ---

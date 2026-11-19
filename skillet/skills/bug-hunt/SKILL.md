@@ -1,7 +1,8 @@
 ---
 name: bug-hunt
-version: 0.1.0
 license: MIT
+metadata:
+  version: "0.1.0"
 description: Use when asked to find bugs, hunt for correctness issues, sweep a codebase for defects, or verify a repo behaves as intended. Not for style or architecture review; this is defect-finding only.
 ---
 

@@ -1,8 +1,8 @@
 ---
 name: work-handover
-version: 0.2.0
 license: MIT
 metadata:
+  version: "0.2.0"
   formerly: relief
 description: Use when in-flight work must change hands - the user says "pause", "stop here", "pause this so another agent can continue", or the context is about to fill or compact - or when taking over unfinished work with "continue where we left off", "pick up this branch", "resume the last session", or "what did the previous agent do". (formerly relief)
 ---

@@ -1,8 +1,8 @@
 ---
 name: dependency-audit
-version: 0.2.0
 license: MIT
 metadata:
+  version: "0.2.0"
   formerly: stocktake
 description: Use when auditing, updating, or migrating project dependencies, runtimes, package managers, lockfiles, or toolchains. Requires reading authoritative release and migration notes, changing one compatibility boundary at a time, and verifying the resolved dependency graph. (formerly stocktake)
 ---

@@ -1,7 +1,8 @@
 ---
 name: pr-security-review
-version: 0.1.0
 license: MIT
+metadata:
+  version: "0.1.0"
 description: Use when asked to security-review a pull request, a commit range, or staged changes, to check a diff for vulnerabilities or leaked secrets before merge, or to vet a PR from an outside contributor. Scoped to the diff. A whole-repo audit goes to security-sweep.
 ---
 

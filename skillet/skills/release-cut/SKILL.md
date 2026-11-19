@@ -1,7 +1,8 @@
 ---
 name: release-cut
-version: 0.1.0
 license: MIT
+metadata:
+  version: "0.1.0"
 description: Use when the user asks to cut a release, tag a version, publish a release, or roll up the changelog. Not for routine merges; releases happen on request, not per feature.
 ---
 

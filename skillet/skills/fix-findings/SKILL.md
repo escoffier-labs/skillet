@@ -1,9 +1,9 @@
 ---
 name: fix-findings
-version: 0.3.0
 license: MIT
 description: Use when the user wants to act on an audit, fix the findings in a repo-audit/bug-hunt/security-sweep/latent-premises/retry-safety report, work a prioritized backlog, or asks to "fix the findings", "work the backlog", "clear the audit", or "do the high-leverage items". The step after the audit skills. (formerly expedite)
 metadata:
+  version: "0.3.0"
   formerly: expedite
 ---
 

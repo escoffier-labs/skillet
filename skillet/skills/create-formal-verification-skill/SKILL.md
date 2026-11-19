@@ -1,7 +1,8 @@
 ---
 name: create-formal-verification-skill
-version: 0.1.0
 license: MIT
+metadata:
+  version: "0.1.0"
 description: Use only when the user explicitly requests a project-local formal verification skill, model checking, or a proof of a code-backed invariant. Do not trigger for ordinary test setup or application smoke checks.
 ---
 

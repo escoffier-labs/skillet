@@ -1,7 +1,8 @@
 ---
 name: fleet-conductor
-version: 0.2.0
 license: MIT
+metadata:
+  version: "0.2.0"
 description: Use when conducting a large backlog or multi-repository campaign across several worker lanes, especially when work needs bounded ownership, held dependencies, collision control, draft pull request gates, and evidence-based landing. Triggers on "conduct the fleet", "burn down the backlog", "run a multi-repo campaign", or "land these agent PRs".
 ---
 

@@ -1,7 +1,8 @@
 ---
 name: graphtrail
-version: 0.1.1
 license: MIT
+metadata:
+  version: "0.1.1"
 description: Compatibility skill for structural code questions in an indexed repo. Use Brigade Code Graph through `brigade code` for callers, callees, impact, affected tests, context, cycles, and graph diffs. Never call the retired application or MCP server directly.
 ---
 

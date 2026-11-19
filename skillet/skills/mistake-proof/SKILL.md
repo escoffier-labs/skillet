@@ -1,9 +1,9 @@
 ---
 name: mistake-proof
-version: 0.2.0
 license: MIT
 description: Use when agents keep repeating the same mistake in a repository, the operator keeps correcting the same thing, or the user asks to "make this mistake impossible", "stop agents doing X", "harden the repo against agent errors", or audit which CLAUDE.md or AGENTS.md rules anything actually enforces. (formerly eighty-six)
 metadata:
+  version: "0.2.0"
   formerly: eighty-six
 ---
 

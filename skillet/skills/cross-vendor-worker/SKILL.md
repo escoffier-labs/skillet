@@ -1,8 +1,8 @@
 ---
 name: cross-vendor-worker
-version: 0.2.0
 license: MIT
 metadata:
+  version: "0.2.0"
   formerly: stagiaire
 description: Use when the session needs an answer or work product from a model on ANOTHER vendor's stack - a second opinion from a different model family, a cheap fast model for bulk work, or a cross-model review. Triggers include "ask grok/composer/gemini/claude/codex what it thinks", "get a second opinion from a different model", "cross-model review", "run this by another model", "poll several models". If a Brigade roster exists, prefer `brigade run --worker`. (formerly stagiaire)
 ---

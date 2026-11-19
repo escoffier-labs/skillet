@@ -1,7 +1,8 @@
 ---
 name: maintain-formal-verification-skill
-version: 0.1.0
 license: MIT
+metadata:
+  version: "0.1.0"
 description: Use only when the user explicitly requests maintenance of an existing formal verification skill or asks whether its model, proof, or harness still matches changed code. Do not trigger on routine merges or ordinary application verification.
 ---
 

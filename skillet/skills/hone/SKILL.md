@@ -1,7 +1,8 @@
 ---
 name: hone
-version: 0.1.0
 license: MIT
+metadata:
+  version: "0.1.0"
 description: Use when a prompt, worker brief, or task description is about to be sent to another agent or model and should be deeper first, or the user says "sharpen this prompt", "hone this brief", "make this deeper, not bigger", or "improve this before I dispatch it".
 ---
 
