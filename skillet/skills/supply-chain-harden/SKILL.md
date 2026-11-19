@@ -1,7 +1,8 @@
 ---
 name: supply-chain-harden
-version: 0.1.0
 license: MIT
+metadata:
+  version: "0.1.0"
 description: Use when asked to harden a repository's software supply chain, pin GitHub Actions to commit SHAs, lock down workflow permissions, add Dependabot or secret scanning to CI, move npm publishing to trusted publishing with provenance, or pin Docker base images. Applies the changes as one reviewable branch per repo. Read-only audits belong to security-sweep.
 ---
 

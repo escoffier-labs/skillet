@@ -1,8 +1,8 @@
 ---
 name: feature-ideas
-version: 0.2.0
 license: MIT
 metadata:
+  version: "0.2.0"
   formerly: special
 description: Use when asked what to build next, what features a repo is missing, where the opportunities are, or to suggest a direction or roadmap grounded in the code. Triggers on "what should we build next", "what's missing", "suggest features", "what's the next thing". Proposes opportunities, not fixes; for finding problems use repo-audit, bug-hunt, or security-sweep. (formerly special)
 ---

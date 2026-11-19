@@ -1,7 +1,8 @@
 ---
 name: security-sweep
-version: 0.1.2
 license: MIT
+metadata:
+  version: "0.1.2"
 description: Use when asked to security-audit a repository, find vulnerabilities and prescribe fixes, check for leaked secrets, review dependencies for known CVEs, or harden a project before exposure. Read-only audit. Applying the fixes belongs to fix-findings.
 ---
 

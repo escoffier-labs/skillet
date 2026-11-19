@@ -1,7 +1,8 @@
 ---
 name: memory-handoff
-version: 0.1.1
 license: MIT
+metadata:
+  version: "0.1.1"
 description: Use at the end of any session that discovered durable knowledge (architecture decisions, root causes, setup gotchas, workflow changes, security findings, reusable patterns), or when the user says "hand off", "write a handoff", or "save this for the memory system".
 ---
 

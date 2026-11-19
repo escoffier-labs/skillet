@@ -1,7 +1,8 @@
 ---
 name: lineage
-version: 0.1.0
 license: MIT
+metadata:
+  version: "0.1.0"
 description: Use when asked why code exists or why it works the way it does - "why is this here", "why did we pick Y", "who added this and for what", "is it safe to remove", a regression's origin, a magic threshold, or a workaround with no comment - and before deleting or reshaping code whose reason you cannot see.
 ---
 

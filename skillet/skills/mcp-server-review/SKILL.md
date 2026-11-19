@@ -1,7 +1,8 @@
 ---
 name: mcp-server-review
-version: 0.1.0
 license: MIT
+metadata:
+  version: "0.1.0"
 description: Use when asked to security-review an MCP (Model Context Protocol) server, either one you are building or one you are about to install, audit its tools for unsafe gating, exec, credential, transport, or tool-description risks, or decide whether a third-party MCP server is safe to connect to an agent. Read-only review. Whole-repo audits belong to security-sweep.
 ---
 

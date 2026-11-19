@@ -1,8 +1,8 @@
 ---
 name: perf-measure
-version: 0.3.0
 license: MIT
 metadata:
+  version: "0.3.0"
   formerly: thermometer
 description: Use when investigating or improving performance, latency, throughput, memory use, CPU use, startup time, or bundle size. Establishes a repeatable baseline and profiles the measured bottleneck before any optimization. (formerly thermometer)
 ---

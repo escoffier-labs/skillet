@@ -1,7 +1,8 @@
 ---
 name: brigade-handoffs
-version: 0.1.1
 license: MIT
+metadata:
+  version: "0.1.1"
 description: Use when setting up, checking, writing, linting, or troubleshooting Brigade memory handoffs for a repo or agent workspace, especially when a user wants durable agent memory, handoff inboxes, cross-harness memory routing, or a safe first Brigade setup.
 ---
 

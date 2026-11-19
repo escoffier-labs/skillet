@@ -1,7 +1,8 @@
 ---
 name: reduce
-version: 0.2.0
 license: MIT
+metadata:
+  version: "0.2.0"
 description: Use when asked to simplify, clean up, tidy, or refactor code for clarity without changing what it does, or when the user says "simplify this", "clean this up", "make it readable", "reduce the complexity", or "tidy this". Behavior-preserving only; not a bug or security audit (use bug-hunt or security-sweep for those).
 ---
 

@@ -340,7 +340,9 @@ while i < len(fm):
 
 if not isinstance(metadata, dict):
     fail("frontmatter must be a YAML mapping")
-for key in ("name", "description", "license", "version"):
+if "version" in metadata:
+    fail("top-level frontmatter 'version' is not allowed; use metadata.version")
+for key in ("name", "description", "license"):
     if key not in metadata:
         fail(f"frontmatter missing {key!r}")
     if not isinstance(metadata[key], str):
@@ -354,9 +356,13 @@ if not 1 <= len(metadata["description"]) <= 1024:
     fail("frontmatter description must be 1-1024 characters")
 if metadata["license"] != "MIT":
     fail("frontmatter license must declare repository license MIT")
-if not re.fullmatch(r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)", metadata["version"]):
-    fail("frontmatter version must use x.y.z semver")
-print(metadata["version"])
+skill_metadata = metadata.get("metadata")
+if not isinstance(skill_metadata, dict) or "version" not in skill_metadata:
+    fail("frontmatter missing 'metadata.version'")
+skill_version = skill_metadata["version"]
+if not re.fullmatch(r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)", skill_version):
+    fail("frontmatter metadata.version must use x.y.z semver")
+print(skill_version)
 print(json.dumps(metadata["description"]))
 PY
 )"; then
@@ -394,22 +400,8 @@ PY
     echo "[fail] $id: skill.json invalid"; return 1
   fi
   if command -v brigade >/dev/null 2>&1; then
-    local brigade_output brigade_tmp
-    if ! brigade_output="$(brigade skills lint "$dir" 2>&1)"; then
-      if ! printf '%s\n' "$brigade_output" |
-        grep -Fxq 'error: unknown frontmatter field: version'; then
-        echo "[fail] $id: brigade skills lint failed"; return 1
-      fi
-      brigade_tmp="$(mktemp -d)"
-      mkdir -p "$brigade_tmp/$id"
-      cp -a "$dir"/. "$brigade_tmp/$id/"
-      sed -i '/^version:/d' "$brigade_tmp/$id/SKILL.md"
-      if ! brigade skills lint "$brigade_tmp/$id" >/dev/null 2>&1; then
-        rm -rf "$brigade_tmp"
-        echo "[fail] $id: brigade skills lint failed after removing unsupported version field"
-        return 1
-      fi
-      rm -rf "$brigade_tmp"
+    if ! brigade skills lint "$dir" >/dev/null 2>&1; then
+      echo "[fail] $id: brigade skills lint failed"; return 1
     fi
   fi
   # Script-test contract: a skill that ships executable helper scripts under
@@ -1179,8 +1171,8 @@ check_linter_regressions() {
 
   description_1024="$(python3 -c 'print("x" * 1024, end="")')"
   description_1025="${description_1024}x"
-  printf '%s\n' '---' 'name: valid-length' 'version: 0.1.0' "description: \"$description_1024\"" 'license: MIT' '---' >"$valid/SKILL.md"
-  printf '%s\n' '---' 'name: invalid-length' 'version: 0.1.0' "description: $description_1025" 'license: MIT' '---' >"$invalid/SKILL.md"
+  printf '%s\n' '---' 'name: valid-length' "description: \"$description_1024\"" 'license: MIT' 'metadata:' '  version: "0.1.0"' '---' >"$valid/SKILL.md"
+  printf '%s\n' '---' 'name: invalid-length' "description: $description_1025" 'license: MIT' 'metadata:' '  version: "0.1.0"' '---' >"$invalid/SKILL.md"
   printf '%s\n' '{"id":"valid-length","version":"0.1.0","tests":["true"],"trust_level":"workspace"}' >"$valid/skill.json"
   printf '%s\n' '{"id":"invalid-length","version":"0.1.0","tests":["true"],"trust_level":"workspace"}' >"$invalid/skill.json"
   : >"$valid/CHANGELOG.md"
@@ -1196,36 +1188,36 @@ check_linter_regressions() {
     rm -rf "$tmp"
     return 1
   fi
-  printf '%s\n' '---' 'name: valid-length' 'version: 0.1.0' "description: 'single ''quoted'' scalar'" 'license: MIT' '---' >"$valid/SKILL.md"
+  printf '%s\n' '---' 'name: valid-length' "description: 'single ''quoted'' scalar'" 'license: MIT' 'metadata:' '  version: "0.1.0"' '---' >"$valid/SKILL.md"
   PATH="$self_test_path" bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1 || {
     echo "[fail] self-test: single-quoted YAML scalar was rejected"; rm -rf "$tmp"; return 1
   }
-  printf '%s\n' '---' 'name: valid-length' 'version: 0.1.0' 'description: "double \x41 \U00000042 scalar"' 'license: MIT' '---' >"$valid/SKILL.md"
+  printf '%s\n' '---' 'name: valid-length' 'description: "double \x41 \U00000042 scalar"' 'license: MIT' 'metadata:' '  version: "0.1.0"' '---' >"$valid/SKILL.md"
   PATH="$self_test_path" bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1 || {
     echo "[fail] self-test: double-quoted YAML escapes were rejected"; rm -rf "$tmp"; return 1
   }
-  printf '%s\n' '---' 'name: valid-length' 'version: 0.1.0' 'description: |-' '  literal' '  scalar' 'license: MIT' '---' >"$valid/SKILL.md"
+  printf '%s\n' '---' 'name: valid-length' 'description: |-' '  literal' '  scalar' 'license: MIT' 'metadata:' '  version: "0.1.0"' '---' >"$valid/SKILL.md"
   PATH="$self_test_path" bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1 || {
     echo "[fail] self-test: literal YAML scalar was rejected"; rm -rf "$tmp"; return 1
   }
-  printf '%s\n' '---' 'name: valid-length' 'version: 0.1.0' 'description: >-' '  folded' '  scalar' 'license: MIT' '---' >"$valid/SKILL.md"
+  printf '%s\n' '---' 'name: valid-length' 'description: >-' '  folded' '  scalar' 'license: MIT' 'metadata:' '  version: "0.1.0"' '---' >"$valid/SKILL.md"
   PATH="$self_test_path" bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1 || {
     echo "[fail] self-test: folded YAML scalar was rejected"; rm -rf "$tmp"; return 1
   }
 
   # A portable skill can carry nested metadata without relaxing scalar fields.
-  printf '%s\n' '---' 'name: valid-length' 'version: 0.1.0' 'description: Metadata fixture' 'license: MIT' 'metadata: # optional mapping' '  # old routing name' '  formerly: "legacy-skill"' '---' >"$valid/SKILL.md"
+  printf '%s\n' '---' 'name: valid-length' 'description: Metadata fixture' 'license: MIT' 'metadata: # optional mapping' '  version: "0.1.0"' '  # old routing name' '  formerly: "legacy-skill"' '---' >"$valid/SKILL.md"
   PATH="$self_test_path" bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1 || {
     echo "[fail] self-test: nested metadata mapping was rejected"; rm -rf "$tmp"; return 1
   }
   for metadata_case in duplicate indentation nested scalar; do
     case "$metadata_case" in
-      duplicate) metadata_lines=$'metadata:\n  formerly: legacy-skill\n  formerly: duplicate-skill' ;;
-      indentation) metadata_lines=$'metadata:\n   formerly: legacy-skill' ;;
-      nested) metadata_lines=$'metadata:\n  formerly:\n    name: legacy-skill' ;;
+      duplicate) metadata_lines=$'metadata:\n  version: "0.1.0"\n  formerly: legacy-skill\n  formerly: duplicate-skill' ;;
+      indentation) metadata_lines=$'metadata:\n  version: "0.1.0"\n   formerly: legacy-skill' ;;
+      nested) metadata_lines=$'metadata:\n  version: "0.1.0"\n  formerly:\n    name: legacy-skill' ;;
       scalar) metadata_lines='metadata: legacy-skill' ;;
     esac
-    printf '%s\n' '---' 'name: valid-length' 'version: 0.1.0' 'description: Metadata fixture' 'license: MIT' "$metadata_lines" '---' >"$valid/SKILL.md"
+    printf '%s\n' '---' 'name: valid-length' 'description: Metadata fixture' 'license: MIT' "$metadata_lines" '---' >"$valid/SKILL.md"
     if PATH="$self_test_path" bash "$tmp/tests/lint-skills.sh" valid-length >/dev/null 2>&1; then
       echo "[fail] self-test: invalid metadata $metadata_case was accepted"; rm -rf "$tmp"; return 1
     fi
@@ -1469,18 +1461,28 @@ PY
 
   fixture="$tmp/version-missing"
   cp -a "$ROOT"/. "$fixture"
-  sed -i '/^version:/d' "$fixture/skillet/skills/repo-audit/SKILL.md"
-  assert_fixture_rejected "missing frontmatter version" "$fixture" repo-audit
+  sed -i '/^  version: /d' "$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "missing frontmatter metadata.version" "$fixture" repo-audit "metadata.version"
+
+  fixture="$tmp/version-metadata-missing"
+  cp -a "$ROOT"/. "$fixture"
+  sed -i -e '/^metadata:$/d' -e '/^  version: /d' "$fixture/skillet/skills/grill/SKILL.md"
+  assert_fixture_rejected "missing frontmatter metadata block" "$fixture" grill "metadata.version"
+
+  fixture="$tmp/version-top-level"
+  cp -a "$ROOT"/. "$fixture"
+  sed -i '/^name: repo-audit$/a version: 0.2.0' "$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "top-level frontmatter version" "$fixture" repo-audit "top-level frontmatter 'version'"
 
   fixture="$tmp/version-invalid"
   cp -a "$ROOT"/. "$fixture"
-  sed -i '/^name: repo-audit$/a version: v1.0' "$fixture/skillet/skills/repo-audit/SKILL.md"
-  assert_fixture_rejected "invalid frontmatter semver" "$fixture" repo-audit
+  sed -i 's/^  version: "0.2.0"$/  version: "v1.0"/' "$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "invalid frontmatter semver" "$fixture" repo-audit "metadata.version must use x.y.z"
 
   fixture="$tmp/version-mismatch"
   cp -a "$ROOT"/. "$fixture"
-  sed -i 's/^version: 0.2.0$/version: 0.3.0/' "$fixture/skillet/skills/repo-audit/SKILL.md"
-  assert_fixture_rejected "frontmatter and skill.json version mismatch" "$fixture" repo-audit
+  sed -i 's/^  version: "0.2.0"$/  version: "0.3.0"/' "$fixture/skillet/skills/repo-audit/SKILL.md"
+  assert_fixture_rejected "frontmatter and skill.json version mismatch" "$fixture" repo-audit "skill.json version"
 
   fixture="$tmp/brief-estimative-unrouted"
   cp -a "$ROOT"/. "$fixture"
@@ -1510,21 +1512,17 @@ PY
   chmod +x "$fixture/skillet/skills/grill/tests/test-deliberate-failure.sh"
   assert_fixture_rejected "failing script unit test" "$fixture" grill "unit test test-deliberate-failure.sh failed"
 
-  fixture="$tmp/brigade-unrelated-failure"
+  fixture="$tmp/brigade-failure"
   cp -a "$ROOT"/. "$fixture"
   mkdir -p "$fixture/bin"
   printf '%s\n' \
     '#!/usr/bin/env bash' \
-    'target="${!#}"' \
-    'if grep -q "^version:" "$target/SKILL.md"; then' \
-    '  echo "error: unknown frontmatter field: version"' \
-    'fi' \
-    'echo "fatal: validator crashed"' \
+    'echo "error: unknown frontmatter field: version"' \
     'exit 1' >"$fixture/bin/brigade"
   chmod +x "$fixture/bin/brigade"
   if brigade_failure_output="$(LINT_SKILLS_SKIP_SELF_TESTS=1 PATH="$fixture/bin:$self_test_path" \
     bash "$fixture/tests/lint-skills.sh" repo-audit 2>&1)"; then
-    echo "[fail] self-test: unrelated Brigade validator failure was masked"
+    echo "[fail] self-test: Brigade validator failure was masked"
     regression_failures=1
   elif ! printf '%s\n' "$brigade_failure_output" |
     grep -Fq '[fail] repo-audit: brigade skills lint failed'; then

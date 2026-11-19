@@ -1,7 +1,8 @@
 ---
 name: reel-check
-version: 0.1.1
 license: MIT
+metadata:
+  version: "0.1.1"
 description: Use before a rendered reel, screen-recording, demo video, or GIF goes public (social, YouTube, a landing page) to catch identity and infrastructure leaks burned into the frames. Also use when the user asks "is this reel safe to post", "scrub this video", or before a video-publishing pipeline ships an MP4. For plain prose use publish-scrub; for repos use publish-readiness.
 ---
 

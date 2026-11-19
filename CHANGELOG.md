@@ -8,6 +8,7 @@ aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Moved each skill's version from a top-level `version:` frontmatter key to `metadata.version` in all 39 `SKILL.md` files, so `brigade skills lint` passes in its default strict mode. Versions are unchanged and still match `skill.json`. `tests/lint-skills.sh` now reads `metadata.version`, rejects a top-level `version:` key, and no longer strips the field before re-linting with Brigade.
 - `merge-ready` and `verify-skill-builder` descriptions no longer route to the retired `pass` and `check` skills. They now name `superpowers:finishing-a-development-branch` and `superpowers:verification-before-completion`.
 
 ### Renamed

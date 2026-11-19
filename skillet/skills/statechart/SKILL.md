@@ -1,7 +1,8 @@
 ---
 name: statechart
-version: 0.1.0
 license: MIT
+metadata:
+  version: "0.1.0"
 description: Use only when the user explicitly asks for a Mermaid statechart, a user-visible chart of a TLA+ model or counterexample, a code/spec/fix chart comparison, or a TLA+ scaffold from an agreed chart.
 ---
 

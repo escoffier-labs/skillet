@@ -1,7 +1,8 @@
 ---
 name: retry-safety
-version: 0.3.0
 license: MIT
+metadata:
+  version: "0.3.0"
 description: Use when a diff carries side effects - database writes, migrations, file mutations, network calls, payments, queue messages - to check whether running it twice is safe. Also when reviewing retry logic, crash recovery, or anything a scheduler, queue, or impatient caller might re-run. Silent when the diff touches no side-effecting surface. Read-only review. Applying the fixes belongs to fix-findings.
 ---
 

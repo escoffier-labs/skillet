@@ -1,7 +1,8 @@
 ---
 name: brief
-version: 0.2.0
 license: MIT
+metadata:
+  version: "0.2.0"
 description: Use when answering at a decision point - recommending an approach, reporting a verification result, finishing a task, proposing a fix, or assessing whether something is ready - so the judgment leads and the reader can evaluate it instead of only accepting it. Triggers on "brief mode", "bluf this", "bottom line", "brief it", "stop burying the answer", "what did I miss", "catch me up".
 ---
 

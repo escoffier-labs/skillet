@@ -1,8 +1,8 @@
 ---
 name: seo-metadata
-version: 0.2.0
 license: MIT
 metadata:
+  version: "0.2.0"
   formerly: garnish
 description: Use when auditing or fixing discoverability metadata for a website before publication, including titles, descriptions, canonical URLs, robots policy, Open Graph, structured data, and sitemaps. Not for content strategy or keyword research. (formerly garnish)
 ---
