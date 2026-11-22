@@ -169,6 +169,14 @@ Use one service name and local port per remote. Verify the service after logout 
 
 ## 6. Save and pair each environment
 
+On nightly 20261121.5038, first inspect the linked environments already
+available through a connected machine. T3 can link a discovered machine through
+that environment without manually entering its address or pairing code. Verify
+the returned machine identity and access before interacting with its threads.
+Use the manual route below when the installed build needs a direct pairing.
+
+Source: [nightly 20261121.5038](https://github.com/pingdotgg/t3code/releases/tag/v0.1.12-nightly.20261121.5038).
+
 For each working remote URL:
 
 1. Start the remote server and obtain the current pairing details from the installed T3 build.
