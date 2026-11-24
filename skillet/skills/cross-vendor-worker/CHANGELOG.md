@@ -6,6 +6,8 @@
 
 ## Unreleased
 
+- Clarify that Claude Code print mode follows the configured tool permissions, including mod calls in 2.1.321.
+
 - Document OpenCode 2.3.0 asynchronous subagents and partial idle reports.
 
 - Document OpenCode 2.2.6 background-job waiting, timeout and cancellation behavior, and worktree flag constraints from upstream release notes.
